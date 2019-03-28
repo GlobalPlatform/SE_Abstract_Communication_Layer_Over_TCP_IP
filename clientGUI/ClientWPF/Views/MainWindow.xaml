@@ -1,0 +1,100 @@
+﻿<Window x:Class="ClientWPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Client" Height="700" Width="1000">
+
+    <Window.Resources>
+        <Style x:Key="DataGridCellStyle1" TargetType="{x:Type DataGridCell}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                            <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="DarkBlue"/>
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                </Trigger>
+                <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                    <Setter Property="BorderBrush" Value="{DynamicResource {x:Static DataGrid.FocusBorderBrushKey}}"/>
+                </Trigger>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsSelected" Value="true"/>
+                        <Condition Property="Selector.IsSelectionActive" Value="false"/>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="Background" Value="DarkBlue"/>
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}"/>
+                </MultiTrigger>
+                <Trigger Property="IsEnabled" Value="false">
+                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="0,0,0,0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="53"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="10"/>
+        </Grid.RowDefinitions>
+
+        <Label Margin="6,0,6,0" Content="Client's state" FontWeight="Bold"/>
+        <DataGrid Name="dgClient" Margin="10,0,10,10" AutoGenerateColumns="False" Grid.Row="1" ItemsSource="{Binding ClientData}" IsReadOnly="False" RowHeaderWidth="0" >
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding ClientState}" Header="State" Width="*" IsReadOnly="True" />
+                <DataGridTextColumn Binding="{Binding IpClientConnected}" Header="Server IP" Width="*" />
+                <DataGridTextColumn Binding="{Binding PortClientConnected}" Header="Server port" Width="*" />
+            </DataGrid.Columns>
+        </DataGrid>
+        <Button Command ="{Binding DisconnectClient}" Content="Disconnect" Width="105" Margin="0,0,10,0" Grid.Row="2" HorizontalAlignment="Right"/>
+        <Button Command="{Binding ConnectClient}" Content="Connect" Width="105" Margin="0,0,125,0" Grid.Row="2" HorizontalAlignment="Right"/>
+
+        <Label Margin="6,0,6,0" Content="Available readers" Grid.Row="3" FontWeight="Bold"/>
+        <DataGrid Name="dgReaders" SelectedItem="{Binding SelectedReader}" Margin="10,0,10,10" Grid.Row="4" 
+                  AutoGenerateColumns="False" ItemsSource="{Binding ReadersList}" IsReadOnly="True" RowHeaderWidth="0"
+                  AlternationCount="2" AlternatingRowBackground="Ivory" CellStyle="{DynamicResource DataGridCellStyle1}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding ReaderID}" Header="Reader ID" Width="*" />
+                <DataGridTextColumn Binding="{Binding ReaderName}" Header="Reader name" Width="*" />
+            </DataGrid.Columns>
+        </DataGrid>
+        <Button Command="{Binding ReloadReaders}" Content="Reload readers" Width="105" Margin="0,0,10,0" Grid.Row="5" HorizontalAlignment="Right"/>
+
+        <Label Margin="6,21,6,4" Content="Resquests/responses" Grid.Row="5" FontWeight="Bold" Grid.RowSpan="2"/>
+        <DataGrid ScrollViewer.CanContentScroll="True" 
+                  ScrollViewer.HorizontalScrollBarVisibility="Auto" 
+                  ScrollViewer.VerticalScrollBarVisibility="Auto" 
+                  Name="dgLogs" Margin="10,0,10,10" Grid.Row="7"
+                  AutoGenerateColumns="False" ItemsSource="{Binding LogsList}" 
+                  IsReadOnly="True" RowHeaderWidth="0"
+                  AlternationCount="2" AlternatingRowBackground="Ivory" >
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding LogType}" Header="Type" Width="100" />
+                <DataGridTextColumn Binding="{Binding LogTime}" Header="Time" Width="150" />
+                <DataGridTextColumn Binding="{Binding LogData}" Header="Data" Width="Auto" />
+            </DataGrid.Columns>
+        </DataGrid>
+        <Button Command="{Binding ClearLogs}" Content="Clear logs" Width="105" Margin="0,0,10,0" Grid.Row="8" HorizontalAlignment="Right"/>
+    </Grid>
+</Window>
