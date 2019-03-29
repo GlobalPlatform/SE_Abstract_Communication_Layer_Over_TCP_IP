@@ -62,13 +62,26 @@
         <Label Margin="6,0,6,0" Content="Server's state" FontWeight="Bold"/>
         <DataGrid Name="dgServer" Margin="10,0,10,10" AutoGenerateColumns="False" Grid.Row="1" Grid.ColumnSpan="2" ItemsSource="{Binding ServerData}" IsReadOnly="False" RowHeaderWidth="0" >
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding ServerState}" Header="State" Width="*" IsReadOnly="True" />
+                <DataGridTextColumn Binding="{Binding ServerState}" Header="State" Width="*" IsReadOnly="True">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Style.Triggers>
+                                <Trigger Property="Text" Value="STARTED">
+                                    <Setter Property="Background" Value="LightGreen"/>
+                                </Trigger>
+                                <Trigger Property="Text" Value="INITIALIZED">
+                                    <Setter Property="Background" Value="LightBlue"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
                 <DataGridTextColumn Binding="{Binding ServerIP}" Header="Server IP" Width="*" />
                 <DataGridTextColumn Binding="{Binding ServerPort}" Header="Server port" Width="*" />
             </DataGrid.Columns>
         </DataGrid>
-        <Button Command="{Binding StartServer}" Content="Start server" Width="105" Margin="0,0,125,0" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right"/>
-        <Button Command ="{Binding StopServer}" Content="Stop server" Width="105" Margin="0,0,10,0" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right"/>
+        <Button Command="{Binding StartServer}" Content="Start server" Width="105" Height="20" Margin="0,0,125,0" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right"/>
+        <Button Command ="{Binding StopServer}" Content="Stop server" Width="105" Height="20" Margin="0,0,10,0" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right"/>
 
         <Label Margin="6,0,6,0" Content="Connected clients" Grid.Row="3" FontWeight="Bold"/>
         <DataGrid CellStyle="{DynamicResource DataGridCellStyle1}" AlternationCount="2" AlternatingRowBackground="Ivory" Name="dgClients" SelectedItem="{Binding SelectedClient}" Margin="10,0,10,10" Grid.Row="4" AutoGenerateColumns="False" ItemsSource="{Binding ClientsList}" IsReadOnly="True" RowHeaderWidth="0">
@@ -77,13 +90,23 @@
                 <DataGridTextColumn Binding="{Binding ClientName}" Header="Client name" Width="*" />
             </DataGrid.Columns>
         </DataGrid>
+        
         <Label Content="Actions on selected client" Grid.Column="1" HorizontalAlignment="Left" Margin="0" Grid.Row="4" VerticalAlignment="Top" Width="200" FontWeight="Bold"/>
+        
         <TextBox Text="{Binding CurrentCommand}" Grid.Column="1" HorizontalAlignment="Left" Height="20" Margin="5,24,0,0" Grid.Row="4" TextWrapping="Wrap" VerticalAlignment="Top" Width="150" />
         <Button Command="{Binding SendCommandClient}" Content="Send command" HorizontalAlignment="Left" Margin="170,24,0,0" Grid.Row="4" VerticalAlignment="Top" Width="105" Height="20" Grid.Column="1"/>
+        <Button Command="{Binding SendTypeA}" Content="Send RF type A" HorizontalAlignment="Left" Margin="290,24,0,0" Grid.Row="4" VerticalAlignment="Top" Width="105" Height="20" Grid.Column="1"/>
+        <Button Command="{Binding SendTypeB}" Content="Send RF type B" HorizontalAlignment="Left" Margin="410,24,0,0" Grid.Row="4" VerticalAlignment="Top" Width="105" Height="20" Grid.Column="1"/>
+        <Button Command="{Binding SendTypeF}" Content="Send RF type F" HorizontalAlignment="Left" Margin="530,24,0,0" Grid.Row="4" VerticalAlignment="Top" Width="105" Height="20" Grid.Column="1"/>
+
         <Button Command="{Binding EchoClient}" Content="Is alive ?" HorizontalAlignment="Left" Margin="5,53,0,0" Grid.Row="4" VerticalAlignment="Top" Width="105" Grid.Column="1"/>
         <Button Command="{Binding DiagnoseClient}" Content="Diagnose" HorizontalAlignment="Left" Margin="5,83,0,0" Grid.Row="4" VerticalAlignment="Top" Width="105" Grid.Column="1"/>
-        <Button Command="{Binding StopClient}" Content="Disconnect" HorizontalAlignment="Left" Margin="5,142,0,0" Grid.Row="4" VerticalAlignment="Top" Width="105" Grid.Column="1"/>
         <Button Command="{Binding RestartTarget}" Content="Restart target" HorizontalAlignment="Left" Margin="5,112,0,0" Grid.Row="4" VerticalAlignment="Top" Width="105" Grid.Column="1"/>
+        <Button Command="{Binding StopClient}" Content="Disconnect" HorizontalAlignment="Left" Margin="5,142,0,0" Grid.Row="4" VerticalAlignment="Top" Width="105" Grid.Column="1"/>
+        <Button Command="{Binding ColdReset}" Content="Cold reset" HorizontalAlignment="Left" Margin="170,53,0,0" Grid.Row="4" VerticalAlignment="Top" Width="105" Height="20" Grid.Column="1"/>
+        <Button Command="{Binding WarmReset}" Content="Warn reset" HorizontalAlignment="Left" Margin="170,83,0,0" Grid.Row="4" VerticalAlignment="Top" Width="105" Height="20" Grid.Column="1"/>
+        <Button Command="{Binding PowerOFFField}" Content="Power OFF field" HorizontalAlignment="Left" Margin="170,112,0,0" Grid.Row="4" VerticalAlignment="Top" Width="105" Height="20" Grid.Column="1"/>
+        <Button Command="{Binding PowerONField}" Content="Power ON field" HorizontalAlignment="Left" Margin="170,142,0,0" Grid.Row="4" VerticalAlignment="Top" Width="105" Height="20" Grid.Column="1"/>
 
         <Label Margin="6,0,6,0" Content="Resquests/responses" Grid.Row="5" FontWeight="Bold"/>
         <DataGrid ScrollViewer.CanContentScroll="True" 
@@ -109,6 +132,6 @@
                 <DataGridTextColumn Binding="{Binding ErrClientDescription}" Header="Card description" Width="Auto" />
             </DataGrid.Columns>
         </DataGrid>
-        <Button Command="{Binding ClearLogs}" Content="Clear logs" Width="105" Margin="0,0,10,0" Grid.Row="7" Grid.Column="1" HorizontalAlignment="Right"/>
+        <Button Command="{Binding ClearLogs}" Content="Clear logs" Width="105" Height="20" Margin="0,0,10,0" Grid.Row="7" Grid.Column="1" HorizontalAlignment="Right"/>
     </Grid>
 </Window>

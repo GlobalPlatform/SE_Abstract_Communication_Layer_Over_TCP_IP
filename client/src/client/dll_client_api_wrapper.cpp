@@ -19,12 +19,21 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 #include "client/client_api.h"
 #include "terminal/flyweight_terminal_factory.h"
 #include "terminal/terminals/terminal_pcsc.h"
-#include "client/requests/request.h"
+#include "client/requests/cold_reset.h"
 #include "client/requests/command.h"
 #include "client/requests/diag.h"
 #include "client/requests/disconnect.h"
 #include "client/requests/echo.h"
+#include "client/requests/power_off_field.h"
+#include "client/requests/power_on_field.h"
+#include "client/requests/request.h"
+#include "client/requests/request.h"
 #include "client/requests/restart_target.h"
+#include "client/requests/send_typeA.h"
+#include "client/requests/send_typeB.h"
+#include "client/requests/send_typeF.h"
+#include "client/requests/warm_reset.h"
+
 #include "constants/request_code.h"
 
 #include <iostream>
@@ -65,11 +74,17 @@ ADDAPI void initClient(client::ClientAPI* client, ResponseDLL& response_packet_d
 	// config all requests the client can handle
 	FlyweightRequests available_requests;
 	available_requests.addRequest(REQ_COMMAND, new Command());
+	available_requests.addRequest(REQ_COMMAND_A, new SendTypeA());
+	available_requests.addRequest(REQ_COMMAND_B, new SendTypeB());
+	available_requests.addRequest(REQ_COMMAND_F, new SendTypeF());
 	available_requests.addRequest(REQ_DIAG, new Diag());
 	available_requests.addRequest(REQ_DISCONNECT, new Disconnect());
 	available_requests.addRequest(REQ_ECHO, new Echo());
 	available_requests.addRequest(REQ_RESTART, new RestartTarget());
-
+	available_requests.addRequest(REQ_COLD_RESET, new ColdReset());
+	available_requests.addRequest(REQ_WARM_RESET, new WarmReset());
+	available_requests.addRequest(REQ_POWER_OFF_FIELD, new PowerOffField());
+	available_requests.addRequest(REQ_POWER_ON_FIELD, new PowerOnField());
 
 	ResponsePacket response_packet = client->initClient("./config/init.json", available_terminals, available_requests);
 	responsePacketForDll(response_packet, response_packet_dll);

@@ -119,40 +119,25 @@ ResponsePacket TerminalPCSC::sendCommand(unsigned char command[], DWORD command_
 	}
 
 	std::string responseAPDU =  utils::unsignedCharToString(pbRecvBuffer, dwRecvLength);
-
-	// process get response if required
-	std::string get_response = "00 C0 00 00";
-	std::string sw1 = responseAPDU.substr(0, responseAPDU.find(" "));
-	std::string sw2 = responseAPDU.substr(3);
-	if (sw1.compare("61") == 0) {
-		get_response.append(sw2);
-		unsigned long int length = 0;
-		unsigned char* command_get_response = utils::stringToUnsignedChar(get_response, &length);
-		dwRecvLength = sizeof(pbRecvBuffer);
-		if ((resp = SCardTransmit(hCard, &pioSendPci, command_get_response, length, NULL, pbRecvBuffer, &dwRecvLength)) != SCARD_S_SUCCESS) {
-			LOG_DEBUG << "Failed to call SCardTransmit() [error:" << errorToString(resp) << "]" << "[card:" << hCard << "][pbSendBuffer:" << command << "][cbSendLength:" << command_length << "]"
-					<< "[recvbuffer:" << pbRecvBuffer << "][recvlength:" << dwRecvLength << "]";
-			return handleErrorResponse("Failed to transmit", resp);
-		}
-		responseAPDU =  utils::unsignedCharToString(pbRecvBuffer, dwRecvLength);
-	}
-
 	ResponsePacket response = { .response = responseAPDU };
 	return response;
 }
 
 ResponsePacket TerminalPCSC::sendTypeA(unsigned char command[],  unsigned long int command_length) {
 	ResponsePacket response;
+	response.response = "Not implemented";
 	return response;
 }
 
 ResponsePacket TerminalPCSC::sendTypeB(unsigned char command[],  unsigned long int command_length) {
 	ResponsePacket response;
+	response.response = "Not implemented";
 	return response;
 }
 
 ResponsePacket TerminalPCSC::sendTypeF(unsigned char command[],  unsigned long int command_length) {
 	ResponsePacket response;
+	response.response = "Not implemented";
 	return response;
 }
 
@@ -261,21 +246,25 @@ ResponsePacket TerminalPCSC::restart() {
 
 ResponsePacket TerminalPCSC::coldReset() {
 	ResponsePacket response;
+	response.response = "Not implemented";
 	return response;
 }
 
 ResponsePacket TerminalPCSC::warmReset() {
 	ResponsePacket response;
+	response.response = "Not implemented";
 	return response;
 }
 
 ResponsePacket TerminalPCSC::powerOFFField() {
 	ResponsePacket response;
+	response.response = "Not implemented";
 	return response;
 }
 
 ResponsePacket TerminalPCSC::powerONField() {
 	ResponsePacket response;
+	response.response = "Not implemented";
 	return response;
 }
 

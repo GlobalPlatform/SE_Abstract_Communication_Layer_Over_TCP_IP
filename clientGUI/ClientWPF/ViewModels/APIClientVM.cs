@@ -40,10 +40,10 @@ namespace ClientWPF.ViewModels
 
         private void UpdateServerDown(string text)
         {
-            if (_clientData.FirstOrDefault().ClientState.Equals("DISCONNECTED")) return;
+            if (_clientData.FirstOrDefault().ClientState.Equals("INITIALIZED")) return;
             APIClientModel old = _clientData.FirstOrDefault();
             _clientData = new ObservableCollection<APIClientModel>();
-            _clientData.Add(new APIClientModel("DISCONNECTED", old.IpClientConnected, old.PortClientConnected));
+            _clientData.Add(new APIClientModel("INITIALIZED", old.IpClientConnected, old.PortClientConnected));
             OnPropertyChanged("ClientData");
         }
 
@@ -104,7 +104,7 @@ namespace ClientWPF.ViewModels
                 ip = array["ip"];
                 port = array["port"];
             }
-            _clientData.Add(new APIClientModel("INIITIALIZED", ip, port));
+            _clientData.Add(new APIClientModel("INITIALIZED", ip, port));
             return _clientData;
         }
 
@@ -182,13 +182,13 @@ namespace ClientWPF.ViewModels
         private void DelDisconnectClient()
         {
             APIClientModel old = _clientData.FirstOrDefault();
-            if (old.ClientState.Equals("DISCONNECTED"))
+            if (old.ClientState.Equals("INITIALIZED"))
             {
-                MessageBox.Show("Error: Client already disconnected");
+                MessageBox.Show("Error: Client not connected");
                 return;
             }
             _clientData = new ObservableCollection<APIClientModel>();
-            _clientData.Add(new APIClientModel("DISCONNECTED", old.IpClientConnected, old.PortClientConnected));
+            _clientData.Add(new APIClientModel("INITIALIZED", old.IpClientConnected, old.PortClientConnected));
             OnPropertyChanged("ClientData");
             ResponseDLL response = APIClientWrapper.DisconnectClient();
             CheckError(response);

@@ -62,13 +62,26 @@
         <Label Margin="6,0,6,0" Content="Client's state" FontWeight="Bold"/>
         <DataGrid Name="dgClient" Margin="10,0,10,10" AutoGenerateColumns="False" Grid.Row="1" ItemsSource="{Binding ClientData}" IsReadOnly="False" RowHeaderWidth="0" >
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding ClientState}" Header="State" Width="*" IsReadOnly="True" />
+                <DataGridTextColumn Binding="{Binding ClientState}" Header="State" Width="*" IsReadOnly="True">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Style.Triggers>
+                                <Trigger Property="Text" Value="CONNECTED">
+                                    <Setter Property="Background" Value="LightGreen"/>
+                                </Trigger>
+                                <Trigger Property="Text" Value="INITIALIZED">
+                                    <Setter Property="Background" Value="LightBlue"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
                 <DataGridTextColumn Binding="{Binding IpClientConnected}" Header="Server IP" Width="*" />
                 <DataGridTextColumn Binding="{Binding PortClientConnected}" Header="Server port" Width="*" />
             </DataGrid.Columns>
         </DataGrid>
-        <Button Command ="{Binding DisconnectClient}" Content="Disconnect" Width="105" Margin="0,0,10,0" Grid.Row="2" HorizontalAlignment="Right"/>
-        <Button Command="{Binding ConnectClient}" Content="Connect" Width="105" Margin="0,0,125,0" Grid.Row="2" HorizontalAlignment="Right"/>
+        <Button Command ="{Binding DisconnectClient}" Content="Disconnect" Width="105" Height="20" Margin="0,0,10,0" Grid.Row="2" HorizontalAlignment="Right"/>
+        <Button Command="{Binding ConnectClient}" Content="Connect" Width="105" Height="20" Margin="0,0,125,0" Grid.Row="2" HorizontalAlignment="Right"/>
 
         <Label Margin="6,0,6,0" Content="Available readers" Grid.Row="3" FontWeight="Bold"/>
         <DataGrid Name="dgReaders" SelectedItem="{Binding SelectedReader}" Margin="10,0,10,10" Grid.Row="4" 
@@ -79,7 +92,7 @@
                 <DataGridTextColumn Binding="{Binding ReaderName}" Header="Reader name" Width="*" />
             </DataGrid.Columns>
         </DataGrid>
-        <Button Command="{Binding ReloadReaders}" Content="Reload readers" Width="105" Margin="0,0,10,0" Grid.Row="5" HorizontalAlignment="Right"/>
+        <Button Command="{Binding ReloadReaders}" Content="Reload readers" Width="105" Height="20" Margin="0,0,10,0" Grid.Row="5" HorizontalAlignment="Right"/>
 
         <Label Margin="6,21,6,4" Content="Resquests/responses" Grid.Row="5" FontWeight="Bold" Grid.RowSpan="2"/>
         <DataGrid ScrollViewer.CanContentScroll="True" 
@@ -95,6 +108,6 @@
                 <DataGridTextColumn Binding="{Binding LogData}" Header="Data" Width="Auto" />
             </DataGrid.Columns>
         </DataGrid>
-        <Button Command="{Binding ClearLogs}" Content="Clear logs" Width="105" Margin="0,0,10,0" Grid.Row="8" HorizontalAlignment="Right"/>
+        <Button Command="{Binding ClearLogs}" Content="Clear logs" Width="105" Height="20" Margin="0,0,10,0" Grid.Row="8" HorizontalAlignment="Right"/>
     </Grid>
 </Window>

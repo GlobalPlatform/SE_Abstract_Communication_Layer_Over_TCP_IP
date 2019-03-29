@@ -55,7 +55,28 @@ namespace ServerWPF.Models
         static private extern void sendCommand(IntPtr server, int id_client, string command, ref ResponseDLL response_packet);
 
         [DllImport(@"libs/libserver.dll")]
+        static private extern void sendTypeA(IntPtr server, int id_client, string command, ref ResponseDLL response_packet);
+
+        [DllImport(@"libs/libserver.dll")]
+        static private extern void sendTypeB(IntPtr server, int id_client, string command, ref ResponseDLL response_packet);
+
+        [DllImport(@"libs/libserver.dll")]
+        static private extern void sendTypeF(IntPtr server, int id_client, string command, ref ResponseDLL response_packet);
+
+        [DllImport(@"libs/libserver.dll")]
         static private extern void restartTarget(IntPtr server, int id_client, ref ResponseDLL response_packet);
+
+        [DllImport(@"libs/libserver.dll")]
+        static private extern void coldReset(IntPtr server, int id_client, ref ResponseDLL response_packet);
+
+        [DllImport(@"libs/libserver.dll")]
+        static private extern void warmReset(IntPtr server, int id_client, ref ResponseDLL response_packet);
+
+        [DllImport(@"libs/libserver.dll")]
+        static private extern void powerOFFField(IntPtr server, int id_client, ref ResponseDLL response_packet);
+
+        [DllImport(@"libs/libserver.dll")]
+        static private extern void powerONField(IntPtr server, int id_client, ref ResponseDLL response_packet);
 
         [DllImport(@"libs/libserver.dll")]
         static private extern void stopClient(IntPtr server, int id_client, ref ResponseDLL response_packet);
@@ -119,10 +140,59 @@ namespace ServerWPF.Models
             return response;
         }
 
+        static public ResponseDLL SendTypeA(int id_client, string command)
+        {
+            ResponseDLL response = new ResponseDLL();
+            sendTypeA(_server, id_client, command, ref response);
+            return response;
+        }
+
+        static public ResponseDLL SendTypeB(int id_client, string command)
+        {
+            ResponseDLL response = new ResponseDLL();
+            sendTypeB(_server, id_client, command, ref response);
+            return response;
+        }
+
+        static public ResponseDLL SendTypeF(int id_client, string command)
+        {
+            ResponseDLL response = new ResponseDLL();
+            sendTypeF(_server, id_client, command, ref response);
+            return response;
+        }
+
         static public ResponseDLL RestartTarget(int id_client)
         {
             ResponseDLL response = new ResponseDLL();
             restartTarget(_server, id_client, ref response);
+            return response;
+        }
+
+        static public ResponseDLL ColdReset(int id_client)
+        {
+            ResponseDLL response = new ResponseDLL();
+            coldReset(_server, id_client, ref response);
+            return response;
+        }
+
+        static public ResponseDLL WarmReset( int id_client)
+        {
+            ResponseDLL response = new ResponseDLL();
+            warmReset(_server, id_client, ref response);
+            return response;
+        }
+
+        static public ResponseDLL PowerOFFField(int id_client)
+        {
+            ResponseDLL response = new ResponseDLL();
+            powerOFFField(_server, id_client, ref response);
+            return response;
+        }
+
+        static public ResponseDLL PowerONField(int id_client)
+        {
+            ResponseDLL response = new ResponseDLL();
+            powerONField(_server, id_client, ref response);
             return response;
         }
 

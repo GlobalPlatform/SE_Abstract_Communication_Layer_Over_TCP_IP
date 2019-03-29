@@ -110,7 +110,7 @@ ResponsePacket ClientEngine::connectClient(const char* reader, const char* ip, c
 		return response;
 	}
 
-	std::string name = config.getValue("name", DEFAULT_NAME);
+	std::string name = config.getValue("name", DEFAULT_NAME).append(" - ").append(reader);
 
 	LOG_INFO << "Client trying to connect on IP " << ip << " port " << port;
 	WSADATA wsaData;
