@@ -24,6 +24,8 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 #include "terminal/terminals/utils/type_converter.h"
 #include "plog/include/plog/Log.h"
 
+#define TRIES_LIMIT 3
+
 namespace client {
 
 ExampleTerminalPCSCContact::~ExampleTerminalPCSCContact() {
@@ -91,6 +93,8 @@ ResponsePacket ExampleTerminalPCSCContact::connect(const char* reader) {
 		return handleErrorResponse("Failed to connect", resp);
 	}
 
+	this->current_reader = std::string(reader);
+
 	switch (dwActiveProtocol) {
 	case SCARD_PROTOCOL_T0:
 		pioSendPci = *SCARD_PCI_T0;
@@ -106,18 +110,26 @@ ResponsePacket ExampleTerminalPCSCContact::connect(const char* reader) {
 }
 
 ResponsePacket ExampleTerminalPCSCContact::sendCommand(unsigned char command[], DWORD command_length) {
-	LONG resp;
+	LONG resp = SCARD_SWALLOWED;
 	std::string strCommand = utils::unsignedCharToString(command, command_length);
-
 	dwRecvLength = sizeof(pbRecvBuffer);
-	if ((resp = SCardTransmit(hCard, &pioSendPci, command, command_length, NULL, pbRecvBuffer, &dwRecvLength)) != SCARD_S_SUCCESS) {
-		LOG_DEBUG << "Failed to call SCardTransmit() [error:" << errorToString(resp) << "]"
-				  << "[card:" << hCard << "][pbSendBuffer:" << command << "][cbSendLength:" << command_length << "]"
-				  << "[recvbuffer:" << pbRecvBuffer << "][recvlength:" << dwRecvLength << "]";
+
+	int tries = 0;
+	while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
+		if ((resp = SCardTransmit(hCard, &pioSendPci, command, command_length, NULL, pbRecvBuffer, &dwRecvLength)) != SCARD_S_SUCCESS) {
+			LOG_DEBUG << "Failed to call SCardTransmit() [error:" << errorToString(resp) << "]" << "[card:" << hCard << "][pbSendBuffer:" << command << "][cbSendLength:" << command_length << "]"
+					  << "[recvbuffer:" << pbRecvBuffer << "][recvlength:" << dwRecvLength << "]";
+			LOG_DEBUG << "RECO";
+			connect(current_reader.c_str());
+			tries++;
+		}
+	}
+
+	if (tries == TRIES_LIMIT) {
 		return handleErrorResponse("Failed to transmit", resp);
 	}
 
-	std::string responseAPDU =  utils::unsignedCharToString(pbRecvBuffer, dwRecvLength);
+	std::string responseAPDU = utils::unsignedCharToString(pbRecvBuffer, dwRecvLength);
 	ResponsePacket response = { .response = responseAPDU };
 	return response;
 }

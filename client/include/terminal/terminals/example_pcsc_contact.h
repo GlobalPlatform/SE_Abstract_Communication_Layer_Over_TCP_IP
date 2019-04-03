@@ -30,6 +30,7 @@ namespace client {
 
 class ExampleTerminalPCSCContact: public ITerminalLayer {
 private:
+	std::string current_reader;
 	SCARDCONTEXT hContext;
 	LPTSTR mszReaders;
 	SCARDHANDLE hCard;

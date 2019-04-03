@@ -24,6 +24,8 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 #include "terminal/terminals/utils/type_converter.h"
 #include "plog/include/plog/Log.h"
 
+#define TRIES_LIMIT 3
+
 namespace client {
 
 ExampleTerminalPCSCContactless::~ExampleTerminalPCSCContactless() {
@@ -108,18 +110,24 @@ ResponsePacket ExampleTerminalPCSCContactless::connect(const char* reader) {
 }
 
 ResponsePacket ExampleTerminalPCSCContactless::sendCommand(unsigned char command[], DWORD command_length) {
-	LONG resp;
+	LONG resp = SCARD_SWALLOWED;
 	std::string strCommand = utils::unsignedCharToString(command, command_length);
-
 	dwRecvLength = sizeof(pbRecvBuffer);
-	if ((resp = SCardTransmit(hCard, &pioSendPci, command, command_length, NULL, pbRecvBuffer, &dwRecvLength)) != SCARD_S_SUCCESS) {
-		LOG_DEBUG << "Failed to call SCardTransmit() [error:" << errorToString(resp) << "]"
-				  << "[card:" << hCard << "][pbSendBuffer:" << command << "][cbSendLength:" << command_length << "]"
-				  << "[recvbuffer:" << pbRecvBuffer << "][recvlength:" << dwRecvLength << "]";
-		return handleErrorResponse("Failed to transmit", resp);
+
+	int tries = 0;
+	while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
+		if ((resp = SCardTransmit(hCard, &pioSendPci, command, command_length, NULL, pbRecvBuffer, &dwRecvLength)) != SCARD_S_SUCCESS) {
+			LOG_DEBUG << "Failed to call SCardTransmit() [error:" << errorToString(resp) << "]" << "[card:" << hCard << "][pbSendBuffer:" << command << "][cbSendLength:" << command_length << "]"
+					  << "[recvbuffer:" << pbRecvBuffer << "][recvlength:" << dwRecvLength << "]";
+			LOG_DEBUG << "RECO";
+			connect(current_reader.c_str());
+			tries++;
+		}
 	}
 
-	LOG_ERROR << "REP = " << pbRecvBuffer;
+	if (tries == TRIES_LIMIT) {
+		return handleErrorResponse("Failed to transmit", resp);
+	}
 
 	std::string responseAPDU =  utils::unsignedCharToString(pbRecvBuffer, dwRecvLength);
 	ResponsePacket response = { .response = responseAPDU };
