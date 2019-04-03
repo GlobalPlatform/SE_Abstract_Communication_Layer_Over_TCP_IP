@@ -46,9 +46,11 @@ public:
 
 	/**
 	 * startServer - start the server. The server is now able to listen to accept connections and to process incoming requests.
+	 * @param ip the ip to listen to.
+	 * @param port the port to listen to.
 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
 	 */
-	ResponsePacket startServer();
+	ResponsePacket startServer(const char* ip, const char* port);
 
 	/*
 	 * listclients - returns a ResponsePacket containing data in the "response" field.

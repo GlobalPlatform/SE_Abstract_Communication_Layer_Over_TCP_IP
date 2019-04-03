@@ -87,7 +87,7 @@ ResponsePacket ClientEngine::initClient(std::string path, FlyweightTerminalFacto
 ResponsePacket ClientEngine::loadAndListReaders() {
 	ResponsePacket response;
 	if (!initialized.load()) {
-		ResponsePacket response_packet = { .response = "KO", .err_client_code = ERR_CLIENT_NOT_INITIALIZED, .err_client_description = "Client must be initialized correctly" };
+		ResponsePacket response_packet = { .response = "KO", .err_client_code = ERR_INVALID_STATE, .err_client_description = "Client must be initialized correctly" };
 		return response_packet;
 	}
 	return terminal->loadAndListReaders();
@@ -96,18 +96,13 @@ ResponsePacket ClientEngine::loadAndListReaders() {
 ResponsePacket ClientEngine::connectClient(const char* reader, const char* ip, const char* port) {
 	ResponsePacket response;
 	if (!initialized.load()) {
-		ResponsePacket response_packet = { .response = "KO", .err_client_code = ERR_CLIENT_NOT_INITIALIZED, .err_client_description = "Client must be initialized correctly" };
+		ResponsePacket response_packet = { .response = "KO", .err_client_code = ERR_INVALID_STATE, .err_client_description = "Client must be initialized correctly" };
 		return response_packet;
 	}
 
 	if (connected.load()) {
-		ResponsePacket response_packet = { .response = "KO", .err_client_code = ERR_CLIENT_NOT_INITIALIZED, .err_client_description = "Client is already connected" };
+		ResponsePacket response_packet = { .response = "KO", .err_client_code = ERR_INVALID_STATE, .err_client_description = "Client is already connected" };
 		return response_packet;
-	}
-
-	response = terminal->connect(reader);
-	if (response.err_card_code < 0 || response.err_terminal_code < 0) {
-		return response;
 	}
 
 	std::string name = config.getValue("name", DEFAULT_NAME).append(" - ").append(reader);
@@ -171,6 +166,12 @@ ResponsePacket ClientEngine::connectClient(const char* reader, const char* ip, c
 		return response_packet;
 	}
 
+	response = terminal->connect(reader);
+	if (response.err_card_code < 0 || response.err_terminal_code < 0) {
+		WSACleanup();
+		return response;
+	}
+
 	connected = true;
 	LOG_INFO << "Client connected on IP " << ip << " port " << port;
 
@@ -183,7 +184,7 @@ ResponsePacket ClientEngine::connectClient(const char* reader, const char* ip, c
 ResponsePacket ClientEngine::disconnectClient() {
 	if (!connected.load()) {
 		LOG_DEBUG << "Client unable to disconnect - Not connected yet";
-		ResponsePacket response_packet = { .response = "KO", .err_client_code = ERR_CLIENT_NOT_INITIALIZED, .err_client_description = "Client must be initialized correctly." };
+		ResponsePacket response_packet = { .response = "KO", .err_client_code = ERR_INVALID_STATE, .err_client_description = "Client must be initialized correctly" };
 		return response_packet;
 	}
 

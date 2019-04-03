@@ -47,6 +47,7 @@ namespace ServerWPF.ViewModels
             App.Current.Dispatcher.Invoke((Action)delegate
             {
                 _clientsList.Add(new ClientModel(id, name));
+                OnPropertyChanged("ClientsList");
             });
         }
 
@@ -128,8 +129,9 @@ namespace ServerWPF.ViewModels
         }
         private void DelStartServer()
         {
-            APIServerWrapper.StartServer();
             APIServerModel old = _serverData.FirstOrDefault();
+            ResponseDLL response = APIServerWrapper.StartServer(old.ServerIP, old.ServerPort);
+            if (CheckError(response)) return;
             _serverData = new ObservableCollection<APIServerModel>();
             _serverData.Add(new APIServerModel("STARTED", old.ServerIP, old.ServerPort));
             OnPropertyChanged("ServerData");
@@ -141,18 +143,12 @@ namespace ServerWPF.ViewModels
         }
         private void DelStopServer()
         {
+            ResponseDLL response = APIServerWrapper.StopServer();
+            if (CheckError(response)) return;
             APIServerModel old = _serverData.FirstOrDefault();
-            if (!old.ServerState.Equals("STARTED"))
-            {
-                MessageBox.Show("Erreur: Server not started");
-                return;
-            }
-            APIServerWrapper.StopServer();
             _serverData = new ObservableCollection<APIServerModel>();
             _serverData.Add(new APIServerModel("INITIALIZED", old.ServerIP, old.ServerPort));
             OnPropertyChanged("ServerData");
-            _clientsList = new ObservableCollection<ClientModel>();
-            OnPropertyChanged("ClientsList");
         }
 
         public DelegateCommand SendCommandClient
@@ -163,7 +159,7 @@ namespace ServerWPF.ViewModels
         {
             if (_selectedClient == null)
             {
-                MessageBox.Show("Erreur: A client must be selected.");
+                MessageBox.Show("Erreur: A client must be selected");
                 return;
             }
             ResponseDLL response = APIServerWrapper.SendCommand(_selectedClient.ClientID, _currentCommand);
@@ -183,7 +179,7 @@ namespace ServerWPF.ViewModels
         {
             if (_selectedClient == null)
             {
-                MessageBox.Show("Erreur: A client must be selected.");
+                MessageBox.Show("Erreur: A client must be selected");
                 return;
             }
             ResponseDLL response = APIServerWrapper.SendTypeA(_selectedClient.ClientID, _currentCommand);
@@ -198,7 +194,7 @@ namespace ServerWPF.ViewModels
         {
             if (_selectedClient == null)
             {
-                MessageBox.Show("Erreur: A client must be selected.");
+                MessageBox.Show("Erreur: A client must be selected");
                 return;
             }
             ResponseDLL response = APIServerWrapper.SendTypeB(_selectedClient.ClientID, _currentCommand);
@@ -213,7 +209,7 @@ namespace ServerWPF.ViewModels
         {
             if (_selectedClient == null)
             {
-                MessageBox.Show("Erreur: A client must be selected.");
+                MessageBox.Show("Erreur: A client must be selected");
                 return;
             }
             ResponseDLL response = APIServerWrapper.SendTypeF(_selectedClient.ClientID, _currentCommand);
@@ -228,7 +224,7 @@ namespace ServerWPF.ViewModels
         {
             if (_selectedClient == null)
             {
-                MessageBox.Show("Erreur: A client must be selected.");
+                MessageBox.Show("Erreur: A client must be selected");
                 return;
             }
             ResponseDLL response = APIServerWrapper.EchoClient(_selectedClient.ClientID);
@@ -243,7 +239,7 @@ namespace ServerWPF.ViewModels
         {
             if (_selectedClient == null)
             {
-                MessageBox.Show("Erreur: A client must be selected.");
+                MessageBox.Show("Erreur: A client must be selected");
                 return;
             }
             ResponseDLL response = APIServerWrapper.DiagClient(_selectedClient.ClientID);
@@ -259,7 +255,7 @@ namespace ServerWPF.ViewModels
         {
             if (_selectedClient == null)
             {
-                MessageBox.Show("Erreur: A client must be selected.");
+                MessageBox.Show("Erreur: A client must be selected");
                 return;
             }
             ResponseDLL response = APIServerWrapper.ColdReset(_selectedClient.ClientID);
@@ -275,7 +271,7 @@ namespace ServerWPF.ViewModels
         {
             if (_selectedClient == null)
             {
-                MessageBox.Show("Erreur: A client must be selected.");
+                MessageBox.Show("Erreur: A client must be selected");
                 return;
             }
             ResponseDLL response = APIServerWrapper.WarmReset(_selectedClient.ClientID);
@@ -291,7 +287,7 @@ namespace ServerWPF.ViewModels
         {
             if (_selectedClient == null)
             {
-                MessageBox.Show("Erreur: A client must be selected.");
+                MessageBox.Show("Erreur: A client must be selected");
                 return;
             }
             ResponseDLL response = APIServerWrapper.PowerOFFField(_selectedClient.ClientID);
@@ -307,7 +303,7 @@ namespace ServerWPF.ViewModels
         {
             if (_selectedClient == null)
             {
-                MessageBox.Show("Erreur: A client must be selected.");
+                MessageBox.Show("Erreur: A client must be selected");
                 return;
             }
             ResponseDLL response = APIServerWrapper.PowerONField(_selectedClient.ClientID);
@@ -322,7 +318,7 @@ namespace ServerWPF.ViewModels
         {
             if (_selectedClient == null)
             {
-                MessageBox.Show("Erreur: A client must be selected.");
+                MessageBox.Show("Erreur: A client must be selected");
                 return;
             }
             ResponseDLL response = APIServerWrapper.RestartTarget(_selectedClient.ClientID);
@@ -337,7 +333,7 @@ namespace ServerWPF.ViewModels
         {
             if (_selectedClient == null)
             {
-                MessageBox.Show("Erreur: A client must be selected.");
+                MessageBox.Show("Erreur: A client must be selected");
                 return;
             }
             ResponseDLL response = APIServerWrapper.StopClient(_selectedClient.ClientID);

@@ -40,7 +40,7 @@ namespace ServerWPF.Models
         static private extern void initServer(IntPtr server, ref ResponseDLL response_packet);
 
         [DllImport(@"libs/libserver.dll")]
-        static private extern void startServer(IntPtr server, ref ResponseDLL response_packet);
+        static private extern void startServer(IntPtr server, string ip, string port, ref ResponseDLL response_packet);
 
         [DllImport(@"libs/libserver.dll")]
         static private extern void listClients(IntPtr server, ref ResponseDLL response_packet);
@@ -105,10 +105,10 @@ namespace ServerWPF.Models
             return response;
         }
 
-        static public ResponseDLL StartServer()
+        static public ResponseDLL StartServer(string ip, string port)
         {
             ResponseDLL response = new ResponseDLL();
-            startServer(_server, ref response);
+            startServer(_server, ip, port, ref response);
             return response;
         }
 

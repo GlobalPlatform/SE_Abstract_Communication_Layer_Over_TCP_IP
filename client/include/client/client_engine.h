@@ -69,7 +69,9 @@ public:
 
 	/**
 	 * connectClient - connect to the given reader and to the server.
-	 * @param terminal_key the key corresponding to a reader.
+	 * @param reader the reader to use.
+	 * @param ip the ip to connect to.
+	 * @param port the port to connect to.
 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
 	 */
 	ResponsePacket connectClient(const char* reader, const char* ip, const char* port);

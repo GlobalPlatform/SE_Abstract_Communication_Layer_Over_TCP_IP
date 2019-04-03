@@ -36,8 +36,8 @@ ResponsePacket ServerAPI::initServer(std::string path) {
 	return resp;
 }
 
-ResponsePacket ServerAPI::startServer() {
-	return engine->startListening();
+ResponsePacket ServerAPI::startServer(const char* ip, const char* port) {
+	return engine->startListening(ip, port);
 }
 
 ResponsePacket ServerAPI::listClients() {

@@ -32,18 +32,22 @@ namespace server {
 
 typedef void (__stdcall *Callback)(int id_client, const char* name_client);
 
+
 class ServerEngine {
 private:
+	enum class State { INSTANCIED, INITIALIZED, STARTED, DISCONNECTED };
 	ConfigWrapper& config = ConfigWrapper::getInstance();
-	std::thread connection_thread;
-	std::atomic<bool> stop_flag { false };
 	std::map<int, ClientData*> clients;
-	SOCKET listen_socket = INVALID_SOCKET;
+	std::thread connection_thread;
 	int next_client_id = 0;
+	std::atomic<bool> stop { false };
+	SOCKET listen_socket = INVALID_SOCKET;
+	State state;
 	Callback notifyConnectionAccepted;
 protected:
 public:
 	ServerEngine(Callback notifyConnectionAccepted) {
+		state = State::INSTANCIED;
 		this->notifyConnectionAccepted = notifyConnectionAccepted;
 	}
 
@@ -58,9 +62,11 @@ public:
 
 	/**
 	 * startListening - setup the socket and start listening to incoming connections on the ip and port given during the initialization.
+	 * @param ip the ip to listen to.
+	 * @param port the port to listen to.
 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
 	 */
-	ResponsePacket startListening();
+	ResponsePacket startListening(const char* ip, const char* port);
 
 	/**
 	 * handleConnections - handle connections request and use helper function "connectionHandshake" at each connection request.

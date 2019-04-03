@@ -37,8 +37,8 @@ ADDAPI void initServer(server::ServerAPI* server, ResponseDLL& response_packet) 
 	responsePacketForDll(response, response_packet);
 }
 
-ADDAPI void startServer(server::ServerAPI* server, ResponseDLL& response_packet) {
-	ResponsePacket response = server->startServer();
+ADDAPI void startServer(server::ServerAPI* server, const char* ip, const char* port, ResponseDLL& response_packet) {
+	ResponsePacket response = server->startServer(ip, port);
 	responsePacketForDll(response, response_packet);
 }
 
