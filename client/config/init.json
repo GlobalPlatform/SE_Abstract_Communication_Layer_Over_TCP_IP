@@ -5,5 +5,5 @@
   	"log_path": "./logs/basics",
   	"log_level": "debug",
   	"default_timeout": 2000,
-  	"terminal": "PCSC"
+  	"terminal": "EXAMPLE_PCSC_CONTACT"
 }

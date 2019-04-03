@@ -41,9 +41,7 @@ private:
 	std::atomic<bool> initialized { false };
 	ITerminalLayer* terminal;
 	FlyweightRequests requests;
-	Callback notifyConnectionLost;
-	Callback notifyRequestReceived;
-	Callback notifyResponseSent;
+	Callback notifyConnectionLost, notifyRequestReceived, notifyResponseSent;
 public:
 	ClientEngine(Callback notifyConnectionLost, Callback notifyRequestReceived, Callback notifyResponseSent) {
 		this->notifyConnectionLost = notifyConnectionLost;

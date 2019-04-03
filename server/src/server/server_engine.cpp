@@ -148,30 +148,19 @@ ResponsePacket ServerEngine::handleConnections(SOCKET listen_socket) {
 	while (!stop_flag.load()) {
 		SOCKET client_socket = INVALID_SOCKET;
 
-	    timeval timeout = {1, 0}; // select will return each second
-		fd_set fds;
-		FD_ZERO(&fds);
-		FD_SET(listen_socket, &fds);
-		select(listen_socket, &fds, NULL, NULL, &timeout);
+		client_socket = accept(listen_socket, NULL, NULL);
+		if (client_socket == INVALID_SOCKET) {
+			LOG_DEBUG << "Failed to call accept() " << "[listen_socket:" << listen_socket << "][WSAError:" << WSAGetLastError() << "]";
+			ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_NETWORK, .err_server_description = "Connection with client failed" };
+			return response_packet;
+		}
 
-		if (FD_ISSET(listen_socket, &fds)) {
-			client_socket = accept(listen_socket, NULL, NULL);
-			if (client_socket == INVALID_SOCKET) {
-				LOG_DEBUG << "Failed to call accept() "
-				          << "[listen_socket:" << listen_socket << "][WSAError:" << WSAGetLastError() << "]";
-				ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_NETWORK, .err_server_description = "Connection with client failed" };
-				return response_packet;
-			}
-
-			std::future<ResponsePacket> fut = std::async(std::launch::async, &ServerEngine::connectionHandshake, this, client_socket);
-			// blocks until the timeout has elapsed or the result becomes available.
-			if (fut.wait_for(std::chrono::milliseconds(connection_timeout)) == std::future_status::timeout) {
-				// connection has timed out
-				LOG_DEBUG << "Connection thread with client has elapsed "
-				          << "[client_socket:" << client_socket << "][connection_timeout:" << connection_timeout << "]";
-			} else {
-				fut.get();
-			}
+		std::future<ResponsePacket> fut = std::async(std::launch::async, &ServerEngine::connectionHandshake, this, client_socket);
+		// blocks until the timeout has elapsed or the result becomes available.
+		if (fut.wait_for(std::chrono::milliseconds(connection_timeout)) == std::future_status::timeout) {
+			LOG_DEBUG << "Connection thread with client has elapsed " << "[client_socket:" << client_socket << "][connection_timeout:" << connection_timeout << "]";
+		} else {
+			fut.get();
 		}
 	}
 
@@ -291,6 +280,7 @@ ResponsePacket ServerEngine::listClients() {
 
 ResponsePacket ServerEngine::stopAllClients() {
 	stop_flag = true; // stop active threads
+	closesocket(listen_socket);
 	connection_thread.join();
 
 	for (const auto &p : clients) {
@@ -298,7 +288,6 @@ ResponsePacket ServerEngine::stopAllClients() {
 		delete(p.second);
 	}
 
-	closesocket(listen_socket);
 	WSACleanup();
 
 	ResponsePacket response_packet;

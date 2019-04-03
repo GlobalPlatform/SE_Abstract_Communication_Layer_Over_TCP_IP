@@ -15,10 +15,12 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
  limitations under the License.
 *********************************************************************************/
 
+#include <terminal/terminals/example_pcsc_contact.h>
 #include "client/dll_client_api_wrapper.h"
 #include "client/client_api.h"
+#include "terminal/factories/example_factory_pcsc_contact.h"
+#include "terminal/factories/example_factory_pcsc_contactless.h"
 #include "terminal/flyweight_terminal_factory.h"
-#include "terminal/terminals/terminal_pcsc.h"
 #include "client/requests/cold_reset.h"
 #include "client/requests/command.h"
 #include "client/requests/diag.h"
@@ -70,7 +72,8 @@ ADDAPI void disconnectClient(client::ClientAPI* client, ResponseDLL& response_pa
 ADDAPI void initClient(client::ClientAPI* client, ResponseDLL& response_packet_dll) {
 	// config available terminal factories
 	FlyweightTerminalFactory available_terminals;
-	available_terminals.addFactory("PCSC", new PCSCFactory());
+	available_terminals.addFactory("EXAMPLE_PCSC_CONTACT", new ExamplePCSCContactFactory());
+	available_terminals.addFactory("EXAMPLE_PCSC_CONTACTLESS", new ExamplePCSCContactlessFactory());
 	// config all requests the client can handle
 	FlyweightRequests available_requests;
 	available_requests.addRequest(REQ_COMMAND, new Command());

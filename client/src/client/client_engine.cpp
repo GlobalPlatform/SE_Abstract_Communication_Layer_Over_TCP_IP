@@ -150,20 +150,20 @@ ResponsePacket ClientEngine::connectClient(const char* reader, const char* ip, c
 		}
 
 		// connects to server
-		retval = connect(this->client_socket, ptr->ai_addr, (int) ptr->ai_addrlen);
+		retval = connect(client_socket, ptr->ai_addr, (int) ptr->ai_addrlen);
 		if (retval == SOCKET_ERROR) {
 			closesocket(this->client_socket);
 			client_socket = INVALID_SOCKET;
 			continue;
 		}
-		send(this->client_socket, name.c_str(), strlen(name.c_str()), 0);
+		send(client_socket, name.c_str(), strlen(name.c_str()), 0);
 		Sleep(1000);
 		break;
 	}
 
 	freeaddrinfo(result);
 
-	if (this->client_socket == INVALID_SOCKET) {
+	if (client_socket == INVALID_SOCKET) {
 		WSACleanup();
 		LOG_DEBUG << "Failed to connect to server "
 				  << "[ip:" << ip << "][port:" << port << "]";
@@ -171,7 +171,7 @@ ResponsePacket ClientEngine::connectClient(const char* reader, const char* ip, c
 		return response_packet;
 	}
 
-	this->connected = true;
+	connected = true;
 	LOG_INFO << "Client connected on IP " << ip << " port " << port;
 
 	std::thread thr(&ClientEngine::waitingRequests, this);

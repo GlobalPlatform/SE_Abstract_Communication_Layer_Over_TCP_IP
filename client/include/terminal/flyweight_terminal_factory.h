@@ -18,10 +18,8 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 #ifndef TERMINAL_FLYWEIGHT_FACTORY_H_
 #define TERMINAL_FLYWEIGHT_FACTORY_H_
 
-#include <map>
-
 #include "factories/factory.h"
-#include "factories/factory_pcsc.h"
+#include <map>
 
 namespace client {
 
