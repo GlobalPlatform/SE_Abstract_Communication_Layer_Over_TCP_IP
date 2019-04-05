@@ -75,7 +75,6 @@ ResponsePacket ServerEngine::initServer(std::string path) {
 		plog::init(plog::info, log_path.c_str(), log_max_size, log_max_files).addAppender(&consoleAppender);
 	}
 
-
 	// launch engine
 	LOG_INFO << "Server launched";
 	state_ = State::INITIALIZED;
