@@ -22,6 +22,11 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 #define DEFAULT_IP "127.0.0.1"
 #define DEFAULT_PORT "66611"
 #define DEFAULT_NAME "default_name"
+#define DEFAULT_LOG_DIRECTORY "./logs"
+#define DEFAULT_LOG_FILENAME "basics"
+#define DEFAULT_LOG_LEVEL "info"
+#define DEFAULT_LOG_MAX_SIZE "1000" // bytes
+#define DEFAULT_LOG_MAX_FILES "5"
 
 #include <fstream>
 #include <future>
@@ -47,6 +52,7 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 #include "terminal/terminals/terminal.h"
 #include "terminal/terminals/utils/type_converter.h"
 
+
 namespace client {
 
 ClientEngine::~ClientEngine() {
@@ -59,17 +65,19 @@ ResponsePacket ClientEngine::initClient(std::string path, FlyweightTerminalFacto
 	requests = available_requests;
 
 	// setup logger
-	std::string log_path = config.getValue("log_path");
-	std::string log_level = config.getValue("log_level", "info");
+	std::string log_directory = config.getValue("log_directory", DEFAULT_LOG_DIRECTORY);
+	std::string log_filename = config.getValue("log_filename", DEFAULT_LOG_FILENAME);
+	CreateDirectory(log_directory.c_str(), NULL);
+	std::string log_level = config.getValue("log_level", DEFAULT_LOG_LEVEL);
+	int log_max_size = std::stoi(config.getValue("log_max_size", DEFAULT_LOG_MAX_SIZE));
+	int log_max_files = std::stoi(config.getValue("log_max_files", DEFAULT_LOG_MAX_FILES));
 	static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
-
+	std::string log_path = log_directory + "/" + log_filename;
 	if (log_level.compare("debug") == 0) {;
-		plog::init(plog::debug, log_path.c_str(), 1000, 5).addAppender(&consoleAppender);
+		plog::init(plog::debug, log_path.c_str(), log_max_size, log_max_files).addAppender(&consoleAppender);
 	} else {
-		plog::init(plog::info, log_path.c_str(), 1000, 5).addAppender(&consoleAppender);
+		plog::init(plog::info, log_path.c_str(), log_max_size, log_max_files).addAppender(&consoleAppender);
 	}
-
-	LOG_INFO << "Client ready to be initialized";
 
 	// launch terminal
 	ResponsePacket response_packet;
@@ -78,7 +86,7 @@ ResponsePacket ClientEngine::initClient(std::string path, FlyweightTerminalFacto
 		LOG_INFO << "Client unable to be initialized";
 		return response_packet;
 	}
-	this->initialized = true;
+	initialized = true;
 
 	LOG_INFO << "Client initialized successfully";
 	return response_packet;
@@ -147,7 +155,7 @@ ResponsePacket ClientEngine::connectClient(const char* reader, const char* ip, c
 		// connects to server
 		retval = connect(client_socket, ptr->ai_addr, (int) ptr->ai_addrlen);
 		if (retval == SOCKET_ERROR) {
-			closesocket(this->client_socket);
+			closesocket(client_socket);
 			client_socket = INVALID_SOCKET;
 			continue;
 		}

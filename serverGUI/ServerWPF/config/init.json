@@ -2,8 +2,11 @@
 	"name": "client_1",
   	"port": "62111",
   	"ip": "127.0.0.1",
-  	"log_path": "./logs/basics",
+  	"log_directory": "./logs/",
+	"log_filename": "basics",
   	"log_level": "debug",
+	"log_max_size": "1000",
+	"log_max_files": "5",
   	"default_timeout": 2000,
-  	"terminal": "PCSC"
+  	"terminal": "EXAMPLE_PCSC_CONTACT"
 }

@@ -1,4 +1,4 @@
-/*
+ /*
  Copyright 2017 GlobalPlatform, Inc.
 
  Licensed under the GlobalPlatform/Apache License, Version 2.0 (the "License");
@@ -22,6 +22,11 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 #define DEFAULT_IP "127.0.0.1"
 #define DEFAULT_PORT "66611"
 #define DEFAULT_TIMEOUT "1000" // milliseconds
+#define DEFAULT_LOG_DIRECTORY "./logs"
+#define DEFAULT_LOG_FILENAME "basics"
+#define DEFAULT_LOG_LEVEL "info"
+#define DEFAULT_LOG_MAX_SIZE "1000" // bytes
+#define DEFAULT_LOG_MAX_FILES "5"
 
 #include <cstdlib>
 #include <fstream>
@@ -56,14 +61,20 @@ ResponsePacket ServerEngine::initServer(std::string path) {
 	config.init(path);
 
 	// setup logger
-	std::string logfile_path = config.getValue("log_path");
-	std::string log_level = config.getValue("log_level", "info");
+	std::string log_directory = config.getValue("log_directory", DEFAULT_LOG_DIRECTORY);
+	std::string log_filename = config.getValue("log_filename", DEFAULT_LOG_FILENAME);
+	CreateDirectory(log_directory.c_str(), NULL);
+	std::string log_level = config.getValue("log_level", DEFAULT_LOG_LEVEL);
+	int log_max_size = std::stoi(config.getValue("log_max_size", DEFAULT_LOG_MAX_SIZE));
+	int log_max_files = std::stoi(config.getValue("log_max_files", DEFAULT_LOG_MAX_FILES));
 	static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
-	if (log_level.compare("debug") == 0) {
-		plog::init(plog::debug, logfile_path.c_str()).addAppender(&consoleAppender);
+	std::string log_path = log_directory + "/" + log_filename;
+	if (log_level.compare("debug") == 0) {;
+		plog::init(plog::debug, log_path.c_str(), log_max_size, log_max_files).addAppender(&consoleAppender);
 	} else {
-		plog::init(plog::info, logfile_path.c_str()).addAppender(&consoleAppender);
+		plog::init(plog::info, log_path.c_str(), log_max_size, log_max_files).addAppender(&consoleAppender);
 	}
+
 
 	// launch engine
 	LOG_INFO << "Server launched";
