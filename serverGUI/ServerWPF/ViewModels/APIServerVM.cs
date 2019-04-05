@@ -7,19 +7,14 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Input;
 
 namespace ServerWPF.ViewModels
 {
-    class APIServerVM : INotifyPropertyChanged
+    class APIServerVM : ViewModelBase
     {
         private readonly int logsLimit = 100;
         private int logsPointer = 0;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
 
         private APIServerWrapper _server;
         private string _currentCommand = "";
@@ -29,12 +24,28 @@ namespace ServerWPF.ViewModels
             _connectionAccepted = new Callback(ConnectionAccepted);
             _server = new APIServerWrapper(_connectionAccepted);
             APIServerWrapper.InitServer();
+
+            _startServer = new DelegateCommand(OnStartServer, null);
+            _stopServer = new DelegateCommand(OnStopServer, null);
+            _sendCommandClient = new DelegateCommand(OnSendCommandClient, IsClientSelected);
+            _sendTypeA = new DelegateCommand(OnSendTypeA, IsClientSelected);
+            _sendTypeB = new DelegateCommand(OnSendTypeB, IsClientSelected);
+            _sendTypeF = new DelegateCommand(OnSendTypeF, IsClientSelected);
+            _echoClient = new DelegateCommand(OnEchoClient, IsClientSelected);
+            _diagnoseClient = new DelegateCommand(OnDiagnoseClient, IsClientSelected);
+            _restartTarget = new DelegateCommand(OnRestartTarget, IsClientSelected);
+            _stopClient = new DelegateCommand(OnStopClient, IsClientSelected);
+            _clearLogs = new DelegateCommand(OnClearLogs, IsClientSelected);
+            _coldReset = new DelegateCommand(OnColdReset, IsClientSelected);
+            _warmReset = new DelegateCommand(OnWarmReset, IsClientSelected);
+            _powerOFFField = new DelegateCommand(OnPowerOFFField, IsClientSelected);
+            _powerONField = new DelegateCommand(OnPowerONField, IsClientSelected);
         }
 
         public string CurrentCommand
         {
-            get { return _currentCommand; }
-            set { _currentCommand = value; }
+            get => _currentCommand;
+            set => SetProperty(ref _currentCommand, value);
         }
 
         #region callbacks
@@ -47,7 +58,6 @@ namespace ServerWPF.ViewModels
             App.Current.Dispatcher.Invoke((Action)delegate
             {
                 _clientsList.Add(new ClientModel(id, name));
-                OnPropertyChanged("ClientsList");
             });
         }
 
@@ -62,12 +72,13 @@ namespace ServerWPF.ViewModels
 
         public ObservableCollection<APIServerModel> ServerData
         {
-            get { return _serverData = _serverData ?? LoadServerData(); }
+            get => _serverData = _serverData ?? LoadServerData();
+            set => SetProperty(ref _serverData, value);
         }
 
         private ObservableCollection<APIServerModel> LoadServerData()
         {
-            _serverData = new ObservableCollection<APIServerModel>();
+            ObservableCollection<APIServerModel> data = new ObservableCollection<APIServerModel>();
             string ip;
             string port;
             using (StreamReader r = new StreamReader("config/init.json"))
@@ -77,285 +88,198 @@ namespace ServerWPF.ViewModels
                 ip = array["ip"];
                 port = array["port"];
             }
-            _serverData.Add(new APIServerModel("INITIALIZED", ip, port));
-            return _serverData;
+            data.Add(new APIServerModel("INITIALIZED", ip, port));
+            ServerData = data;
+            return ServerData;
         }
 
         public ObservableCollection<ClientModel> ClientsList
         {
-            get { return _clientsList = _clientsList ?? LoadClients(); }
-        }
-
-        private ObservableCollection<ClientModel> LoadClients()
-        {
-            _clientsList = new ObservableCollection<ClientModel>();
-            return _clientsList;
+            get => _clientsList = _clientsList ?? new ObservableCollection<ClientModel>();
+            set => SetProperty(ref _clientsList, value);
         }
 
         public ClientModel SelectedClient
         {
-            get { return _selectedClient; }
-            set { _selectedClient = value; }
+            get => _selectedClient;
+            set {
+                SetProperty(ref _selectedClient, value);
+                _sendCommandClient.InvokeCanExecuteChanged();
+                _sendTypeA.InvokeCanExecuteChanged();
+                _sendTypeB.InvokeCanExecuteChanged();
+                _sendTypeF.InvokeCanExecuteChanged();
+                _echoClient.InvokeCanExecuteChanged();
+                _diagnoseClient.InvokeCanExecuteChanged();
+                _restartTarget.InvokeCanExecuteChanged();
+                _stopClient.InvokeCanExecuteChanged();
+                _clearLogs.InvokeCanExecuteChanged();
+                _coldReset.InvokeCanExecuteChanged();
+                _warmReset.InvokeCanExecuteChanged();
+                _powerOFFField.InvokeCanExecuteChanged();
+                _powerONField.InvokeCanExecuteChanged();
+            }
         }
 
         public ObservableCollection<LogModel> LogsList
         {
-            get { return _logsList = _logsList ?? new ObservableCollection<LogModel>(); }
+            get => _logsList = _logsList ?? new ObservableCollection<LogModel>();
+            set => SetProperty(ref _logsList, value);
         }
 
         #endregion
 
         #region commands
+        private readonly DelegateCommand _startServer;
+        public ICommand StartServer => _startServer;
 
-        private DelegateCommand _startServer;
         private DelegateCommand _stopServer;
-        private DelegateCommand _sendCommandClient;
-        private DelegateCommand _sendTypeA;
-        private DelegateCommand _sendTypeB;
-        private DelegateCommand _sendTypeF;
-        private DelegateCommand _echoClient;
-        private DelegateCommand _diagnoseClient;
-        private DelegateCommand _restartTarget;
-        private DelegateCommand _stopClient;
-        private DelegateCommand _clearLogs;
-        private DelegateCommand _coldReset;
-        private DelegateCommand _warmReset;
-        private DelegateCommand _powerOFFField;
-        private DelegateCommand _powerONField;
+        public ICommand StopServer => _stopServer;
 
-        public DelegateCommand StartServer
-        {
-            get { return _startServer = _startServer ?? new DelegateCommand(DelStartServer); }
-        }
-        private void DelStartServer()
+        private DelegateCommand _sendCommandClient;
+        public ICommand SendCommandClient => _sendCommandClient;
+
+        private DelegateCommand _sendTypeA;
+        public ICommand SendTypeA => _sendTypeA;
+
+        private DelegateCommand _sendTypeB;
+        public ICommand SendTypeB => _sendTypeB;
+
+        private DelegateCommand _sendTypeF;
+        public ICommand SendTypeF => _sendTypeF;
+
+        private DelegateCommand _echoClient;
+        public ICommand EchoClient => _echoClient;
+
+        private DelegateCommand _diagnoseClient;
+        public ICommand DiagnoseClient => _diagnoseClient;
+
+        private DelegateCommand _restartTarget;
+        public ICommand RestartTarget => _restartTarget;
+
+        private DelegateCommand _stopClient;
+        public ICommand StopClient => _stopClient;
+
+        private DelegateCommand _clearLogs;
+        public ICommand ClearLogs => _clearLogs;
+
+        private DelegateCommand _coldReset;
+        public ICommand ColdReset => _coldReset;
+
+        private DelegateCommand _warmReset;
+        public ICommand WarmReset => _warmReset;
+
+        private DelegateCommand _powerOFFField;
+        public ICommand PowerOFFField => _powerOFFField;
+
+        private DelegateCommand _powerONField;
+        public ICommand PowerONField => _powerONField;
+
+        private void OnStartServer(object commandParameter)
         {
             APIServerModel old = _serverData.FirstOrDefault();
             ResponseDLL response = APIServerWrapper.StartServer(old.ServerIP, old.ServerPort);
             if (CheckError(response)) return;
-            _serverData = new ObservableCollection<APIServerModel>();
+            _serverData.Clear();
             _serverData.Add(new APIServerModel("STARTED", old.ServerIP, old.ServerPort));
-            OnPropertyChanged("ServerData");
         }
 
-        public DelegateCommand StopServer
-        {
-            get { return _stopServer = _stopServer ?? new DelegateCommand(DelStopServer); }
-        }
-        private void DelStopServer()
+        private void OnStopServer(object commandParameter)
         {
             ResponseDLL response = APIServerWrapper.StopServer();
             if (CheckError(response)) return;
             APIServerModel old = _serverData.FirstOrDefault();
-            _serverData = new ObservableCollection<APIServerModel>();
+            _serverData.Clear();
             _serverData.Add(new APIServerModel("INITIALIZED", old.ServerIP, old.ServerPort));
-            OnPropertyChanged("ServerData");
         }
 
-        public DelegateCommand SendCommandClient
+        private void OnSendCommandClient(object commandParameter)
         {
-            get { return _sendCommandClient = _sendCommandClient ?? new DelegateCommand(DelSendCommandClient); }
-        }
-        private void DelSendCommandClient()
-        {
-            if (_selectedClient == null)
-            {
-                MessageBox.Show("Erreur: A client must be selected");
-                return;
-            }
             ResponseDLL response = APIServerWrapper.SendCommand(_selectedClient.ClientID, _currentCommand);
-            AddNewLog(String.Format("COMMAND {0}", _currentCommand), response);
+            AppendLog(String.Format("COMMAND {0}", _currentCommand), response);
             string[] sws = response.response.Split(' ');
-            if (sws.Length == 2 && sws[0].Equals("61")) {
+            if (sws.Length == 2 && sws[0].Equals("61"))
+            {
                 response = APIServerWrapper.SendCommand(_selectedClient.ClientID, String.Format("00 C0 00 00 {0}", sws[1]));
-                AddNewLog(String.Format("COMMAND 00 C0 00 00 {0}", sws[1]), response);
+                AppendLog(String.Format("COMMAND 00 C0 00 00 {0}", sws[1]), response);
             }
         }
 
-        public DelegateCommand SendTypeA
+        private void OnSendTypeA(object commandParameter)
         {
-            get { return _sendTypeA = _sendTypeA ?? new DelegateCommand(DelSendTypeA); }
-        }
-        private void DelSendTypeA()
-        {
-            if (_selectedClient == null)
-            {
-                MessageBox.Show("Erreur: A client must be selected");
-                return;
-            }
             ResponseDLL response = APIServerWrapper.SendTypeA(_selectedClient.ClientID, _currentCommand);
-            AddNewLog(String.Format("COMMAND {0}", _currentCommand), response);
+            AppendLog(String.Format("COMMAND {0}", _currentCommand), response);
         }
 
-        public DelegateCommand SendTypeB
+        private void OnSendTypeB(object commandParameter)
         {
-            get { return _sendTypeB = _sendTypeB ?? new DelegateCommand(DelSendTypeA); }
-        }
-        private void DelSendTypeB()
-        {
-            if (_selectedClient == null)
-            {
-                MessageBox.Show("Erreur: A client must be selected");
-                return;
-            }
             ResponseDLL response = APIServerWrapper.SendTypeB(_selectedClient.ClientID, _currentCommand);
-            AddNewLog(String.Format("COMMAND {0}", _currentCommand), response);
+            AppendLog(String.Format("COMMAND {0}", _currentCommand), response);
         }
 
-        public DelegateCommand SendTypeF
+        private void OnSendTypeF(object commandParameter)
         {
-            get { return _sendTypeF = _sendTypeF ?? new DelegateCommand(DelSendTypeF); }
-        }
-        private void DelSendTypeF()
-        {
-            if (_selectedClient == null)
-            {
-                MessageBox.Show("Erreur: A client must be selected");
-                return;
-            }
             ResponseDLL response = APIServerWrapper.SendTypeF(_selectedClient.ClientID, _currentCommand);
-            AddNewLog(String.Format("COMMAND {0}", _currentCommand), response);
+            AppendLog(String.Format("COMMAND {0}", _currentCommand), response);
         }
 
-        public DelegateCommand EchoClient
+        private void OnEchoClient(object commandParameter)
         {
-            get { return _echoClient = _echoClient ?? new DelegateCommand(DelEchoClient); }
-        }
-        private void DelEchoClient()
-        {
-            if (_selectedClient == null)
-            {
-                MessageBox.Show("Erreur: A client must be selected");
-                return;
-            }
             ResponseDLL response = APIServerWrapper.EchoClient(_selectedClient.ClientID);
-            AddNewLog("IS ALIVE", response);
+            AppendLog("IS ALIVE", response);
         }
 
-        public DelegateCommand DiagnoseClient
+        private void OnDiagnoseClient(object commandParameter)
         {
-            get { return _diagnoseClient = _diagnoseClient ?? new DelegateCommand(DelDiagnoseClient); }
-        }
-        private void DelDiagnoseClient()
-        {
-            if (_selectedClient == null)
-            {
-                MessageBox.Show("Erreur: A client must be selected");
-                return;
-            }
             ResponseDLL response = APIServerWrapper.DiagClient(_selectedClient.ClientID);
-            AddNewLog("DIAG", response);
+            AppendLog("DIAG", response);
         }
 
-        public DelegateCommand ColdReset
+        private void OnColdReset(object commandParameter)
         {
-            get { return _coldReset = _coldReset ?? new DelegateCommand(DelColdReset); }
-
-        }
-        private void DelColdReset()
-        {
-            if (_selectedClient == null)
-            {
-                MessageBox.Show("Erreur: A client must be selected");
-                return;
-            }
             ResponseDLL response = APIServerWrapper.ColdReset(_selectedClient.ClientID);
-            AddNewLog("COLD RESET", response);
+            AppendLog("COLD RESET", response);
         }
 
-        public DelegateCommand WarmReset
+        private void OnWarmReset(object commandParameter)
         {
-            get { return _warmReset = _warmReset ?? new DelegateCommand(DelWarmReset); }
-
-        }
-        private void DelWarmReset()
-        {
-            if (_selectedClient == null)
-            {
-                MessageBox.Show("Erreur: A client must be selected");
-                return;
-            }
             ResponseDLL response = APIServerWrapper.WarmReset(_selectedClient.ClientID);
-            AddNewLog("WARM RESET", response);
+            AppendLog("WARM RESET", response);
         }
 
-        public DelegateCommand PowerOFFField
+        private void OnPowerOFFField(object commandParameter)
         {
-            get { return _powerOFFField = _powerOFFField ?? new DelegateCommand(DelPowerOFFField); }
-
-        }
-        private void DelPowerOFFField()
-        {
-            if (_selectedClient == null)
-            {
-                MessageBox.Show("Erreur: A client must be selected");
-                return;
-            }
             ResponseDLL response = APIServerWrapper.PowerOFFField(_selectedClient.ClientID);
-            AddNewLog("POWER OFF FIELD", response);
+            AppendLog("POWER OFF FIELD", response);
         }
 
-        public DelegateCommand PowerONField
+        private void OnPowerONField(object commandParameter)
         {
-            get { return _powerONField = _powerONField ?? new DelegateCommand(DelPowerONField); }
-
-        }
-        private void DelPowerONField()
-        {
-            if (_selectedClient == null)
-            {
-                MessageBox.Show("Erreur: A client must be selected");
-                return;
-            }
             ResponseDLL response = APIServerWrapper.PowerONField(_selectedClient.ClientID);
-            AddNewLog("POWER ON FIELD", response);
+            AppendLog("POWER ON FIELD", response);
         }
 
-        public DelegateCommand RestartTarget
+        private void OnRestartTarget(object commandParameter)
         {
-            get { return _restartTarget = _restartTarget ?? new DelegateCommand(DelRestartTarget); }
-        }
-        private void DelRestartTarget()
-        {
-            if (_selectedClient == null)
-            {
-                MessageBox.Show("Erreur: A client must be selected");
-                return;
-            }
             ResponseDLL response = APIServerWrapper.RestartTarget(_selectedClient.ClientID);
-            AddNewLog("RESTART", response);
+            AppendLog("RESTART", response);
         }
 
-        public DelegateCommand StopClient
+        private void OnStopClient(object commandParameter)
         {
-            get { return _stopClient = _stopClient ?? new DelegateCommand(DelStopClient); }
-        }
-        private void DelStopClient()
-        {
-            if (_selectedClient == null)
-            {
-                MessageBox.Show("Erreur: A client must be selected");
-                return;
-            }
             ResponseDLL response = APIServerWrapper.StopClient(_selectedClient.ClientID);
-            AddNewLog("STOP CLIENT", response);
+            AppendLog("STOP CLIENT", response);
             _clientsList.Remove(_selectedClient);
             _selectedClient = null;
-            OnPropertyChanged("ClientsList");
         }
 
-        public DelegateCommand ClearLogs
+        private void OnClearLogs(object commandParameter)
         {
-            get { return _clearLogs = _clearLogs ?? new DelegateCommand(DelClearLogs); }
-        }
-        private void DelClearLogs()
-        {
-            _logsList = new ObservableCollection<LogModel>();
-            OnPropertyChanged("LogsList");
+            _logsList.Clear();
         }
 
         #endregion
 
-        private void AddNewLog(string request, ResponseDLL response)
+        private void AppendLog(string request, ResponseDLL response)
         {
             if (_logsList.Count == logsLimit)
             {
@@ -366,6 +290,11 @@ namespace ServerWPF.ViewModels
                 _logsList.Add(new LogModel(_selectedClient.ClientID, _selectedClient.ClientName, request, response));
             }
             logsPointer = (logsPointer + 1) % logsLimit;
+        }
+
+        private bool IsClientSelected(object commandParameter)
+        {
+            return _selectedClient != null;
         }
 
         private bool CheckError(ResponseDLL packet)

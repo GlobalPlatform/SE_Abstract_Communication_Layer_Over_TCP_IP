@@ -372,7 +372,6 @@ ResponsePacket ExampleTerminalPCSCContactless::powerONField() {
 	LONG resp;
 	ResponsePacket response;
 
-
 	int tries = 0;
 	if ((resp = SCardConnect(hContext_, current_reader_.c_str(), SCARD_SHARE_DIRECT, 0, &hCard_, &dwActiveProtocol_)) != SCARD_S_SUCCESS) {
 		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {

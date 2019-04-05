@@ -6,19 +6,30 @@ namespace ServerWPF.ViewModels
 
     public class DelegateCommand : ICommand
     {
-        private Action _executeMethod;
-        public DelegateCommand(Action executeMethod)
+        private Action<object> _executeAction;
+        private Func<object, bool> _canExecuteAction;
+
+        public DelegateCommand(Action<object> executeAction, Func<object, bool> canExecuteAction)
         {
-            _executeMethod = executeMethod;
+            _executeAction = executeAction;
+            _canExecuteAction = canExecuteAction;
         }
+
         public bool CanExecute(object parameter)
         {
-            return true;
+            return _canExecuteAction?.Invoke(parameter) ?? true;
         }
+
         public event EventHandler CanExecuteChanged;
+
         public void Execute(object parameter)
         {
-            _executeMethod.Invoke();
+            _executeAction(parameter);
+        }
+
+        public void InvokeCanExecuteChanged()
+        {
+            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 }
