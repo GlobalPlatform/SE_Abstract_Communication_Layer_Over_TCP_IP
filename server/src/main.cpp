@@ -1,4 +1,4 @@
-/*
+/*********************************************************************************
  Copyright 2017 GlobalPlatform, Inc.
 
  Licensed under the GlobalPlatform/Apache License, Version 2.0 (the "License");
@@ -13,7 +13,7 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
  implied.
  See the License for the specific language governing permissions and
  limitations under the License.
-*/
+*********************************************************************************/
 
 #include "server/server_api.h"
 #include <iostream>
