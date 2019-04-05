@@ -30,19 +30,19 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 namespace client {
 
 ResponsePacket ClientAPI::initClient(std::string path, FlyweightTerminalFactory available_terminals, FlyweightRequests available_requests) {
-	return engine->initClient(path, available_terminals, available_requests);
+	return engine_->initClient(path, available_terminals, available_requests);
 }
 
 ResponsePacket ClientAPI::connectClient(const char* reader, const char* ip, const char* port) {
-	return engine->connectClient(reader, ip, port);
+	return engine_->connectClient(reader, ip, port);
 }
 
 ResponsePacket ClientAPI::disconnectClient() {
-	return engine->disconnectClient();
+	return engine_->disconnectClient();
 }
 
 ResponsePacket ClientAPI::loadAndListReaders() {
-	return engine->loadAndListReaders();
+	return engine_->loadAndListReaders();
 }
 
 } /* namespace client */

@@ -25,7 +25,7 @@ namespace client {
 
 class FlyweightTerminalFactory {
 private:
-	std::map<std::string, ITerminalFactory*> factories;
+	std::map<std::string, ITerminalFactory*> factories_;
 public:
 	FlyweightTerminalFactory() {};
 	virtual ~FlyweightTerminalFactory() {};

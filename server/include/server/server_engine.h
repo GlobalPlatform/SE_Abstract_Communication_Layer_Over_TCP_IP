@@ -36,19 +36,19 @@ typedef void (__stdcall *Callback)(int id_client, const char* name_client);
 class ServerEngine {
 private:
 	enum class State { INSTANCIED, INITIALIZED, STARTED, DISCONNECTED };
-	ConfigWrapper& config = ConfigWrapper::getInstance();
-	std::map<int, ClientData*> clients;
-	std::thread connection_thread;
-	int next_client_id = 0;
-	std::atomic<bool> stop { false };
-	SOCKET listen_socket = INVALID_SOCKET;
-	State state;
-	Callback notifyConnectionAccepted;
+	State state_;
+	ConfigWrapper& config_ = ConfigWrapper::getInstance();
+	std::map<int, ClientData*> clients_;
+	std::thread connection_thread_;
+	int next_client_id_ = 0;
+	std::atomic<bool> stop_ { false };
+	SOCKET listen_socket_ = INVALID_SOCKET;
+	Callback notifyConnectionAccepted_;
 protected:
 public:
 	ServerEngine(Callback notifyConnectionAccepted) {
-		state = State::INSTANCIED;
-		this->notifyConnectionAccepted = notifyConnectionAccepted;
+		state_ = State::INSTANCIED;
+		this->notifyConnectionAccepted_ = notifyConnectionAccepted;
 	}
 
 	virtual ~ServerEngine() {}

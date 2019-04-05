@@ -29,15 +29,15 @@ typedef void (__stdcall *Callback)(const char* text);
 
 class ClientAPI {
 private:
-	ClientEngine* engine;
+	ClientEngine* engine_;
 protected:
 public:
 	ClientAPI(Callback notifyConnectionLost, Callback notifyRequestReceived, Callback notifyResponseSent) {
-		this->engine = new ClientEngine(notifyConnectionLost, notifyRequestReceived, notifyResponseSent);
+		this->engine_ = new ClientEngine(notifyConnectionLost, notifyRequestReceived, notifyResponseSent);
 	}
 
 	virtual ~ClientAPI() {
-		delete engine;
+		delete engine_;
 	}
 
 	/**

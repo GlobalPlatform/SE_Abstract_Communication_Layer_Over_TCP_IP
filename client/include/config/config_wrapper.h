@@ -53,7 +53,7 @@ public:
 	std::string getValue(std::string key, std::string default_value);
 private:
 	ConfigWrapper() {}
-	nlohmann::json config;
+	nlohmann::json config_;
 public:
 	ConfigWrapper(ConfigWrapper const&) = delete;
 	void operator=(ConfigWrapper const&) = delete;

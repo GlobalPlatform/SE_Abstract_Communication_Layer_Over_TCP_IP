@@ -20,33 +20,33 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 namespace server {
 
 ClientData::ClientData(SOCKET socket, int id, std::string name) {
-	this->socket = socket;
-	this->id = id;
-	this->name = name;
+	this->socket_ = socket;
+	this->id_ = id;
+	this->name_ = name;
 }
 
 int ClientData::getId() {
-	return id;
+	return id_;
 }
 
 std::string ClientData::getName() {
-	return name;
+	return name_;
 }
 
 SOCKET ClientData::getSocket() {
-	return socket;
+	return socket_;
 }
 
 void ClientData::setId(int id) {
-	this->id = id;
+	this->id_ = id;
 }
 
 void ClientData::setName(std::string name) {
-	this->name = name;
+	this->name_ = name;
 }
 
 void ClientData::setSocket(SOCKET socket) {
-	this->socket = socket;
+	this->socket_ = socket;
 }
 
 } /* namespace server */

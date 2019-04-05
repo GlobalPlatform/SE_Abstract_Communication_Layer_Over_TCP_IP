@@ -23,11 +23,11 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 namespace client {
 
 void FlyweightTerminalFactory::addFactory(std::string key, ITerminalFactory* factory) {
-	factories.insert(std::make_pair(key, factory));
+	factories_.insert(std::make_pair(key, factory));
 }
 
 ITerminalFactory* FlyweightTerminalFactory::getFactory(std::string key) {
-	return factories.at(key);
+	return factories_.at(key);
 }
 
 } /* namespace terminal */

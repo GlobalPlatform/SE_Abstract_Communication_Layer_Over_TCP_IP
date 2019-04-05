@@ -18,6 +18,8 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 #ifndef CLIENT_DATA_H_
 #define CLIENT_DATA_H_
 
+#define DEFAULT_NAME "no name"
+
 #include <string>
 #include <winsock2.h>
 
@@ -25,9 +27,9 @@ namespace server {
 
 class ClientData {
 private:
-	int id;
-	SOCKET socket = INVALID_SOCKET;
-	std::string name = "no name";
+	int id_;
+	SOCKET socket_ = INVALID_SOCKET;
+	std::string name_ = DEFAULT_NAME;
 protected:
 public:
 	ClientData() {}

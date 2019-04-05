@@ -34,19 +34,19 @@ typedef void (__stdcall *Callback)(const char* text);
 
 class ClientEngine {
 private:
-	ConfigWrapper& config = ConfigWrapper::getInstance();
-	SOCKET client_socket;
-	std::thread requests_thread;
-	std::atomic<bool> connected { false };
-	std::atomic<bool> initialized { false };
-	ITerminalLayer* terminal;
-	FlyweightRequests requests;
-	Callback notifyConnectionLost, notifyRequestReceived, notifyResponseSent;
+	ConfigWrapper& config_ = ConfigWrapper::getInstance();
+	SOCKET client_socket_;
+	std::thread requests_thread_;
+	std::atomic<bool> connected_ { false };
+	std::atomic<bool> initialized_ { false };
+	ITerminalLayer* terminal_;
+	FlyweightRequests requests_;
+	Callback notifyConnectionLost_, notifyRequestReceived_, notifyResponseSent_;
 public:
 	ClientEngine(Callback notifyConnectionLost, Callback notifyRequestReceived, Callback notifyResponseSent) {
-		this->notifyConnectionLost = notifyConnectionLost;
-		this->notifyRequestReceived = notifyRequestReceived;
-		this->notifyResponseSent = notifyResponseSent;
+		this->notifyConnectionLost_ = notifyConnectionLost;
+		this->notifyRequestReceived_ = notifyRequestReceived;
+		this->notifyResponseSent_ = notifyResponseSent;
 	}
 	virtual ~ClientEngine();
 

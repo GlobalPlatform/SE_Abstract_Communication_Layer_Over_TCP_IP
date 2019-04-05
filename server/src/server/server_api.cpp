@@ -32,48 +32,48 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 namespace server {
 
 ResponsePacket ServerAPI::initServer(std::string path) {
-	ResponsePacket resp = engine->initServer(path);
+	ResponsePacket resp = engine_->initServer(path);
 	return resp;
 }
 
 ResponsePacket ServerAPI::startServer(const char* ip, const char* port) {
-	return engine->startListening(ip, port);
+	return engine_->startListening(ip, port);
 }
 
 ResponsePacket ServerAPI::listClients() {
-	return engine->listClients();
+	return engine_->listClients();
 }
 
 ResponsePacket ServerAPI::sendCommand(int id_client, std::string command) {
-	return engine->handleRequest(id_client, REQ_COMMAND, command);
+	return engine_->handleRequest(id_client, REQ_COMMAND, command);
 }
 
 ResponsePacket ServerAPI::sendTypeA(int id_client, std::string command) {
-	return engine->handleRequest(id_client, REQ_COMMAND_A, command);
+	return engine_->handleRequest(id_client, REQ_COMMAND_A, command);
 }
 
 ResponsePacket ServerAPI::sendTypeB(int id_client, std::string command) {
-	return engine->handleRequest(id_client, REQ_COMMAND_B, command);
+	return engine_->handleRequest(id_client, REQ_COMMAND_B, command);
 }
 
 ResponsePacket ServerAPI::sendTypeF(int id_client, std::string command) {
-	return engine->handleRequest(id_client, REQ_COMMAND_F, command);
+	return engine_->handleRequest(id_client, REQ_COMMAND_F, command);
 }
 
 ResponsePacket ServerAPI::restartTarget(int id_client) {
-	return engine->handleRequest(id_client, REQ_RESTART);
+	return engine_->handleRequest(id_client, REQ_RESTART);
 }
 
 ResponsePacket ServerAPI::echoClient(int id_client) {
-	return engine->handleRequest(id_client, REQ_ECHO);
+	return engine_->handleRequest(id_client, REQ_ECHO);
 }
 
 ResponsePacket ServerAPI::diagClient(int id_client) {
-	return engine->handleRequest(id_client, REQ_DIAG);
+	return engine_->handleRequest(id_client, REQ_DIAG);
 }
 
 ResponsePacket ServerAPI::stopClient(int id_client) {
-	ResponsePacket response = engine->handleRequest(id_client, REQ_DISCONNECT);
+	ResponsePacket response = engine_->handleRequest(id_client, REQ_DISCONNECT);
 	if (response.err_server_code == ERR_NETWORK) {
 		ResponsePacket okResponse;
 		return okResponse;
@@ -82,23 +82,23 @@ ResponsePacket ServerAPI::stopClient(int id_client) {
 }
 
 ResponsePacket ServerAPI::coldReset(int id_client) {
-	return engine->handleRequest(id_client, REQ_COLD_RESET);
+	return engine_->handleRequest(id_client, REQ_COLD_RESET);
 }
 
 ResponsePacket ServerAPI::warmReset(int id_client) {
-	return engine->handleRequest(id_client, REQ_WARM_RESET);
+	return engine_->handleRequest(id_client, REQ_WARM_RESET);
 }
 
 ResponsePacket ServerAPI::powerOFFField(int id_client) {
-	return engine->handleRequest(id_client, REQ_POWER_OFF_FIELD);
+	return engine_->handleRequest(id_client, REQ_POWER_OFF_FIELD);
 }
 
 ResponsePacket ServerAPI::powerONField(int id_client) {
-	return engine->handleRequest(id_client, REQ_POWER_ON_FIELD);
+	return engine_->handleRequest(id_client, REQ_POWER_ON_FIELD);
 }
 
 ResponsePacket ServerAPI::stopServer() {
-	return engine->stopAllClients();
+	return engine_->stopAllClients();
 }
 
 }  // namespace server

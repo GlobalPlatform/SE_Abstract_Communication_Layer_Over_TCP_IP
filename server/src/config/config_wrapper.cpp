@@ -25,15 +25,15 @@ namespace server {
 
 void ConfigWrapper::init(std::string path) {
 	std::ifstream i(path);
-	i >> config;
+	i >> config_;
 }
 
 std::string ConfigWrapper::getValue(std::string key) {
-	return config[key];
+	return config_[key];
 }
 
 std::string ConfigWrapper::getValue(std::string key, std::string default_value) {
-	return config[key].is_null() ? default_value : config[key].get<std::string>();
+	return config_[key].is_null() ? default_value : config_[key].get<std::string>();
 }
 
 } /* namespace client */

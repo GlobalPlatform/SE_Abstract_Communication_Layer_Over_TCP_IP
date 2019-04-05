@@ -29,21 +29,21 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 namespace client {
 
 ExampleTerminalPCSCContact::~ExampleTerminalPCSCContact() {
-	if (SCardFreeMemory(hContext, mszReaders) != SCARD_S_SUCCESS) {
-		LOG_DEBUG << "Failed to call SCardFreeMemory() " << "[card:" << hCard << "][mszReaders:" << mszReaders << "]";
+	if (SCardFreeMemory(hContext_, mszReaders_) != SCARD_S_SUCCESS) {
+		LOG_DEBUG << "Failed to call SCardFreeMemory() " << "[card:" << hCard << "][mszReaders:" << mszReaders_ << "]";
 	}
 
-	if (SCardReleaseContext(hContext) != SCARD_S_SUCCESS) {
-		LOG_DEBUG << "Failed to call SCardReleaseContext() " << "[card:" << hCard << "][hContext:" << hContext << "]";
+	if (SCardReleaseContext(hContext_) != SCARD_S_SUCCESS) {
+		LOG_DEBUG << "Failed to call SCardReleaseContext() " << "[card:" << hCard << "][hContext:" << hContext_ << "]";
 	}
 }
 
 ResponsePacket ExampleTerminalPCSCContact::init() {
 	ResponsePacket response;
 	LONG resp;
-	if ((resp = SCardEstablishContext(SCARD_SCOPE_SYSTEM, NULL, NULL, &hContext)) != SCARD_S_SUCCESS) {
+	if ((resp = SCardEstablishContext(SCARD_SCOPE_SYSTEM, NULL, NULL, &hContext_)) != SCARD_S_SUCCESS) {
 		LOG_DEBUG << "Failed to call SCardEstablishContext() [error:" << errorToString(resp) << "]"
-				  << "[dwScope:" << SCARD_SCOPE_SYSTEM << "][pvReserved1:" << NULL << "][pvReserved1:" << NULL << "][hContext:" << hContext << "]";
+				  << "[dwScope:" << SCARD_SCOPE_SYSTEM << "][pvReserved1:" << NULL << "][pvReserved1:" << NULL << "][hContext:" << hContext_ << "]";
 		return handleErrorResponse("Failed to establish context", resp);
 	}
 
@@ -55,16 +55,16 @@ ResponsePacket ExampleTerminalPCSCContact::loadAndListReaders() {
 	ResponsePacket response;
 	LONG resp;
 
-	if (SCardFreeMemory(hContext, mszReaders) != SCARD_S_SUCCESS) {
-		LOG_DEBUG << "Failed to call SCardFreeMemory() " << "[card:" << hCard << "][mszReaders:" << mszReaders << "]";
+	if (SCardFreeMemory(hContext_, mszReaders_) != SCARD_S_SUCCESS) {
+		LOG_DEBUG << "Failed to call SCardFreeMemory() " << "[card:" << hCard << "][mszReaders:" << mszReaders_ << "]";
 	}
 
-	dwReaders = SCARD_AUTOALLOCATE;
+	dwReaders_ = SCARD_AUTOALLOCATE;
 	int tries = 0;
-	if ((resp = SCardListReaders(hContext, NULL, (LPTSTR) &mszReaders, &dwReaders)) != SCARD_S_SUCCESS) {
+	if ((resp = SCardListReaders(hContext_, NULL, (LPTSTR) &mszReaders_, &dwReaders_)) != SCARD_S_SUCCESS) {
 		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
 			resp = handleRetry(resp);
-			resp = SCardListReaders(hContext, NULL, (LPTSTR) &mszReaders, &dwReaders);
+			resp = SCardListReaders(hContext_, NULL, (LPTSTR) &mszReaders_, &dwReaders_);
 			if (resp != SCARD_S_SUCCESS) {
 				tries++;
 			}
@@ -74,7 +74,7 @@ ResponsePacket ExampleTerminalPCSCContact::loadAndListReaders() {
 		}
 	}
 
-	LPTSTR pReader = mszReaders;
+	LPTSTR pReader = mszReaders_;
 	std::string list_readers;
 	int i = 0;
 	while ('\0' != *pReader) {
@@ -95,28 +95,28 @@ ResponsePacket ExampleTerminalPCSCContact::connect(const char* reader) {
 
 	LOG_INFO << "Trying to connect: " << reader;
 	int tries = 0;
-	if ((resp = SCardConnect(hContext, reader, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, &hCard, &dwActiveProtocol)) != SCARD_S_SUCCESS) {
+	if ((resp = SCardConnect(hContext_, reader, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, &hCard, &dwActiveProtocol_)) != SCARD_S_SUCCESS) {
 		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
 			resp = handleRetry(resp);
-			resp = SCardConnect(hContext, reader, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, &hCard, &dwActiveProtocol);
+			resp = SCardConnect(hContext_, reader, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, &hCard, &dwActiveProtocol_);
 			tries++;
 		}
 		if (resp != SCARD_S_SUCCESS) {
 			LOG_DEBUG << "Failed to call SCardConnect() " << "[error:" << errorToString(resp) << "]"
-					  << "[hContext:" << hContext << "][szReader:" << reader << "][dwShareMode:" << SCARD_SHARE_SHARED << "]"
-					  << "[dwPreferredProtocols:" << 0 << "][hCard:" << hCard << "][dwActiveProtocol:" << dwActiveProtocol << "]";
+					  << "[hContext:" << hContext_ << "][szReader:" << reader << "][dwShareMode:" << SCARD_SHARE_SHARED << "]"
+					  << "[dwPreferredProtocols:" << 0 << "][hCard:" << hCard << "][dwActiveProtocol:" << dwActiveProtocol_ << "]";
 			return handleErrorResponse("Failed to connect", resp);
 		}
 	}
 
-	current_reader = std::string(reader);
-	switch (dwActiveProtocol) {
+	current_reader_ = std::string(reader);
+	switch (dwActiveProtocol_) {
 	case SCARD_PROTOCOL_T0:
-		pioSendPci = *SCARD_PCI_T0;
+		pioSendPci_ = *SCARD_PCI_T0;
 		break;
 
 	case SCARD_PROTOCOL_T1:
-		pioSendPci = *SCARD_PCI_T1;
+		pioSendPci_ = *SCARD_PCI_T1;
 		break;
 	}
 
@@ -127,23 +127,23 @@ ResponsePacket ExampleTerminalPCSCContact::connect(const char* reader) {
 ResponsePacket ExampleTerminalPCSCContact::sendCommand(unsigned char command[], DWORD command_length) {
 	LONG resp = SCARD_SWALLOWED;
 	std::string strCommand = utils::unsignedCharToString(command, command_length);
-	dwRecvLength = sizeof(pbRecvBuffer);
+	dwRecvLength_ = sizeof(pbRecvBuffer_);
 
 	int tries = 0;
-	if ((resp = SCardTransmit(hCard, &pioSendPci, command, command_length, NULL, pbRecvBuffer, &dwRecvLength)) != SCARD_S_SUCCESS) {
+	if ((resp = SCardTransmit(hCard, &pioSendPci_, command, command_length, NULL, pbRecvBuffer_, &dwRecvLength_)) != SCARD_S_SUCCESS) {
 		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
 			resp = handleRetry(resp);
-			resp = SCardTransmit(hCard, &pioSendPci, command, command_length, NULL, pbRecvBuffer, &dwRecvLength);
+			resp = SCardTransmit(hCard, &pioSendPci_, command, command_length, NULL, pbRecvBuffer_, &dwRecvLength_);
 			tries++;
 		}
 		if (resp != SCARD_S_SUCCESS) {
 			LOG_DEBUG << "Failed to call SCardTransmit() [error:" << errorToString(resp) << "]" << "[card:" << hCard << "][pbSendBuffer:" << command << "][cbSendLength:" << command_length << "]"
-					  << "[recvbuffer:" << pbRecvBuffer << "][recvlength:" << dwRecvLength << "]";
+					  << "[recvbuffer:" << pbRecvBuffer_ << "][recvlength:" << dwRecvLength_ << "]";
 			return handleErrorResponse("Failed to send command", resp);
 		}
 	}
 
-	std::string responseAPDU = utils::unsignedCharToString(pbRecvBuffer, dwRecvLength);
+	std::string responseAPDU = utils::unsignedCharToString(pbRecvBuffer_, dwRecvLength_);
 	ResponsePacket response = { .response = responseAPDU };
 	return response;
 }
@@ -275,18 +275,18 @@ ResponsePacket ExampleTerminalPCSCContact::restart() {
 		}
 		if (resp != SCARD_S_SUCCESS) {
 			LOG_DEBUG << "Failed to call SCardReconnect() "
-					  << "[hContext:" << hContext << "][[dwShareMode:" << SCARD_SHARE_SHARED << "]"
-					  << "[dwActiveProtocol:" << dwActiveProtocol << "]";
+					  << "[hContext:" << hContext_ << "][[dwShareMode:" << SCARD_SHARE_SHARED << "]"
+					  << "[dwActiveProtocol:" << dwActiveProtocol_ << "]";
 			return handleErrorResponse("Failed to reconnect", resp);
 		}
 	}
 
-	switch (dwActiveProtocol) {
+	switch (dwActiveProtocol_) {
 	case SCARD_PROTOCOL_T0:
-		pioSendPci = *SCARD_PCI_T0;
+		pioSendPci_ = *SCARD_PCI_T0;
 		break;
 	case SCARD_PROTOCOL_T1:
-		pioSendPci = *SCARD_PCI_T1;
+		pioSendPci_ = *SCARD_PCI_T1;
 		break;
 	}
 
@@ -307,18 +307,18 @@ ResponsePacket ExampleTerminalPCSCContact::coldReset() {
 		}
 		if (resp != SCARD_S_SUCCESS) {
 			LOG_DEBUG << "Failed to call SCardReconnect() "
-					  << "[hContext:" << hContext << "][[dwShareMode:" << SCARD_SHARE_SHARED << "]"
-					  << "[dwActiveProtocol:" << dwActiveProtocol << "]";
+					  << "[hContext:" << hContext_ << "][[dwShareMode:" << SCARD_SHARE_SHARED << "]"
+					  << "[dwActiveProtocol:" << dwActiveProtocol_ << "]";
 			return handleErrorResponse("Failed to reconnect", resp);
 		}
 	}
 
-	switch (dwActiveProtocol) {
+	switch (dwActiveProtocol_) {
 	case SCARD_PROTOCOL_T0:
-		pioSendPci = *SCARD_PCI_T0;
+		pioSendPci_ = *SCARD_PCI_T0;
 		break;
 	case SCARD_PROTOCOL_T1:
-		pioSendPci = *SCARD_PCI_T1;
+		pioSendPci_ = *SCARD_PCI_T1;
 		break;
 	}
 
@@ -343,18 +343,18 @@ ResponsePacket ExampleTerminalPCSCContact::warmReset() {
 		}
 		if (resp != SCARD_S_SUCCESS) {
 			LOG_DEBUG << "Failed to call SCardReconnect() "
-					  << "[hContext:" << hContext << "][[dwShareMode:" << SCARD_SHARE_SHARED << "]"
-					  << "[dwActiveProtocol:" << dwActiveProtocol << "]";
+					  << "[hContext:" << hContext_ << "][[dwShareMode:" << SCARD_SHARE_SHARED << "]"
+					  << "[dwActiveProtocol:" << dwActiveProtocol_ << "]";
 			return handleErrorResponse("Failed to reconnect", resp);
 		}
 	}
 
-	switch (dwActiveProtocol) {
+	switch (dwActiveProtocol_) {
 	case SCARD_PROTOCOL_T0:
-		pioSendPci = *SCARD_PCI_T0;
+		pioSendPci_ = *SCARD_PCI_T0;
 		break;
 	case SCARD_PROTOCOL_T1:
-		pioSendPci = *SCARD_PCI_T1;
+		pioSendPci_ = *SCARD_PCI_T1;
 		break;
 	}
 
@@ -372,16 +372,16 @@ ResponsePacket ExampleTerminalPCSCContact::retrieveAtr(BYTE* bAttr, DWORD* cByte
 	DWORD dwState;
 
 	int tries = 0;
-	if ((resp = SCardStatus(hCard, mszReaders, &cch, &dwState, &dwActiveProtocol, (LPBYTE) bAttr, cByte)) != SCARD_S_SUCCESS) {
+	if ((resp = SCardStatus(hCard, mszReaders_, &cch, &dwState, &dwActiveProtocol_, (LPBYTE) bAttr, cByte)) != SCARD_S_SUCCESS) {
 		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
 			resp = handleRetry(resp);
-			resp = SCardStatus(hCard, mszReaders, &cch, &dwState, &dwActiveProtocol, (LPBYTE) bAttr, cByte);
+			resp = SCardStatus(hCard, mszReaders_, &cch, &dwState, &dwActiveProtocol_, (LPBYTE) bAttr, cByte);
 			tries++;
 		}
 		if (resp != SCARD_S_SUCCESS) {
 			LOG_DEBUG << "Failed to call SCardStatus() "
-					  << "[hContext:" << hContext << "][[mszReaders:" << mszReaders << "]"
-					  << "[dwActiveProtocol:" << dwActiveProtocol << "]";
+					  << "[hContext:" << hContext_ << "][[mszReaders:" << mszReaders_ << "]"
+					  << "[dwActiveProtocol:" << dwActiveProtocol_ << "]";
 			return handleErrorResponse("Failed to retrieve atr", resp);
 		}
 	}
@@ -543,8 +543,8 @@ ResponsePacket ExampleTerminalPCSCContact::handleErrorResponse(std::string conte
 }
 
 LONG ExampleTerminalPCSCContact::handleRetry(LONG error) {
-	LONG response = SCardEstablishContext(SCARD_SCOPE_SYSTEM, NULL, NULL, &hContext);
-	response = SCardConnect(hContext, current_reader.c_str(), SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, &hCard, &dwActiveProtocol);
+	LONG response = SCardEstablishContext(SCARD_SCOPE_SYSTEM, NULL, NULL, &hContext_);
+	response = SCardConnect(hContext_, current_reader_.c_str(), SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, &hCard, &dwActiveProtocol_);
 	return response;
 }
 

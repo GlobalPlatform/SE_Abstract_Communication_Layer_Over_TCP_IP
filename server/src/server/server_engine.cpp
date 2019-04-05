@@ -53,20 +53,20 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 namespace server {
 
 ResponsePacket ServerEngine::initServer(std::string path) {
-	if (state != State::INSTANCIED) {
+	if (state_ != State::INSTANCIED) {
 		ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_INVALID_STATE, .err_server_description = "Server already initialized" };
 		return response_packet;
 	}
 
-	config.init(path);
+	config_.init(path);
 
 	// setup logger
-	std::string log_directory = config.getValue("log_directory", DEFAULT_LOG_DIRECTORY);
-	std::string log_filename = config.getValue("log_filename", DEFAULT_LOG_FILENAME);
+	std::string log_directory = config_.getValue("log_directory", DEFAULT_LOG_DIRECTORY);
+	std::string log_filename = config_.getValue("log_filename", DEFAULT_LOG_FILENAME);
 	CreateDirectory(log_directory.c_str(), NULL);
-	std::string log_level = config.getValue("log_level", DEFAULT_LOG_LEVEL);
-	int log_max_size = std::stoi(config.getValue("log_max_size", DEFAULT_LOG_MAX_SIZE));
-	int log_max_files = std::stoi(config.getValue("log_max_files", DEFAULT_LOG_MAX_FILES));
+	std::string log_level = config_.getValue("log_level", DEFAULT_LOG_LEVEL);
+	int log_max_size = std::stoi(config_.getValue("log_max_size", DEFAULT_LOG_MAX_SIZE));
+	int log_max_files = std::stoi(config_.getValue("log_max_files", DEFAULT_LOG_MAX_FILES));
 	static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
 	std::string log_path = log_directory + "/" + log_filename;
 	if (log_level.compare("debug") == 0) {;
@@ -78,13 +78,13 @@ ResponsePacket ServerEngine::initServer(std::string path) {
 
 	// launch engine
 	LOG_INFO << "Server launched";
-	state = State::INITIALIZED;
+	state_ = State::INITIALIZED;
 	ResponsePacket response_packet;
 	return response_packet;
 }
 
 ResponsePacket ServerEngine::startListening(const char* ip, const char* port) {
-	if (state != State::INITIALIZED && state != State::DISCONNECTED) {
+	if (state_ != State::INITIALIZED && state_ != State::DISCONNECTED) {
 		ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_INVALID_STATE, .err_server_description = "Server invalid state" };
 		return response_packet;
 	}
@@ -120,8 +120,8 @@ ResponsePacket ServerEngine::startListening(const char* ip, const char* port) {
 	}
 
 	// Create a SOCKET for connecting to server
-	listen_socket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
-	if (listen_socket == INVALID_SOCKET) {
+	listen_socket_ = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
+	if (listen_socket_ == INVALID_SOCKET) {
 		LOG_DEBUG << "Failed to call socket() "
 		          << "[ip:" << ip << "][port:" << port << "][WSAError:" << WSAGetLastError() << "]";
 		freeaddrinfo(result);
@@ -131,12 +131,12 @@ ResponsePacket ServerEngine::startListening(const char* ip, const char* port) {
 	}
 
 	// Setup the TCP listening socket
-	retval = bind(listen_socket, result->ai_addr, (int) result->ai_addrlen);
+	retval = bind(listen_socket_, result->ai_addr, (int) result->ai_addrlen);
 	if (retval == SOCKET_ERROR) {
 		LOG_DEBUG << "Failed to call bind() "
 		          << "[ip:" << ip << "][port:" << port << "][WSAError:" << WSAGetLastError() << "]";
 		freeaddrinfo(result);
-		closesocket(listen_socket);
+		closesocket(listen_socket_);
 		WSACleanup();
 		ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_NETWORK, .err_server_description = "Bind failed" };
 		return response_packet;
@@ -144,19 +144,19 @@ ResponsePacket ServerEngine::startListening(const char* ip, const char* port) {
 
 	freeaddrinfo(result);
 
-	retval = listen(listen_socket, SOMAXCONN);
+	retval = listen(listen_socket_, SOMAXCONN);
 	if (retval == SOCKET_ERROR) {
 		LOG_DEBUG << "Failed to call listen() "
 		          << "[ip:" << ip << "][port:" << port << "][WSAError:" << WSAGetLastError() << "]";
-		closesocket(listen_socket);
+		closesocket(listen_socket_);
 		WSACleanup();
 		ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_NETWORK, .err_server_description = "Listen failed" };
 		return response_packet;
 	}
 
-	state = State::STARTED;
-	std::thread thr(&ServerEngine::handleConnections, this, listen_socket);
-	std::swap(thr, connection_thread);
+	state_ = State::STARTED;
+	std::thread thr(&ServerEngine::handleConnections, this, listen_socket_);
+	std::swap(thr, connection_thread_);
 
 	ResponsePacket response_packet;
 	return response_packet;
@@ -164,9 +164,9 @@ ResponsePacket ServerEngine::startListening(const char* ip, const char* port) {
 
 ResponsePacket ServerEngine::handleConnections(SOCKET listen_socket) {
 	LOG_ERROR << "??? 1";
-	int connection_timeout = std::atoi(config.getValue("timeout", DEFAULT_TIMEOUT).c_str());
-	LOG_ERROR << "??? 55" << stop.load();
-	while (!stop.load()) {
+	int connection_timeout = std::atoi(config_.getValue("timeout", DEFAULT_TIMEOUT).c_str());
+	LOG_ERROR << "??? 55" << stop_.load();
+	while (!stop_.load()) {
 		LOG_ERROR << "??? 2";
 		SOCKET client_socket = INVALID_SOCKET;
 
@@ -191,7 +191,7 @@ ResponsePacket ServerEngine::handleConnections(SOCKET listen_socket) {
 }
 
 ResponsePacket ServerEngine::connectionHandshake(SOCKET client_socket) {
-	std::string timeout = config.getValue("timeout", DEFAULT_TIMEOUT);
+	std::string timeout = config_.getValue("timeout", DEFAULT_TIMEOUT);
 
 	char recvbuf[DEFAULT_BUFLEN];
 	setsockopt(client_socket, SOL_SOCKET, SO_RCVTIMEO, (char*) &timeout, sizeof(timeout));
@@ -208,10 +208,10 @@ ResponsePacket ServerEngine::connectionHandshake(SOCKET client_socket) {
 
 	if (retval > 0) {
 		recvbuf[retval] = '\0';
-		ClientData* client = new ClientData(client_socket, ++next_client_id, recvbuf);
-		clients.insert(std::make_pair(client->getId(), client));
+		ClientData* client = new ClientData(client_socket, ++next_client_id_, recvbuf);
+		clients_.insert(std::make_pair(client->getId(), client));
 		LOG_INFO << "Client connected [id:" << client->getId() << "][name:" << client->getName() << "]";
-		if (notifyConnectionAccepted != 0) notifyConnectionAccepted(client->getId(), client->getName().c_str());
+		if (notifyConnectionAccepted_ != 0) notifyConnectionAccepted_(client->getId(), client->getName().c_str());
 		ResponsePacket response_packet;
 		return response_packet;
 	} else {
@@ -222,19 +222,19 @@ ResponsePacket ServerEngine::connectionHandshake(SOCKET client_socket) {
 }
 
 ResponsePacket ServerEngine::handleRequest(int id_client, RequestCode request, std::string data, DWORD timeout) {
-	if (state != State::STARTED) {
+	if (state_ != State::STARTED) {
 		ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_INVALID_STATE, .err_server_description = "Server must be started" };
 		return response_packet;
 	}
 
-	if (clients.find(id_client) == clients.end()) {
+	if (clients_.find(id_client) == clients_.end()) {
 		LOG_DEBUG << "Failed to retrieve client "
 		          << "[id_client:" << id_client << "][request:" << requestCodeToString(request) << "]";
 		ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_CLIENT_CLOSED, .err_server_description = "Client closed or not found" };
 		return response_packet;
 	}
 
-	SOCKET client_socket = clients.at(id_client)->getSocket();
+	SOCKET client_socket = clients_.at(id_client)->getSocket();
 
 	nlohmann::json j;
 	j["request"] = request;
@@ -296,13 +296,13 @@ ResponsePacket ServerEngine::asyncRequest(SOCKET client_socket, std::string to_s
 }
 
 ResponsePacket ServerEngine::listClients() {
-	if (state != State::STARTED) {
+	if (state_ != State::STARTED) {
 		ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_INVALID_STATE, .err_server_description = "Server must be started" };
 		return response_packet;
 	}
 
-	std::string output = "Clients connected: " +  std::to_string(clients.size()) + "|";
-	for (const auto &p : clients) {
+	std::string output = "Clients connected: " +  std::to_string(clients_.size()) + "|";
+	for (const auto &p : clients_) {
 		output += std::to_string(p.second->getId()) + "|" + p.second->getName() + "|";
 	}
 	ResponsePacket response_packet = { .response = output };
@@ -310,33 +310,33 @@ ResponsePacket ServerEngine::listClients() {
 }
 
 ResponsePacket ServerEngine::stopAllClients() {
-	if (state != State::STARTED) {
+	if (state_ != State::STARTED) {
 		ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_INVALID_STATE, .err_server_description = "Server must be started" };
 		return response_packet;
 	}
 
-	stop = true; // stop active threads
-	closesocket(listen_socket);
-	connection_thread.join();
+	stop_ = true; // stop active threads
+	closesocket(listen_socket_);
+	connection_thread_.join();
 
-	for (const auto &p : clients) {
+	for (const auto &p : clients_) {
 		stopClient(p.first);
 		delete(p.second);
 	}
 
 	WSACleanup();
-	state = State::DISCONNECTED;
+	state_ = State::DISCONNECTED;
 	ResponsePacket response_packet;
 	return response_packet;
 }
 
 ResponsePacket ServerEngine::stopClient(int id_client) {
-	if (state != State::STARTED) {
+	if (state_ != State::STARTED) {
 		ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_INVALID_STATE, .err_server_description = "Server must be started" };
 		return response_packet;
 	}
 
-	SOCKET client_socket = clients.at(id_client)->getSocket();
+	SOCKET client_socket = clients_.at(id_client)->getSocket();
 	ResponsePacket response_packet = handleRequest(id_client, REQ_DISCONNECT);
 	if (response_packet.err_server_code  < 0) {
 		return response_packet;

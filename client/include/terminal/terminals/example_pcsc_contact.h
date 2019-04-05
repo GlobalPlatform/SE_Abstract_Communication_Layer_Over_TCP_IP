@@ -30,13 +30,13 @@ namespace client {
 
 class ExampleTerminalPCSCContact: public ITerminalLayer {
 private:
-	std::string current_reader;
-	SCARDCONTEXT hContext;
-	LPTSTR mszReaders;
+	std::string current_reader_;
+	SCARDCONTEXT hContext_;
+	LPTSTR mszReaders_;
 	SCARDHANDLE hCard;
-	DWORD dwReaders, dwActiveProtocol, dwRecvLength;
-	SCARD_IO_REQUEST pioSendPci;
-	BYTE pbRecvBuffer[DEFAULT_BUFLEN];
+	DWORD dwReaders_, dwActiveProtocol_, dwRecvLength_;
+	SCARD_IO_REQUEST pioSendPci_;
+	BYTE pbRecvBuffer_[DEFAULT_BUFLEN];
 public:
 	ExampleTerminalPCSCContact() {};
 	~ExampleTerminalPCSCContact();

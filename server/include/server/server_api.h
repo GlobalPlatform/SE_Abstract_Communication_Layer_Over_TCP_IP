@@ -28,11 +28,11 @@ typedef void (__stdcall *Callback)(int id_client, const char* name_client);
 
 class ServerAPI {
 private:
-	ServerEngine* engine;
+	ServerEngine* engine_;
 protected:
 public:
 	ServerAPI(Callback notifyConnectionAccepted) {
-		this->engine = new ServerEngine(notifyConnectionAccepted);
+		this->engine_ = new ServerEngine(notifyConnectionAccepted);
 	}
 
 	virtual ~ServerAPI() {}
