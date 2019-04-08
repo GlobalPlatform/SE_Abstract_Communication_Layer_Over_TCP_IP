@@ -278,7 +278,6 @@ namespace ServerWPF.ViewModels
         {
             _logsList.Clear();
         }
-        #endregion
 
         private void AppendLog(string request, ResponseDLL response)
         {
@@ -309,7 +308,9 @@ namespace ServerWPF.ViewModels
             APIServerModel client = _serverData.FirstOrDefault();
             return client != null && client.State.Equals(ServerState.STARTED.ToString());
         }
+        #endregion
 
+        #region utils
         private bool CheckError(ResponseDLL packet)
         {
             bool hasError = false;
@@ -337,5 +338,6 @@ namespace ServerWPF.ViewModels
             if (hasError) MessageBox.Show("Error: " + description);
             return hasError;
         }
+        #endregion
     }
 }

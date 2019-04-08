@@ -42,7 +42,7 @@ namespace ClientWPF.ViewModels
             {
                 APIClientModel old = _clientData.FirstOrDefault();
                 _clientData.Clear();
-                _clientData.Add(new APIClientModel(ClientState.DISCONNECTED, old.IpClientConnected, old.PortClientConnected));
+                _clientData.Add(new APIClientModel(ClientState.DISCONNECTED, old.IpClientConnected, old.PortClientConnected, old.Name));
                 _disconnectClient.InvokeCanExecuteChanged();
                 SelectedReader = null;
             });
@@ -79,7 +79,6 @@ namespace ClientWPF.ViewModels
                 logsPointer = (logsPointer + 1) % logsLimit;
             });
         }
-
         #endregion callbacks
 
         #region observable collections
@@ -90,8 +89,8 @@ namespace ClientWPF.ViewModels
 
         public ObservableCollection<APIClientModel> ClientData
         {
-            get { return _clientData = _clientData ?? LoadClientData(); }
-            set { SetProperty(ref _clientData, value); }
+            get =>_clientData = _clientData ?? LoadClientData(); 
+            set => SetProperty(ref _clientData, value); 
         }
 
         private ObservableCollection<APIClientModel> LoadClientData()
@@ -99,14 +98,16 @@ namespace ClientWPF.ViewModels
             _clientData = new ObservableCollection<APIClientModel>();
             string ip;
             string port;
+            string name;
             using (StreamReader r = new StreamReader("config/init.json"))
             {
                 string json = r.ReadToEnd();
                 dynamic array = JsonConvert.DeserializeObject(json);
                 ip = array["ip"];
                 port = array["port"];
+                name = array["name"];
             }
-            _clientData.Add(new APIClientModel(ClientState.INITIALIZED, ip, port));
+            _clientData.Add(new APIClientModel(ClientState.INITIALIZED, ip, port, name));
             return _clientData;
         }
 
@@ -171,7 +172,7 @@ namespace ClientWPF.ViewModels
             ResponseDLL response = APIClientWrapper.ConnectClient(_selectedReader.ReaderName, old.IpClientConnected, old.PortClientConnected);
             if (CheckError(response)) return;
             _clientData.Clear();
-            _clientData.Add(new APIClientModel(ClientState.CONNECTED, old.IpClientConnected, old.PortClientConnected));
+            _clientData.Add(new APIClientModel(ClientState.CONNECTED, old.IpClientConnected, old.PortClientConnected, old.Name));
             _connectClient.InvokeCanExecuteChanged();
             _disconnectClient.InvokeCanExecuteChanged();
         }
@@ -182,7 +183,7 @@ namespace ClientWPF.ViewModels
             if (CheckError(response)) return;
             APIClientModel old = _clientData.FirstOrDefault();
             _clientData.Clear();
-            _clientData.Add(new APIClientModel(ClientState.DISCONNECTED, old.IpClientConnected, old.PortClientConnected));
+            _clientData.Add(new APIClientModel(ClientState.DISCONNECTED, old.IpClientConnected, old.PortClientConnected, old.Name));
             SelectedReader = null;
             _connectClient.InvokeCanExecuteChanged();
             _disconnectClient.InvokeCanExecuteChanged();

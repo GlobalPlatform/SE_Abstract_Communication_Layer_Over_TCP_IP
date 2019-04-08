@@ -1,7 +1,7 @@
 ﻿<Window x:Class="ClientWPF.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Client" Height="700" Width="1000">
+        Title="{Binding ClientData[0].Name}" Height="700" Width="1000">
 
     <Window.Resources>
         <Style x:Key="DataGridCellStyle1" TargetType="{x:Type DataGridCell}">
