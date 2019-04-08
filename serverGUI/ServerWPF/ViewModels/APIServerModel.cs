@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-
-namespace ServerWPF.ViewModels
+﻿namespace ServerWPF.ViewModels
 {
     public class APIServerModel
     {
