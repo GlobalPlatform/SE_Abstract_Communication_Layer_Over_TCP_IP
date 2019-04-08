@@ -3,7 +3,6 @@ using System.Windows.Input;
 
 namespace ServerWPF.ViewModels
 {
-
     public class DelegateCommand : ICommand
     {
         private Action<object> _executeAction;

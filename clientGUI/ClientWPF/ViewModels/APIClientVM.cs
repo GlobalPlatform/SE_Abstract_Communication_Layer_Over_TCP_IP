@@ -1,24 +1,17 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
-using WpfApplication1.ViewModels;
+using System.Windows.Input;
 
 namespace ClientWPF.ViewModels
 {
-    class APIClientVM : INotifyPropertyChanged
+    class APIClientVM : ViewModelBase
     {
         private readonly int logsLimit = 100;
         private int logsPointer = 0;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
 
         private APIClientWrapper _client;
 
@@ -28,11 +21,16 @@ namespace ClientWPF.ViewModels
             _requestReceivedCallback = new Callback(UpdateRequestReceived);
             _responseSentCallback = new Callback(UpdateResponseSent);
             _client = new APIClientWrapper(_connectionLostCallback, _requestReceivedCallback, _responseSentCallback);
+
+            _reloadReaders = new DelegateCommand(OnReloadReaders, null);
+            _connectClient = new DelegateCommand(OnConnectClient, CanConnectClient);
+            _disconnectClient = new DelegateCommand(OnDisconnectClient, CanDisconnectClient);
+            _clearLogs = new DelegateCommand(OnClearLogs, null);
+
             APIClientWrapper.InitClient();
         }
 
         #region callbacks
-
         public delegate void Callback(string text);
         private Callback _connectionLostCallback;
         private Callback _requestReceivedCallback;
@@ -40,11 +38,14 @@ namespace ClientWPF.ViewModels
 
         private void UpdateServerDown(string text)
         {
-            if (_clientData.FirstOrDefault().ClientState.Equals("INITIALIZED")) return;
-            APIClientModel old = _clientData.FirstOrDefault();
-            _clientData = new ObservableCollection<APIClientModel>();
-            _clientData.Add(new APIClientModel("INITIALIZED", old.IpClientConnected, old.PortClientConnected));
-            OnPropertyChanged("ClientData");
+            App.Current.Dispatcher.Invoke((Action)delegate
+            {
+                APIClientModel old = _clientData.FirstOrDefault();
+                _clientData.Clear();
+                _clientData.Add(new APIClientModel(ClientState.DISCONNECTED, old.IpClientConnected, old.PortClientConnected));
+                _disconnectClient.InvokeCanExecuteChanged();
+                SelectedReader = null;
+            });
         }
 
         private void UpdateRequestReceived(string text)
@@ -75,14 +76,13 @@ namespace ClientWPF.ViewModels
                 {
                     _logsList.Add(new LogModel("response", text));
                 }
-                logsPointer = (logsPointer + 1) % logsLimit; 
+                logsPointer = (logsPointer + 1) % logsLimit;
             });
         }
 
         #endregion callbacks
 
         #region observable collections
-
         private ObservableCollection<APIClientModel> _clientData;
         private ObservableCollection<ReaderModel> _readersList;
         private ObservableCollection<LogModel> _logsList;
@@ -91,7 +91,9 @@ namespace ClientWPF.ViewModels
         public ObservableCollection<APIClientModel> ClientData
         {
             get { return _clientData = _clientData ?? LoadClientData(); }
+            set { SetProperty(ref _clientData, value); }
         }
+
         private ObservableCollection<APIClientModel> LoadClientData()
         {
             _clientData = new ObservableCollection<APIClientModel>();
@@ -104,14 +106,16 @@ namespace ClientWPF.ViewModels
                 ip = array["ip"];
                 port = array["port"];
             }
-            _clientData.Add(new APIClientModel("INITIALIZED", ip, port));
+            _clientData.Add(new APIClientModel(ClientState.INITIALIZED, ip, port));
             return _clientData;
         }
 
         public ObservableCollection<ReaderModel> ReadersList
         {
             get { return _readersList = _readersList ?? LoadReaders(); }
+            set { SetProperty(ref _readersList, value); }
         }
+
         private ObservableCollection<ReaderModel> LoadReaders()
         {
             ResponseDLL response = APIClientWrapper.LoadAndListReaders();
@@ -121,91 +125,88 @@ namespace ClientWPF.ViewModels
 
             for (int i = 0; i < data.Length - 1; i += 2)
             {
-                _readersList.Add(new ReaderModel(i/2, data[i + 1]));
+                _readersList.Add(new ReaderModel(i / 2, data[i + 1]));
             }
             return _readersList;
         }
+
         public ReaderModel SelectedReader
         {
-            get { return _selectedReader; }
-            set { _selectedReader = value; }
+            get => _selectedReader;
+            set
+            {
+                SetProperty(ref _selectedReader, value);
+                _connectClient.InvokeCanExecuteChanged();
+            }
         }
 
         public ObservableCollection<LogModel> LogsList
         {
             get { return _logsList = _logsList ?? new ObservableCollection<LogModel>(); }
         }
-
         #endregion observable collections
 
         #region commands
+        private readonly DelegateCommand _reloadReaders;
+        public ICommand ReloadReaders => _reloadReaders;
 
-        private DelegateCommand _reloadReaders;
-        private DelegateCommand _connectClient;
-        private DelegateCommand _disconnectClient;
-        private DelegateCommand _clearLogs;
+        private readonly DelegateCommand _connectClient;
+        public ICommand ConnectClient => _connectClient;
 
-        public DelegateCommand ReloadReaders
+        private readonly DelegateCommand _disconnectClient;
+        public ICommand DisconnectClient => _disconnectClient;
+
+        private readonly DelegateCommand _clearLogs;
+        public ICommand ClearLogs => _clearLogs;
+
+        private void OnReloadReaders(object commandParameter)
         {
-            get { return _reloadReaders = _reloadReaders ?? new DelegateCommand(DelReloadReaders); }
-        }
-        private void DelReloadReaders()
-        {
-            _selectedReader = null;
+            SelectedReader = null;
             LoadReaders();
-            OnPropertyChanged("ReadersList");
         }
 
-        public DelegateCommand ConnectClient
+        private void OnConnectClient(object commandParameter)
         {
-            get { return _connectClient = _connectClient ?? new DelegateCommand(DelConnectClient); }
-        }
-        private void DelConnectClient()
-        {
-            if (_selectedReader == null)
-            {
-                MessageBox.Show("Error: A reader must be selected");
-                return;
-            }
             APIClientModel old = _clientData.FirstOrDefault();
             ResponseDLL response = APIClientWrapper.ConnectClient(_selectedReader.ReaderName, old.IpClientConnected, old.PortClientConnected);
             if (CheckError(response)) return;
-            _clientData = new ObservableCollection<APIClientModel>();
-            _clientData.Add(new APIClientModel("CONNECTED", old.IpClientConnected, old.PortClientConnected));
-            OnPropertyChanged("ClientData");
+            _clientData.Clear();
+            _clientData.Add(new APIClientModel(ClientState.CONNECTED, old.IpClientConnected, old.PortClientConnected));
+            _connectClient.InvokeCanExecuteChanged();
+            _disconnectClient.InvokeCanExecuteChanged();
         }
 
-        public DelegateCommand DisconnectClient
+        private void OnDisconnectClient(object commandParameter)
         {
-            get { return _disconnectClient = _disconnectClient ?? new DelegateCommand(DelDisconnectClient); }
-        }
-        private void DelDisconnectClient()
-        {
-            APIClientModel old = _clientData.FirstOrDefault();
-            if (old.ClientState.Equals("INITIALIZED"))
-            {
-                MessageBox.Show("Error: Client not connected");
-                return;
-            }
-            _clientData = new ObservableCollection<APIClientModel>();
-            _clientData.Add(new APIClientModel("INITIALIZED", old.IpClientConnected, old.PortClientConnected));
-            OnPropertyChanged("ClientData");
             ResponseDLL response = APIClientWrapper.DisconnectClient();
-            CheckError(response);
+            if (CheckError(response)) return;
+            APIClientModel old = _clientData.FirstOrDefault();
+            _clientData.Clear();
+            _clientData.Add(new APIClientModel(ClientState.DISCONNECTED, old.IpClientConnected, old.PortClientConnected));
+            SelectedReader = null;
+            _connectClient.InvokeCanExecuteChanged();
+            _disconnectClient.InvokeCanExecuteChanged();
         }
 
-        public DelegateCommand ClearLogs
+        private void OnClearLogs(object commandParameter)
         {
-            get { return _clearLogs = _clearLogs ?? new DelegateCommand(DelClearLogs); }
-        }
-        private void DelClearLogs()
-        {
-            _logsList = new ObservableCollection<LogModel>();
-            OnPropertyChanged("LogsList");
+            _logsList.Clear();
         }
 
+        private bool CanConnectClient(object commandParameter)
+        {
+            APIClientModel client = _clientData.FirstOrDefault();
+            return !client.ClientState.Equals(ClientState.CONNECTED.ToString()) && _selectedReader != null;
+        }
+
+        private bool CanDisconnectClient(object commandParameter)
+        {
+            APIClientModel client = _clientData.FirstOrDefault();
+            return client.ClientState.Equals(ClientState.CONNECTED.ToString());
+        }
         #endregion commands
 
+        #region utils
         private bool CheckError(ResponseDLL packet)
         {
             bool hasError = false;
@@ -233,5 +234,6 @@ namespace ClientWPF.ViewModels
             if (hasError) MessageBox.Show("Error: " + description);
             return hasError;
         }
+        #endregion
     }
 }

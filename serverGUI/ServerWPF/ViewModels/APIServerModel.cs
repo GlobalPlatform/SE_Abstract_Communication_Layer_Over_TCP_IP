@@ -3,43 +3,44 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace ServerWPF.ViewModels
 {
-    class APIServerModel
+    public class APIServerModel
     {
         private string _state;
         private string _ip;
         private string _port;
 
-        public APIServerModel(string state)
+        public APIServerModel(ServerState state)
         {
-            this._state = state;
+            _state = state.ToString();
         }
 
-        public APIServerModel(string state, string ip, string port)
+        public APIServerModel(ServerState state, string ip, string port)
         {
-            this._state = state;
-            this._ip = ip;
-            this._port = port;
+            _state = state.ToString();
+            _ip = ip;
+            _port = port;
         }
 
-        public string ServerState
+        public string State
         {
-            get { return _state; }
-            set { _state = value; }
+            get => _state;
+            set => _state = value;
         }
 
         public string ServerIP
         {
-            get { return _ip; }
-            set { _ip = value; }
+            get => _ip; 
+            set => _ip = value; 
         }
 
         public string ServerPort
         {
-            get { return _port; }
-            set { _port = value; }
+            get => _port; 
+            set => _port = value; 
         }
     }
 }

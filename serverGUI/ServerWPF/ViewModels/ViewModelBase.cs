@@ -2,18 +2,21 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-public abstract class ViewModelBase : INotifyPropertyChanged
+namespace ServerWPF.ViewModels
 {
-    public event PropertyChangedEventHandler PropertyChanged;
-
-    protected bool SetProperty<T>(ref T field, T newValue, [CallerMemberName]string propertyName = null)
+    public abstract class ViewModelBase : INotifyPropertyChanged
     {
-        if (!EqualityComparer<T>.Default.Equals(field, newValue))
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected bool SetProperty<T>(ref T field, T newValue, [CallerMemberName]string propertyName = null)
         {
-            field = newValue;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            return true;
+            if (!EqualityComparer<T>.Default.Equals(field, newValue))
+            {
+                field = newValue;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+                return true;
+            }
+            return false;
         }
-        return false;
     }
 }

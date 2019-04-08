@@ -7,20 +7,20 @@
 
         public ClientModel(int id, string name)
         {
-            this._id = id;
-            this._name = name;
+            _id = id;
+            _name = name;
         }
 
         public int ClientID
         {
-            get { return _id; }
-            set { _id = value; }
+            get => _id; 
+            set => _id = value; 
         }
 
         public string ClientName
         {
-            get { return _name; }
-            set { _name = value; }
+            get =>_name; 
+            set => _name = value; 
         }
     }
 }

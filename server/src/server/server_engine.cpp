@@ -154,6 +154,7 @@ ResponsePacket ServerEngine::startListening(const char* ip, const char* port) {
 	}
 
 	state_ = State::STARTED;
+	stop_ = false;
 	std::thread thr(&ServerEngine::handleConnections, this, listen_socket_);
 	std::swap(thr, connection_thread_);
 
@@ -162,11 +163,8 @@ ResponsePacket ServerEngine::startListening(const char* ip, const char* port) {
 }
 
 ResponsePacket ServerEngine::handleConnections(SOCKET listen_socket) {
-	LOG_ERROR << "??? 1";
 	int connection_timeout = std::atoi(config_.getValue("timeout", DEFAULT_TIMEOUT).c_str());
-	LOG_ERROR << "??? 55" << stop_.load();
 	while (!stop_.load()) {
-		LOG_ERROR << "??? 2";
 		SOCKET client_socket = INVALID_SOCKET;
 
 		client_socket = accept(listen_socket, NULL, NULL);
@@ -320,7 +318,6 @@ ResponsePacket ServerEngine::stopAllClients() {
 
 	for (const auto &p : clients_) {
 		stopClient(p.first);
-		delete(p.second);
 	}
 
 	WSACleanup();
@@ -350,6 +347,8 @@ ResponsePacket ServerEngine::stopClient(int id_client) {
 	}
 
 	closesocket(client_socket);
+	delete clients_.at(id_client);
+	clients_.erase(id_client);
 	return response_packet;
 }
 

@@ -72,6 +72,9 @@
                                 <Trigger Property="Text" Value="INITIALIZED">
                                     <Setter Property="Background" Value="LightBlue"/>
                                 </Trigger>
+                                <Trigger Property="Text" Value="DISCONNECTED">
+                                    <Setter Property="Background" Value="#FFD36841"/>
+                                </Trigger>
                             </Style.Triggers>
                         </Style>
                     </DataGridTextColumn.ElementStyle>

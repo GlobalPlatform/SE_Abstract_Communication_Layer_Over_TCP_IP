@@ -3,7 +3,6 @@ using Newtonsoft.Json;
 using ServerWPF.Models;
 using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -11,7 +10,7 @@ using System.Windows.Input;
 
 namespace ServerWPF.ViewModels
 {
-    class APIServerVM : ViewModelBase
+    public class APIServerVM : ViewModelBase
     {
         private readonly int logsLimit = 100;
         private int logsPointer = 0;
@@ -23,10 +22,9 @@ namespace ServerWPF.ViewModels
         {
             _connectionAccepted = new Callback(ConnectionAccepted);
             _server = new APIServerWrapper(_connectionAccepted);
-            APIServerWrapper.InitServer();
 
-            _startServer = new DelegateCommand(OnStartServer, null);
-            _stopServer = new DelegateCommand(OnStopServer, null);
+            _startServer = new DelegateCommand(OnStartServer, CanStartServer);
+            _stopServer = new DelegateCommand(OnStopServer, CanStopServer);
             _sendCommandClient = new DelegateCommand(OnSendCommandClient, IsClientSelected);
             _sendTypeA = new DelegateCommand(OnSendTypeA, IsClientSelected);
             _sendTypeB = new DelegateCommand(OnSendTypeB, IsClientSelected);
@@ -35,11 +33,14 @@ namespace ServerWPF.ViewModels
             _diagnoseClient = new DelegateCommand(OnDiagnoseClient, IsClientSelected);
             _restartTarget = new DelegateCommand(OnRestartTarget, IsClientSelected);
             _stopClient = new DelegateCommand(OnStopClient, IsClientSelected);
-            _clearLogs = new DelegateCommand(OnClearLogs, IsClientSelected);
             _coldReset = new DelegateCommand(OnColdReset, IsClientSelected);
             _warmReset = new DelegateCommand(OnWarmReset, IsClientSelected);
             _powerOFFField = new DelegateCommand(OnPowerOFFField, IsClientSelected);
             _powerONField = new DelegateCommand(OnPowerONField, IsClientSelected);
+            _clearLogs = new DelegateCommand(OnClearLogs, null);
+
+            LoadServerData();
+            APIServerWrapper.InitServer();
         }
 
         public string CurrentCommand
@@ -49,7 +50,6 @@ namespace ServerWPF.ViewModels
         }
 
         #region callbacks
-
         public delegate void Callback(int id, string name);
         private Callback _connectionAccepted;
 
@@ -60,11 +60,9 @@ namespace ServerWPF.ViewModels
                 _clientsList.Add(new ClientModel(id, name));
             });
         }
-
         #endregion
 
         #region observable collections
-
         private ObservableCollection<APIServerModel> _serverData;
         private ObservableCollection<ClientModel> _clientsList;
         private ObservableCollection<LogModel> _logsList;
@@ -78,7 +76,7 @@ namespace ServerWPF.ViewModels
 
         private ObservableCollection<APIServerModel> LoadServerData()
         {
-            ObservableCollection<APIServerModel> data = new ObservableCollection<APIServerModel>();
+            _serverData = new ObservableCollection<APIServerModel>();
             string ip;
             string port;
             using (StreamReader r = new StreamReader("config/init.json"))
@@ -88,9 +86,8 @@ namespace ServerWPF.ViewModels
                 ip = array["ip"];
                 port = array["port"];
             }
-            data.Add(new APIServerModel("INITIALIZED", ip, port));
-            ServerData = data;
-            return ServerData;
+            _serverData.Add(new APIServerModel(ServerState.INITIALIZED, ip, port));
+            return _serverData;
         }
 
         public ObservableCollection<ClientModel> ClientsList
@@ -125,62 +122,65 @@ namespace ServerWPF.ViewModels
             get => _logsList = _logsList ?? new ObservableCollection<LogModel>();
             set => SetProperty(ref _logsList, value);
         }
-
         #endregion
 
-        #region commands
+        #region delegates declarations
         private readonly DelegateCommand _startServer;
         public ICommand StartServer => _startServer;
 
-        private DelegateCommand _stopServer;
+        private readonly DelegateCommand _stopServer;
         public ICommand StopServer => _stopServer;
 
-        private DelegateCommand _sendCommandClient;
+        private readonly DelegateCommand _sendCommandClient;
         public ICommand SendCommandClient => _sendCommandClient;
 
-        private DelegateCommand _sendTypeA;
+        private readonly DelegateCommand _sendTypeA;
         public ICommand SendTypeA => _sendTypeA;
 
-        private DelegateCommand _sendTypeB;
+        private readonly DelegateCommand _sendTypeB;
         public ICommand SendTypeB => _sendTypeB;
 
-        private DelegateCommand _sendTypeF;
+        private readonly DelegateCommand _sendTypeF;
         public ICommand SendTypeF => _sendTypeF;
 
-        private DelegateCommand _echoClient;
+        private readonly DelegateCommand _echoClient;
         public ICommand EchoClient => _echoClient;
 
-        private DelegateCommand _diagnoseClient;
+        private readonly DelegateCommand _diagnoseClient;
         public ICommand DiagnoseClient => _diagnoseClient;
 
-        private DelegateCommand _restartTarget;
+        private readonly DelegateCommand _restartTarget;
         public ICommand RestartTarget => _restartTarget;
 
-        private DelegateCommand _stopClient;
+        private readonly DelegateCommand _stopClient;
         public ICommand StopClient => _stopClient;
 
-        private DelegateCommand _clearLogs;
+        private readonly DelegateCommand _clearLogs;
         public ICommand ClearLogs => _clearLogs;
 
-        private DelegateCommand _coldReset;
+        private readonly DelegateCommand _coldReset;
         public ICommand ColdReset => _coldReset;
 
-        private DelegateCommand _warmReset;
+        private readonly DelegateCommand _warmReset;
         public ICommand WarmReset => _warmReset;
 
-        private DelegateCommand _powerOFFField;
+        private readonly DelegateCommand _powerOFFField;
         public ICommand PowerOFFField => _powerOFFField;
 
-        private DelegateCommand _powerONField;
+        private readonly DelegateCommand _powerONField;
         public ICommand PowerONField => _powerONField;
+        #endregion
 
+        #region delegates implementations
         private void OnStartServer(object commandParameter)
         {
             APIServerModel old = _serverData.FirstOrDefault();
             ResponseDLL response = APIServerWrapper.StartServer(old.ServerIP, old.ServerPort);
             if (CheckError(response)) return;
             _serverData.Clear();
-            _serverData.Add(new APIServerModel("STARTED", old.ServerIP, old.ServerPort));
+            _serverData.Add(new APIServerModel(ServerState.STARTED, old.ServerIP, old.ServerPort));
+            _startServer.InvokeCanExecuteChanged();
+            _stopServer.InvokeCanExecuteChanged();
         }
 
         private void OnStopServer(object commandParameter)
@@ -189,85 +189,87 @@ namespace ServerWPF.ViewModels
             if (CheckError(response)) return;
             APIServerModel old = _serverData.FirstOrDefault();
             _serverData.Clear();
-            _serverData.Add(new APIServerModel("INITIALIZED", old.ServerIP, old.ServerPort));
+            _serverData.Add(new APIServerModel(ServerState.DISCONNECTED, old.ServerIP, old.ServerPort));
+            _clientsList.Clear();
+            _startServer.InvokeCanExecuteChanged();
+            _stopServer.InvokeCanExecuteChanged();
         }
 
         private void OnSendCommandClient(object commandParameter)
         {
             ResponseDLL response = APIServerWrapper.SendCommand(_selectedClient.ClientID, _currentCommand);
-            AppendLog(String.Format("COMMAND {0}", _currentCommand), response);
+            AppendLog(String.Format("{0} {1}", ActionMethod.COMMAND.ToString(), _currentCommand), response);
             string[] sws = response.response.Split(' ');
             if (sws.Length == 2 && sws[0].Equals("61"))
             {
-                response = APIServerWrapper.SendCommand(_selectedClient.ClientID, String.Format("00 C0 00 00 {0}", sws[1]));
-                AppendLog(String.Format("COMMAND 00 C0 00 00 {0}", sws[1]), response);
+                AppendLog(String.Format("{0} 00 C0 00 00 {1}", ActionMethod.COMMAND.ToString(), sws[1]), response);
             }
         }
 
         private void OnSendTypeA(object commandParameter)
         {
             ResponseDLL response = APIServerWrapper.SendTypeA(_selectedClient.ClientID, _currentCommand);
-            AppendLog(String.Format("COMMAND {0}", _currentCommand), response);
+            AppendLog(String.Format("{0} {1}", ActionMethod.SEND_TYPE_A.ToString(), _currentCommand), response);
         }
 
         private void OnSendTypeB(object commandParameter)
         {
             ResponseDLL response = APIServerWrapper.SendTypeB(_selectedClient.ClientID, _currentCommand);
-            AppendLog(String.Format("COMMAND {0}", _currentCommand), response);
+            AppendLog(String.Format("{0} {1}", ActionMethod.SEND_TYPE_B.ToString(), _currentCommand), response);
         }
 
         private void OnSendTypeF(object commandParameter)
         {
             ResponseDLL response = APIServerWrapper.SendTypeF(_selectedClient.ClientID, _currentCommand);
-            AppendLog(String.Format("COMMAND {0}", _currentCommand), response);
+            AppendLog(String.Format("{0} {1}", ActionMethod.SEND_TYPE_F.ToString(), _currentCommand), response);
         }
 
         private void OnEchoClient(object commandParameter)
         {
             ResponseDLL response = APIServerWrapper.EchoClient(_selectedClient.ClientID);
-            AppendLog("IS ALIVE", response);
+            AppendLog(ActionMethod.ECHO.ToString(), response);
         }
 
         private void OnDiagnoseClient(object commandParameter)
         {
             ResponseDLL response = APIServerWrapper.DiagClient(_selectedClient.ClientID);
-            AppendLog("DIAG", response);
+            AppendLog(ActionMethod.DIAG.ToString(), response);
         }
 
         private void OnColdReset(object commandParameter)
         {
             ResponseDLL response = APIServerWrapper.ColdReset(_selectedClient.ClientID);
-            AppendLog("COLD RESET", response);
+            AppendLog(ActionMethod.COLD_RESET.ToString(), response);
         }
 
         private void OnWarmReset(object commandParameter)
         {
             ResponseDLL response = APIServerWrapper.WarmReset(_selectedClient.ClientID);
-            AppendLog("WARM RESET", response);
+            AppendLog(ActionMethod.WARM_RESET.ToString(), response);
         }
 
         private void OnPowerOFFField(object commandParameter)
         {
             ResponseDLL response = APIServerWrapper.PowerOFFField(_selectedClient.ClientID);
-            AppendLog("POWER OFF FIELD", response);
+            AppendLog(ActionMethod.POWER_OFF_FIELD.ToString(), response);
         }
 
         private void OnPowerONField(object commandParameter)
         {
             ResponseDLL response = APIServerWrapper.PowerONField(_selectedClient.ClientID);
-            AppendLog("POWER ON FIELD", response);
+            AppendLog(ActionMethod.POWER_ON_FIELD.ToString(), response);
         }
 
         private void OnRestartTarget(object commandParameter)
         {
             ResponseDLL response = APIServerWrapper.RestartTarget(_selectedClient.ClientID);
-            AppendLog("RESTART", response);
+            AppendLog(ActionMethod.RESTART.ToString(), response);
         }
 
         private void OnStopClient(object commandParameter)
         {
             ResponseDLL response = APIServerWrapper.StopClient(_selectedClient.ClientID);
-            AppendLog("STOP CLIENT", response);
+            AppendLog(ActionMethod.STOP_CLIENT.ToString(), response);
             _clientsList.Remove(_selectedClient);
             _selectedClient = null;
         }
@@ -276,7 +278,6 @@ namespace ServerWPF.ViewModels
         {
             _logsList.Clear();
         }
-
         #endregion
 
         private void AppendLog(string request, ResponseDLL response)
@@ -295,6 +296,18 @@ namespace ServerWPF.ViewModels
         private bool IsClientSelected(object commandParameter)
         {
             return _selectedClient != null;
+        }
+
+        private bool CanStartServer(object commandParameter)
+        {
+            APIServerModel client = _serverData.FirstOrDefault();
+            return client.State.Equals(ServerState.DISCONNECTED.ToString()) || client.State.Equals(ServerState.INITIALIZED.ToString());
+        }
+
+        private bool CanStopServer(object commandParameter)
+        {
+            APIServerModel client = _serverData.FirstOrDefault();
+            return client != null && client.State.Equals(ServerState.STARTED.ToString());
         }
 
         private bool CheckError(ResponseDLL packet)

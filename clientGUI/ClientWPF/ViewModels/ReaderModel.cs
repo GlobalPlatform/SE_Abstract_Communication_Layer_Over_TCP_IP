@@ -9,24 +9,18 @@ namespace ClientWPF.ViewModels
 
         public ReaderModel(int id, string name)
         {
-            this._id = id;
-            this._name = name;
+            _id = id;
+            _name = name;
         }
 
         public int ReaderID
         {
-            get
-            {
-                return _id;
-            }
+            get => _id;
         }
 
         public string ReaderName
         {
-            get
-            {
-                return _name;
-            }
+            get => _name;
         }
     }
 }

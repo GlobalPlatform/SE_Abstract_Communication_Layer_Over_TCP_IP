@@ -10,33 +10,24 @@ namespace ClientWPF.ViewModels
 
         public LogModel(string type, string data)
         {
-            this._type = type;
-            this._data = data;
-            this._time = DateTime.Now.ToString("s").Replace(":", ".");
+            _type = type;
+            _data = data;
+            _time = DateTime.Now.ToString("s").Replace(":", ".");
         }
 
         public string LogType
         {
-            get
-            {
-                return _type;
-            }
+            get => _type;
         }
 
         public string LogData
         {
-            get
-            {
-                return _data;
-            }
+            get => _data;
         }
 
         public string LogTime
         {
-            get
-            {
-                return _time;
-            }
+            get => _time;
         }
     }
 }

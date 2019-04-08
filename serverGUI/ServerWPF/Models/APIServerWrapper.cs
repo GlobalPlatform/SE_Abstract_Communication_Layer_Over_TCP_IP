@@ -9,7 +9,7 @@ using System.Windows;
 namespace ServerWPF.Models
 {
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-    struct ResponseDLL
+    public struct ResponseDLL
     {
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 2048)]
         public string response;
@@ -31,7 +31,7 @@ namespace ServerWPF.Models
         public string err_card_description;
     }
 
-    class APIServerWrapper
+    public class APIServerWrapper
     {
         [DllImport(@"libs/libserver.dll")]
         static private extern IntPtr createServerAPI();

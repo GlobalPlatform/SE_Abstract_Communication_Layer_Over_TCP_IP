@@ -3,7 +3,7 @@ using System;
 
 namespace ClientWPF.ViewModels
 {
-    class LogModel
+    public class LogModel
     {
         private int _idClient;
         private string _logTime;
@@ -22,71 +22,71 @@ namespace ClientWPF.ViewModels
 
         public int IdClient
         {
-            get { return _idClient; }
-            set { _idClient = value; }
+            get => _idClient; 
+            set => _idClient = value; 
         }
 
         public string LogTime
         {
-            get { return _logTime; }
-            set { _logTime = value; }
+            get => _logTime; 
+            set => _logTime = value; 
         }
 
         public string NameClient
         {
-            get { return _nameClient; }
-            set { _nameClient = value; }
+            get => _nameClient; 
+            set => _nameClient = value; 
         }
 
         public string Request
         {
-            get { return _request; }
-            set { _request = value; }
+            get => _request; 
+            set => _request = value; 
         }
 
         public string Response
         {
-            get { return _response.response; }
+            get => _response.response; 
         }
 
         public int ErrServerCode
         {
-            get { return _response.err_server_code; }
+            get => _response.err_server_code; 
         }
 
         public string ErrServerDescription
         {
-            get { return _response.err_server_description; }
+            get => _response.err_server_description; 
         }
 
         public int ErrClientCode
         {
-            get { return _response.err_client_code; }
+            get => _response.err_client_code; 
         }
 
         public string ErrClientDescription
         {
-            get { return _response.err_client_description; }
+            get => _response.err_client_description; 
         }
 
         public int ErrTerminalCode
         {
-            get { return _response.err_terminal_code; }
+            get => _response.err_terminal_code; 
         }
 
         public string ErrTerminalDescription
         {
-            get { return _response.err_terminal_description; }
+            get => _response.err_terminal_description; 
         }
 
         public int ErrCardCode
         {
-            get { return _response.err_card_code; }
+            get => _response.err_card_code; 
         }
 
         public string ErrCardDescription
         {
-            get { return _response.err_card_description; }
+            get => _response.err_card_description; 
         }
     }
 }

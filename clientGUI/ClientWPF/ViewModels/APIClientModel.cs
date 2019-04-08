@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ClientWPF.ViewModels
+﻿namespace ClientWPF.ViewModels
 {
     class APIClientModel
     {
@@ -8,34 +6,34 @@ namespace ClientWPF.ViewModels
         private string _ip;
         private string _port;
 
-        public APIClientModel(string state)
+        public APIClientModel(ClientState state)
         {
-            this._state = state;
+            _state = state.ToString();
         }
 
-        public APIClientModel(string state, string ip, string port)
+        public APIClientModel(ClientState state, string ip, string port)
         {
-            this._state = state;
-            this._ip = ip;
-            this._port = port;
+            _state = state.ToString();
+            _ip = ip;
+            _port = port;
         }
 
         public string ClientState
         {
-            get { return _state; }
-            set { _state = value; }
+            get =>_state; 
+            set => _state = value; 
         }
 
         public string IpClientConnected
         {
-            get { return _ip; }
-            set { _ip = value; }
+            get =>_ip; 
+            set => _ip = value; 
         }
 
         public string PortClientConnected
         {
-            get { return _port; }
-            set { _port = value; }
+            get => _port; 
+            set => _port = value; 
         }
     }
 }

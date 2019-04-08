@@ -92,6 +92,8 @@
     <Compile Include="ViewModels\DelegateCommand.cs" />
     <Compile Include="ViewModels\LogModel.cs" />
     <Compile Include="ViewModels\ReaderModel.cs" />
+    <Compile Include="ViewModels\ClientState.cs" />
+    <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

@@ -62,7 +62,7 @@
         <Label Margin="6,0,6,0" Content="Server's state" FontWeight="Bold"/>
         <DataGrid Name="dgServer" Margin="10,0,10,10" AutoGenerateColumns="False" Grid.Row="1" Grid.ColumnSpan="2" ItemsSource="{Binding ServerData}" IsReadOnly="False" RowHeaderWidth="0" >
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding ServerState}" Header="State" Width="*" IsReadOnly="True">
+                <DataGridTextColumn Binding="{Binding State}" Header="State" Width="*" IsReadOnly="True">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="{x:Type TextBlock}">
                             <Style.Triggers>
@@ -71,6 +71,9 @@
                                 </Trigger>
                                 <Trigger Property="Text" Value="INITIALIZED">
                                     <Setter Property="Background" Value="LightBlue"/>
+                                </Trigger>
+                                <Trigger Property="Text" Value="DISCONNECTED">
+                                    <Setter Property="Background" Value="#FFD36841"/>
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
