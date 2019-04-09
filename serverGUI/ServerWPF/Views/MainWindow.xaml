@@ -83,7 +83,7 @@
             <Setter Property="BorderBrush" Value="#DDDDDD" />
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="Width" Value="110" />
-            <Setter Property="Background" Value="#d2d8dd" />
+            <Setter Property="Background" Value="#D2D8DD" />
         </Style>
     </Window.Resources>
 
@@ -121,7 +121,7 @@
                                     <Setter Property="Foreground" Value="Blue"/>
                                 </Trigger>
                                 <Trigger Property="Text" Value="DISCONNECTED">
-                                    <Setter Property="Foreground" Value="Red"/>
+                                    <Setter Property="Foreground" Value="#FF8D1717"/>
                                 </Trigger>
                             </Style.Triggers>
                             <Setter Property="FontWeight" Value="Bold" />

@@ -123,7 +123,7 @@
                                     <Setter Property="Foreground" Value="Blue"/>
                                 </Trigger>
                                 <Trigger Property="Text" Value="DISCONNECTED">
-                                    <Setter Property="Foreground" Value="Red"/>
+                                    <Setter Property="Foreground" Value="#FF8D1717"/>
                                 </Trigger>
                             </Style.Triggers>
                             <Setter Property="FontWeight" Value="Bold" />
