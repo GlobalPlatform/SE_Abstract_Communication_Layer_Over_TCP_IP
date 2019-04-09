@@ -24,6 +24,7 @@ namespace ServerWPF
             apiServer = new APIServerVM();
             this.DataContext = apiServer;
             InitializeComponent();
+            Style = (Style)FindResource(typeof(Window));
         }
     }
 }

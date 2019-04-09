@@ -202,6 +202,7 @@ namespace ServerWPF.ViewModels
             string[] sws = response.response.Split(' ');
             if (sws.Length == 2 && sws[0].Equals("61"))
             {
+                response = APIServerWrapper.SendCommand(_selectedClient.ClientID, String.Format("00 C0 00 00 {0}", sws[1]));
                 AppendLog(String.Format("{0} 00 C0 00 00 {1}", ActionMethod.COMMAND.ToString(), sws[1]), response);
             }
         }

@@ -25,6 +25,7 @@ namespace ClientWPF
             apiClient = new APIClientVM();
             this.DataContext = apiClient;
             InitializeComponent();
+            Style = (Style)FindResource(typeof(Window));
         }
     }
 }
