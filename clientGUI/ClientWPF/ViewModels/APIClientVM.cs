@@ -120,10 +120,9 @@ namespace ClientWPF.ViewModels
         private ObservableCollection<ReaderModel> LoadReaders()
         {
             ResponseDLL response = APIClientWrapper.LoadAndListReaders();
-            _readersList = new ObservableCollection<ReaderModel>();
-            if (CheckError(response)) return _readersList;
+            _readersList = _readersList ?? new ObservableCollection<ReaderModel>();
+            _readersList.Clear();
             String[] data = response.response.Split('|');
-
             for (int i = 0; i < data.Length - 1; i += 2)
             {
                 _readersList.Add(new ReaderModel(i / 2, data[i + 1]));

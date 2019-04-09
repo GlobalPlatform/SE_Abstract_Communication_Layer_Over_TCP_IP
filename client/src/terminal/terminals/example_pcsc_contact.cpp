@@ -70,7 +70,7 @@ ResponsePacket ExampleTerminalPCSCContact::loadAndListReaders() {
 			}
 		}
 		if (resp != SCARD_S_SUCCESS) {
-			return handleErrorResponse("Failed to connect", resp);
+			return handleErrorResponse("Failed to list readers", resp);
 		}
 	}
 
