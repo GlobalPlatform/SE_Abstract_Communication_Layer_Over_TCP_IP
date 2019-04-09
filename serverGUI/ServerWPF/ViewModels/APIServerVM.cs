@@ -1,11 +1,11 @@
 ﻿using ClientWPF.ViewModels;
 using Newtonsoft.Json;
 using ServerWPF.Models;
+using ServerWPF.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Windows;
 using System.Windows.Input;
 
 namespace ServerWPF.ViewModels
@@ -16,10 +16,12 @@ namespace ServerWPF.ViewModels
         private int logsPointer = 0;
 
         private APIServerWrapper _server;
-        private string _currentCommand = "";
+        private readonly IDialogService _dialogService;
 
-        public APIServerVM()
+        public APIServerVM(IDialogService dialogService) // injects services
         {
+            _dialogService = dialogService;
+
             _connectionAccepted = new Callback(ConnectionAccepted);
             _server = new APIServerWrapper(_connectionAccepted);
 
@@ -43,6 +45,7 @@ namespace ServerWPF.ViewModels
             APIServerWrapper.InitServer();
         }
 
+        private string _currentCommand = "";
         public string CurrentCommand
         {
             get => _currentCommand;
@@ -336,7 +339,7 @@ namespace ServerWPF.ViewModels
                 description = packet.err_card_description;
                 hasError = true;
             }
-            if (hasError) MessageBox.Show("Error: " + description);
+            if (hasError) _dialogService.ShowError(description);
             return hasError;
         }
         #endregion

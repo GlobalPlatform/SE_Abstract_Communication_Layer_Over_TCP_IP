@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json;
+using ServerWPF.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Windows;
 using System.Windows.Input;
 
 namespace ClientWPF.ViewModels
@@ -14,9 +14,12 @@ namespace ClientWPF.ViewModels
         private int logsPointer = 0;
 
         private APIClientWrapper _client;
+        private readonly IDialogService _dialogService;
 
-        public APIClientVM()
+        public APIClientVM(IDialogService dialogService) // injects services
         {
+            _dialogService = dialogService;
+
             _connectionLostCallback = new Callback(UpdateServerDown);
             _requestReceivedCallback = new Callback(UpdateRequestReceived);
             _responseSentCallback = new Callback(UpdateResponseSent);
@@ -209,30 +212,10 @@ namespace ClientWPF.ViewModels
         #region utils
         private bool CheckError(ResponseDLL packet)
         {
-            bool hasError = false;
-            string description = "none";
-            if (packet.err_server_code != 0)
-            {
-                description = packet.err_server_description;
-                hasError = true;
-            }
-            else if (packet.err_client_code != 0)
-            {
-                description = packet.err_client_description;
-                hasError = true;
-            }
-            else if (packet.err_terminal_code != 0)
-            {
-                description = packet.err_terminal_description;
-                hasError = true;
-            }
-            else if (packet.err_card_code != 0)
-            {
-                description = packet.err_card_description;
-                hasError = true;
-            }
-            if (hasError) MessageBox.Show("Error: " + description);
-            return hasError;
+            string description = APIClientWrapper.RetrieveErrorDescription(packet);
+            if (description.Equals(APIClientWrapper.NO_ERROR)) return false;
+             _dialogService.ShowError(description);
+            return true;
         }
         #endregion
     }

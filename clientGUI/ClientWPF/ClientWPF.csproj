@@ -78,6 +78,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Services\DialogService.cs" />
+    <Compile Include="Services\IDialogService.cs" />
     <Compile Include="ViewModels\APIClientModel.cs" />
     <Compile Include="ViewModels\APIClientVM.cs" />
     <Page Include="Views\MainWindow.xaml">

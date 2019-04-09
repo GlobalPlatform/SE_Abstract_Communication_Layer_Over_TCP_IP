@@ -98,5 +98,28 @@ namespace ClientWPF.ViewModels
             connectClient(_client, reader, ip, port, ref response);
             return response;
         }
+
+        public static string NO_ERROR = "NONE";
+        public static string RetrieveErrorDescription(ResponseDLL packet)
+        {
+            string description = NO_ERROR;
+            if (packet.err_server_code != 0)
+            {
+                description = packet.err_server_description;
+            }
+            else if (packet.err_client_code != 0)
+            {
+                description = packet.err_client_description;
+            }
+            else if (packet.err_terminal_code != 0)
+            {
+                description = packet.err_terminal_description;
+            }
+            else if (packet.err_card_code != 0)
+            {
+                description = packet.err_card_description;
+            }
+            return description;
+        }
     }
 }

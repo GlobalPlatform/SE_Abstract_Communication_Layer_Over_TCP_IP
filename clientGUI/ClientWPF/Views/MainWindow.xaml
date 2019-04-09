@@ -4,87 +4,89 @@
         Title="{Binding ClientData[0].Name}" Height="700" Width="1395">
 
     <Window.Resources>
-        <!-- Default font family -->
-        <Style TargetType="{x:Type Window}">
-            <Setter Property="FontFamily" Value="Helvetica" />
-        </Style>
+        <ResourceDictionary>
+            <!-- Default font family -->
+            <Style TargetType="{x:Type Window}">
+                <Setter Property="FontFamily" Value="Helvetica" />
+            </Style>
 
-        <!-- Datagrid style inspired from https://gist.github.com/hqf00342/199e53c638d2899445aa -->
-        <Style TargetType="DataGrid">
-            <!-- Make the border and grid lines a little less imposing -->
-            <Setter Property="BorderBrush" Value="#DDDDDD" />
-            <Setter Property="HorizontalGridLinesBrush" Value="#DDDDDD" />
-            <Setter Property="VerticalGridLinesBrush" Value="#DDDDDD" />
+            <!-- Datagrid style inspired from https://gist.github.com/hqf00342/199e53c638d2899445aa -->
+            <Style TargetType="DataGrid">
+                <!-- Make the border and grid lines a little less imposing -->
+                <Setter Property="BorderBrush" Value="#DDDDDD" />
+                <Setter Property="HorizontalGridLinesBrush" Value="#DDDDDD" />
+                <Setter Property="VerticalGridLinesBrush" Value="#DDDDDD" />
 
-            <Setter Property="RowStyle">
-                <Setter.Value>
-                    <Style TargetType="DataGridRow">
-                        <Style.Triggers>
-                            <!-- Highlight a grid row as the mouse passes over -->
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="LightCyan" />
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="CellStyle">
-                <Setter.Value>
-                    <Style TargetType="DataGridCell">
-                        <Style.Triggers>
-                            <!-- Highlight selected rows -->
-                            <Trigger Property="IsSelected" Value="True">
-                                <Setter Property="Background" Value="#FF7AD2FD" />
-                                <Setter Property="BorderBrush" Value="Transparent" />
-                                <Setter Property="Foreground" Value="Black" />
-                            </Trigger>
-                            <Trigger Property="IsFocused" Value="True">
-                                <Setter Property="Background" Value="#FF7AD2FD" />
-                                <Setter Property="BorderBrush" Value="Black" />
-                                <Setter Property="BorderThickness" Value="1"/>
-                                <Setter Property="Foreground" Value="Black" />
-                            </Trigger>
-                        </Style.Triggers>
-                        <!-- Add some padding around the contents of a cell -->
-                        <Setter Property="Padding" Value="4,3,4,3" />
-                        <Setter Property="BorderBrush" Value="Transparent"/>
-                        <Setter Property="BorderThickness" Value="1"/>
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="DataGridCell">
-                                    <Border Padding="{TemplateBinding Padding}" 
+                <Setter Property="RowStyle">
+                    <Setter.Value>
+                        <Style TargetType="DataGridRow">
+                            <Style.Triggers>
+                                <!-- Highlight a grid row as the mouse passes over -->
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="LightCyan" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="CellStyle">
+                    <Setter.Value>
+                        <Style TargetType="DataGridCell">
+                            <Style.Triggers>
+                                <!-- Highlight selected rows -->
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="#FFA1DFFD" />
+                                    <Setter Property="BorderBrush" Value="Transparent" />
+                                    <Setter Property="Foreground" Value="Black" />
+                                </Trigger>
+                                <Trigger Property="IsFocused" Value="True">
+                                    <Setter Property="Background" Value="#FFA1DFFD" />
+                                    <Setter Property="BorderBrush" Value="Black" />
+                                    <Setter Property="BorderThickness" Value="1"/>
+                                    <Setter Property="Foreground" Value="Black" />
+                                </Trigger>
+                            </Style.Triggers>
+                            <!-- Add some padding around the contents of a cell -->
+                            <Setter Property="Padding" Value="4,3,4,3" />
+                            <Setter Property="BorderBrush" Value="Transparent"/>
+                            <Setter Property="BorderThickness" Value="1"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="DataGridCell">
+                                        <Border Padding="{TemplateBinding Padding}" 
                                             BorderBrush="{TemplateBinding BorderBrush}"
                                             BorderThickness="{TemplateBinding BorderThickness}"
                                             Background="{TemplateBinding Background}">
-                                        <ContentPresenter />
-                                    </Border>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                        <Setter Property="FocusVisualStyle">
-                            <Setter.Value>
-                                <Style TargetType="Control">
-                                    <Setter Property="BorderBrush" Value="Transparent" />
-                                </Style>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </Setter.Value>
-            </Setter>
-        </Style>
+                                            <ContentPresenter />
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="FocusVisualStyle">
+                                <Setter.Value>
+                                    <Style TargetType="Control">
+                                        <Setter Property="BorderBrush" Value="Transparent" />
+                                    </Style>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Setter.Value>
+                </Setter>
+            </Style>
 
-        <!-- Buttons style -->
-        <Style TargetType="Button">
-            <!-- Add some padding around the contents of a button -->
-            <Setter Property="Padding" Value="4,3,4,3" />
-            <Setter Property="BorderThickness" Value="1"/>
+            <!-- Buttons style -->
+            <Style TargetType="Button">
+                <!-- Add some padding around the contents of a button -->
+                <Setter Property="Padding" Value="4,3,4,3" />
+                <Setter Property="BorderThickness" Value="1"/>
 
-            <!-- Miscellaneous default properties -->
-            <Setter Property="BorderBrush" Value="#DDDDDD" />
-            <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="Width" Value="110" />
-            <Setter Property="Background" Value="#d2d8dd" />
-        </Style>
+                <!-- Miscellaneous default properties -->
+                <Setter Property="BorderBrush" Value="#DDDDDD" />
+                <Setter Property="Cursor" Value="Hand" />
+                <Setter Property="Width" Value="110" />
+                <Setter Property="Background" Value="#d2d8dd" />
+            </Style>
+        </ResourceDictionary>
     </Window.Resources>
 
     <Grid Margin="0,0,0,0">
@@ -114,7 +116,7 @@
                         <Style TargetType="{x:Type TextBlock}">
                             <!-- Change the background color according to the state of the server -->
                             <Style.Triggers>
-                                <Trigger Property="Text" Value="STARTED">
+                                <Trigger Property="Text" Value="CONNECTED">
                                     <Setter Property="Foreground" Value="Green"/>
                                 </Trigger>
                                 <Trigger Property="Text" Value="INITIALIZED">
@@ -147,7 +149,7 @@
         <Button Command="{Binding ReloadReaders}" Content="Reload readers" Margin="0,0,10,0" Grid.Row="5" HorizontalAlignment="Right"/>
 
         <!-- Responses/requests -->
-        <Label Margin="6,21,6,4" Content="Resquests/responses" Grid.Row="5" FontWeight="Bold" Grid.RowSpan="2"/>
+        <Label Margin="6,21,6,4" Content="Resquests - responses" Grid.Row="5" FontWeight="Bold" Grid.RowSpan="2"/>
         <DataGrid Name="dgLogs" ItemsSource="{Binding LogsList}"
                   Margin="10,0,10,10" Grid.Row="7" RowHeaderWidth="0"
                   ScrollViewer.CanContentScroll="True" 

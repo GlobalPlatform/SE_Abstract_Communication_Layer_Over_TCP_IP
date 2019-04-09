@@ -168,9 +168,9 @@ ResponsePacket ClientEngine::connectClient(const char* reader, const char* ip, c
 
 	if (client_socket_ == INVALID_SOCKET) {
 		WSACleanup();
-		LOG_DEBUG << "Failed to connect to server "
+		LOG_DEBUG << "Failed to connect: server unreachable"
 				  << "[ip:" << ip << "][port:" << port << "]";
-		ResponsePacket response_packet = { .response = "KO", .err_client_code = ERR_NETWORK, .err_client_description = "Can't connect to server" };
+		ResponsePacket response_packet = { .response = "KO", .err_client_code = ERR_NETWORK, .err_client_description = "Failed to connect: server unreachable" };
 		return response_packet;
 	}
 
@@ -191,8 +191,8 @@ ResponsePacket ClientEngine::connectClient(const char* reader, const char* ip, c
 
 ResponsePacket ClientEngine::disconnectClient() {
 	if (!connected_.load()) {
-		LOG_DEBUG << "Client unable to disconnect - Not connected yet";
-		ResponsePacket response_packet = { .response = "KO", .err_client_code = ERR_INVALID_STATE, .err_client_description = "Client must be initialized correctly" };
+		LOG_DEBUG << "Failed to disconnect: not connected yet";
+		ResponsePacket response_packet = { .response = "KO", .err_client_code = ERR_INVALID_STATE, .err_client_description = "Failed to disconnect: not connected yet" };
 		return response_packet;
 	}
 
