@@ -11,18 +11,18 @@ namespace ServerWPF.ViewModels
         private readonly String name;
         private readonly int value;
 
-        public static readonly ActionMethod COMMAND = new ActionMethod(1, "COMMAND");
-        public static readonly ActionMethod SEND_TYPE_A = new ActionMethod(2, "SEND TYPE A");
-        public static readonly ActionMethod SEND_TYPE_B = new ActionMethod(3, "SEND TYPE B");
-        public static readonly ActionMethod SEND_TYPE_F = new ActionMethod(4, "SEND TYPE F");
-        public static readonly ActionMethod ECHO = new ActionMethod(5, "ECHO");
-        public static readonly ActionMethod DIAG = new ActionMethod(6, "DIAG");
-        public static readonly ActionMethod COLD_RESET = new ActionMethod(7, "COLD RESET");
-        public static readonly ActionMethod WARM_RESET = new ActionMethod(8, "WARM RESET");
-        public static readonly ActionMethod POWER_OFF_FIELD = new ActionMethod(8, "POWER OFF FIELD");
-        public static readonly ActionMethod POWER_ON_FIELD = new ActionMethod(9, "POWER ON FIELD");
-        public static readonly ActionMethod RESTART = new ActionMethod(10, "RESTART");
-        public static readonly ActionMethod STOP_CLIENT = new ActionMethod(11, "STOP CLIENT");
+        public static readonly ActionMethod COMMAND = new ActionMethod(1, nameof(COMMAND));
+        public static readonly ActionMethod SEND_TYPE_A = new ActionMethod(2, nameof(SEND_TYPE_A));
+        public static readonly ActionMethod SEND_TYPE_B = new ActionMethod(3, nameof(SEND_TYPE_B));
+        public static readonly ActionMethod SEND_TYPE_F = new ActionMethod(4, nameof(SEND_TYPE_F));
+        public static readonly ActionMethod ECHO = new ActionMethod(5, nameof(ECHO));
+        public static readonly ActionMethod DIAG = new ActionMethod(6, nameof(DIAG));
+        public static readonly ActionMethod COLD_RESET = new ActionMethod(7, nameof(COLD_RESET));
+        public static readonly ActionMethod WARM_RESET = new ActionMethod(8, nameof(WARM_RESET));
+        public static readonly ActionMethod POWER_OFF_FIELD = new ActionMethod(8, nameof(POWER_OFF_FIELD));
+        public static readonly ActionMethod POWER_ON_FIELD = new ActionMethod(9, nameof(POWER_ON_FIELD));
+        public static readonly ActionMethod RESTART = new ActionMethod(10, nameof(RESTART));
+        public static readonly ActionMethod STOP_CLIENT = new ActionMethod(11, nameof(STOP_CLIENT));
 
         private ActionMethod(int value, String name)
         {

@@ -1,6 +1,6 @@
 ﻿namespace ServerWPF.Services
 {
-    public interface IDialogService
+    public interface IMessageDialogService
     {
         void ShowMessageBox(string message);
         void ShowError(string message);

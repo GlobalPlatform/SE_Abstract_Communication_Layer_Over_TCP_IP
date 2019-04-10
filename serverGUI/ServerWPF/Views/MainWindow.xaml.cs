@@ -10,7 +10,7 @@ namespace ServerWPF
 
         public MainWindow()
         {
-            apiServer = new APIServerVM(new DialogService());
+            apiServer = new APIServerVM(new MessageDialogService(), new FileDialogService());
             this.DataContext = apiServer;
             InitializeComponent();
             Style = (Style)FindResource(typeof(Window));

@@ -2,7 +2,7 @@
 
 namespace ServerWPF.Services
 {
-    class DialogService : IDialogService
+    class MessageDialogService : IMessageDialogService
     {
         public void ShowError(string message)
         {

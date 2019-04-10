@@ -69,8 +69,11 @@
     <Compile Include="Models\APIServerWrapper.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
-    <Compile Include="Services\DialogService.cs" />
-    <Compile Include="Services\IDialogService.cs" />
+    <Compile Include="Services\MessageDialogService.cs" />
+    <Compile Include="Services\FileDialogService.cs" />
+    <Compile Include="Services\IMessageDialogService.cs" />
+    <Compile Include="Services\IFileDialogService.cs" />
+    <Compile Include="ViewModels\ActionFlyweight.cs" />
     <Compile Include="ViewModels\ActionMethod.cs" />
     <Compile Include="ViewModels\APIServerModel.cs" />
     <Compile Include="ViewModels\APIServerVM.cs" />

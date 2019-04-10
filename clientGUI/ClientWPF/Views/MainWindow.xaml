@@ -12,18 +12,13 @@
 
             <!-- Datagrid style inspired from https://gist.github.com/hqf00342/199e53c638d2899445aa -->
             <Style TargetType="DataGrid">
-                <!-- Make the border and grid lines a little less imposing -->
-                <Setter Property="BorderBrush" Value="#DDDDDD" />
-                <Setter Property="HorizontalGridLinesBrush" Value="#DDDDDD" />
-                <Setter Property="VerticalGridLinesBrush" Value="#DDDDDD" />
-
                 <Setter Property="RowStyle">
                     <Setter.Value>
                         <Style TargetType="DataGridRow">
                             <Style.Triggers>
                                 <!-- Highlight a grid row as the mouse passes over -->
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="LightCyan" />
+                                    <Setter Property="Background" Value="#E3F3F9" />
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
@@ -35,26 +30,18 @@
                             <Style.Triggers>
                                 <!-- Highlight selected rows -->
                                 <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Background" Value="#FFA1DFFD" />
+                                    <Setter Property="Background" Value="#A9D6E8" />
                                     <Setter Property="BorderBrush" Value="Transparent" />
                                     <Setter Property="Foreground" Value="Black" />
-                                </Trigger>
-                                <Trigger Property="IsFocused" Value="True">
-                                    <Setter Property="Background" Value="#FFA1DFFD" />
-                                    <Setter Property="BorderBrush" Value="Black" />
-                                    <Setter Property="BorderThickness" Value="1"/>
-                                    <Setter Property="Foreground" Value="Black" />
+                                    <!-- Default is white -->
                                 </Trigger>
                             </Style.Triggers>
                             <!-- Add some padding around the contents of a cell -->
-                            <Setter Property="Padding" Value="4,3,4,3" />
-                            <Setter Property="BorderBrush" Value="Transparent"/>
-                            <Setter Property="BorderThickness" Value="1"/>
+                            <Setter Property="Padding" Value="3,3,3,3" />
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="DataGridCell">
                                         <Border Padding="{TemplateBinding Padding}" 
-                                            BorderBrush="{TemplateBinding BorderBrush}"
                                             BorderThickness="{TemplateBinding BorderThickness}"
                                             Background="{TemplateBinding Background}">
                                             <ContentPresenter />
@@ -72,19 +59,23 @@
                         </Style>
                     </Setter.Value>
                 </Setter>
+                <!-- Mitigate the datagrid border -->
+                <Setter Property="BorderBrush" Value="#CECECE" />
+                <Setter Property="HorizontalGridLinesBrush" Value="#CECECE" />
+                <Setter Property="VerticalGridLinesBrush" Value="#CECECE" />
             </Style>
 
             <!-- Buttons style -->
             <Style TargetType="Button">
-                <!-- Add some padding around the contents of a button -->
-                <Setter Property="Padding" Value="4,3,4,3" />
+                <!-- Add some padding around the contents of the button -->
+                <Setter Property="Padding" Value="3,3,3,3" />
                 <Setter Property="BorderThickness" Value="1"/>
 
                 <!-- Miscellaneous default properties -->
-                <Setter Property="BorderBrush" Value="#DDDDDD" />
+                <Setter Property="BorderBrush" Value="#CECECE" />
                 <Setter Property="Cursor" Value="Hand" />
                 <Setter Property="Width" Value="110" />
-                <Setter Property="Background" Value="#d2d8dd" />
+                <Setter Property="Background" Value="#DDDDDD" />
             </Style>
         </ResourceDictionary>
     </Window.Resources>
@@ -97,13 +88,13 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="25"/>
             <RowDefinition Height="53"/>
-            <RowDefinition Height="25"/>
+            <RowDefinition Height="22"/>
             <RowDefinition Height="25"/>
             <RowDefinition Height="1*"/>
-            <RowDefinition Height="25"/>
+            <RowDefinition Height="22"/>
             <RowDefinition Height="25"/>
             <RowDefinition Height="2*"/>
-            <RowDefinition Height="25"/>
+            <RowDefinition Height="22"/>
             <RowDefinition Height="10"/>
         </Grid.RowDefinitions>
 

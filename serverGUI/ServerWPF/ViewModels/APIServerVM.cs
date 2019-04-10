@@ -6,6 +6,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace ServerWPF.ViewModels
@@ -16,11 +17,15 @@ namespace ServerWPF.ViewModels
         private int logsPointer = 0;
 
         private APIServerWrapper _server;
-        private readonly IDialogService _dialogService;
+        private ActionFlyweight _actions = new ActionFlyweight();
 
-        public APIServerVM(IDialogService dialogService) // injects services
+        private readonly IMessageDialogService _dialogService;
+        private readonly IFileDialogService _fileDialogService;
+
+        public APIServerVM(IMessageDialogService dialogService, IFileDialogService fileDialogService) // injects services
         {
             _dialogService = dialogService;
+            _fileDialogService = fileDialogService;
 
             _connectionAccepted = new Callback(ConnectionAccepted);
             _server = new APIServerWrapper(_connectionAccepted);
@@ -40,6 +45,21 @@ namespace ServerWPF.ViewModels
             _powerOFFField = new DelegateCommand(OnPowerOFFField, IsClientSelected);
             _powerONField = new DelegateCommand(OnPowerONField, IsClientSelected);
             _clearLogs = new DelegateCommand(OnClearLogs, null);
+            _browseFile = new DelegateCommand(OnBrowseFile, IsClientSelected);
+            _sendCommandsBatch = new DelegateCommand(OnSendCommandBatch, CanSendCommandBatch);
+
+            _actions.addAction(ActionMethod.COMMAND.ToString(), OnSendCommandClient);
+            _actions.addAction(ActionMethod.SEND_TYPE_A.ToString(), OnSendTypeA);
+            _actions.addAction(ActionMethod.SEND_TYPE_B.ToString(), OnSendTypeB);
+            _actions.addAction(ActionMethod.SEND_TYPE_F.ToString(), OnSendTypeF);
+            _actions.addAction(ActionMethod.ECHO.ToString(), OnEchoClient);
+            _actions.addAction(ActionMethod.DIAG.ToString(), OnDiagnoseClient);
+            _actions.addAction(ActionMethod.RESTART.ToString(), OnRestartTarget);
+            _actions.addAction(ActionMethod.STOP_CLIENT.ToString(), OnStopClient);
+            _actions.addAction(ActionMethod.COLD_RESET.ToString(), OnColdReset);
+            _actions.addAction(ActionMethod.WARM_RESET.ToString(), OnWarmReset);
+            _actions.addAction(ActionMethod.POWER_OFF_FIELD.ToString(), OnPowerOFFField);
+            _actions.addAction(ActionMethod.POWER_ON_FIELD.ToString(), OnPowerONField);
 
             LoadServerData();
             APIServerWrapper.InitServer();
@@ -50,6 +70,16 @@ namespace ServerWPF.ViewModels
         {
             get => _currentCommand;
             set => SetProperty(ref _currentCommand, value);
+        }
+
+        private string _currentFilePath = "";
+        public string CurrentFilePath
+        {
+            get => _currentFilePath;
+            set {
+                SetProperty(ref _currentFilePath, value);
+                _sendCommandsBatch.InvokeCanExecuteChanged();
+            }
         }
 
         #region callbacks
@@ -117,6 +147,8 @@ namespace ServerWPF.ViewModels
                 _warmReset.InvokeCanExecuteChanged();
                 _powerOFFField.InvokeCanExecuteChanged();
                 _powerONField.InvokeCanExecuteChanged();
+                _browseFile.InvokeCanExecuteChanged();
+                _sendCommandsBatch.InvokeCanExecuteChanged();
             }
         }
 
@@ -172,6 +204,12 @@ namespace ServerWPF.ViewModels
 
         private readonly DelegateCommand _powerONField;
         public ICommand PowerONField => _powerONField;
+
+        private readonly DelegateCommand _browseFile;
+        public ICommand BrowseFile => _browseFile;
+
+        private readonly DelegateCommand _sendCommandsBatch;
+        public ICommand SendCommandsBatch => _sendCommandsBatch;
         #endregion
 
         #region delegates implementations
@@ -283,6 +321,23 @@ namespace ServerWPF.ViewModels
             _logsList.Clear();
         }
 
+        private void OnBrowseFile(object commandParameter)
+        {
+            CurrentFilePath = _fileDialogService.OpenFileDialog(@"C:\Users\st\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\clientGUI\ClientWPF\bin\Debug") ?? String.Empty;
+        }
+
+        private void OnSendCommandBatch(object commandParameter)
+        {
+            var lines = File.ReadLines(CurrentFilePath);
+            foreach (string line in lines)
+            {
+                if (SelectedClient == null) break;
+                string[] tokens = line.Split(' ');
+                if (tokens.Length == 2) CurrentCommand = tokens[1];
+               _actions.getAction(tokens[0]).DynamicInvoke(new object());
+            }
+        }
+
         private void AppendLog(string request, ResponseDLL response)
         {
             if (_logsList.Count == logsLimit)
@@ -311,6 +366,11 @@ namespace ServerWPF.ViewModels
         {
             APIServerModel client = _serverData.FirstOrDefault();
             return client != null && client.State.Equals(ServerState.STARTED.ToString());
+        }
+
+        private bool CanSendCommandBatch(object commandParameter)
+        {
+            return SelectedClient != null && File.Exists(CurrentFilePath);
         }
         #endregion
 
