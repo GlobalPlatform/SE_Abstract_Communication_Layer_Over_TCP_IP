@@ -15,9 +15,9 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
  limitations under the License.
 *********************************************************************************/
 
+#include <client/client_engine.hpp>
+#include <client/requests/disconnect.hpp>
 #include <winsock2.h>
-#include "client/requests/disconnect.h"
-#include "client/client_engine.h"
 #include "plog/include/plog/Log.h"
 
 namespace client {

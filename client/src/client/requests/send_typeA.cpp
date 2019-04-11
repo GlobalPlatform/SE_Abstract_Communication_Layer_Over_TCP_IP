@@ -15,7 +15,7 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
  limitations under the License.
 *********************************************************************************/
 
-#include "client/requests/send_typeA.h"
+#include <client/requests/send_typeA.hpp>
 #include "plog/include/plog/Log.h"
 
 namespace client {

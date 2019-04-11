@@ -38,14 +38,14 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 #include "plog/include/plog/Appenders/ColorConsoleAppender.h"
 #include "plog/include/plog/Appenders/RollingFileAppender.h"
 
-#include "client/client_engine.h"
-#include "client/client_tcp_socket.h"
-#include "config/config_wrapper.h"
-#include "constants/request_code.h"
-#include "constants/response_packet.h"
-#include "terminal/flyweight_terminal_factory.h"
-#include "terminal/terminals/terminal.h"
-#include "terminal/terminals/utils/type_converter.h"
+#include <client/client_engine.hpp>
+#include <client/client_tcp_socket.hpp>
+#include <config/config_wrapper.hpp>
+#include <constants/request_code.hpp>
+#include <constants/response_packet.hpp>
+#include <terminal/flyweight_terminal_factory.hpp>
+#include <terminal/terminals/terminal.hpp>
+#include <terminal/terminals/utils/type_converter.hpp>
 
 namespace client {
 
@@ -112,13 +112,13 @@ ResponsePacket ClientEngine::connectClient(const char* reader, const char* ip, c
 	}
 
 	LOG_INFO << "Client trying to connect on IP " << ip << " port " << port;
-	response = socket_->init_client(ip, port);
+	response = socket_->initClient(ip, port);
 	if (!response) {
 		ResponsePacket response_packet = { .response = "KO", .err_client_code = ERR_NETWORK, .err_client_description = "Failed to connect: initialization failed" };
 		return response_packet;
 	}
 
-	response = socket_->connect_client();
+	response = socket_->connectClient();
 	if (!response) {
 		ResponsePacket response_packet = { .response = "KO", .err_client_code = ERR_NETWORK, .err_client_description = "Failed to connect: check the server" };
 		return response_packet;
@@ -126,12 +126,12 @@ ResponsePacket ClientEngine::connectClient(const char* reader, const char* ip, c
 
 
 	std::string name = config_.getValue("name", DEFAULT_NAME).append(" - ").append(reader);
-	socket_->send_data(name.c_str());
+	socket_->sendData(name.c_str());
 	Sleep(1000);
 
 	packet = terminal_->connect(reader);
 	if (packet.err_card_code < 0 || packet.err_terminal_code < 0) {
-		socket_ ->close_client();
+		socket_ ->closeClient();
 		return packet;
 	}
 
@@ -152,7 +152,7 @@ ResponsePacket ClientEngine::disconnectClient() {
 	}
 
 	connected_ = false;
-	socket_->close_client();
+	socket_->closeClient();
 	ResponsePacket response = terminal_->disconnect();
 	if (notifyConnectionLost_ != 0) notifyConnectionLost_("End of connection");
 	LOG_INFO << "Client disconnected successfully";
@@ -168,7 +168,7 @@ ResponsePacket ClientEngine::waitingRequests() {
 
 	// receives until the server closes the connection
 	while (connected_.load()) {
-		response = socket_->receive_data(recvbuf, recvbuflen);
+		response = socket_->receiveData(recvbuf, recvbuflen);
 		if (response) {
 			std::async(std::launch::async, &ClientEngine::handleRequest, this, recvbuf);
 		} else {
@@ -202,7 +202,7 @@ ResponsePacket ClientEngine::handleRequest(std::string request) {
 	}
 
 	std::string to_send = response.dump();
-	if (socket_->send_data(to_send.c_str())) {
+	if (socket_->sendData(to_send.c_str())) {
 		LOG_INFO << "Data sent to server: " << to_send;
 		if (notifyResponseSent_ != 0) notifyResponseSent_(to_send.c_str());
 	} else {

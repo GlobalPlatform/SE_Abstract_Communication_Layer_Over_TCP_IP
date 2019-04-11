@@ -15,6 +15,7 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
  limitations under the License.
 *********************************************************************************/
 
+#include <client/client_api.hpp>
 #include <atomic>
 #include <fstream>
 #include <iostream>
@@ -25,7 +26,6 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 #include "plog/include/plog/Log.h"
 #include "plog/include/plog/Appenders/ColorConsoleAppender.h"
 
-#include "client/client_api.h"
 
 namespace client {
 

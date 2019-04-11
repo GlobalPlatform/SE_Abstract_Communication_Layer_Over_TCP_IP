@@ -15,8 +15,8 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
  limitations under the License.
 *********************************************************************************/
 
-#include <terminal/factories/example_factory_pcsc_contactless.h>
-#include <terminal/terminals/example_pcsc_contactless.h>
+#include <terminal/factories/example_factory_pcsc_contactless.hpp>
+#include <terminal/terminals/example_pcsc_contactless.hpp>
 
 namespace client {
 

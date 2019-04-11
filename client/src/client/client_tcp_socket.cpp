@@ -18,14 +18,14 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 #define _WIN32_WINNT 0x501
 #define WIN32_LEAN_AND_MEAN
 
-#include "client/client_tcp_socket.h"
+#include <client/client_tcp_socket.hpp>
 #include "plog/include/plog/Log.h"
 
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <windows.h>
 
-bool ClientTCPSocket::init_client(const char* ip, const char* port) {
+bool ClientTCPSocket::initClient(const char* ip, const char* port) {
 	// initialises Winsock
 	int retval = WSAStartup(MAKEWORD(2, 2), &wsaData_);
 	if (retval != 0) {
@@ -48,7 +48,7 @@ bool ClientTCPSocket::init_client(const char* ip, const char* port) {
 	return true;
 }
 
-bool ClientTCPSocket::connect_client() {
+bool ClientTCPSocket::connectClient() {
 	int retval = 0;
 	struct addrinfo* ptr;
 	for (ptr = result_; ptr != NULL; ptr = ptr->ai_next) {
@@ -78,7 +78,7 @@ bool ClientTCPSocket::connect_client() {
 	return true;
 }
 
-bool ClientTCPSocket::send_data(const char* data_send) {
+bool ClientTCPSocket::sendData(const char* data_send) {
 	int retval = send(client_socket_, data_send, strlen(data_send), 0);
 	if (retval == SOCKET_ERROR) {
 		LOG_DEBUG << "Failed to send response to server " << "[socket:" << client_socket_ << "][buffer:" << data_send << "][size:" << strlen(data_send) << "][flags:" << NULL << "]";
@@ -88,7 +88,7 @@ bool ClientTCPSocket::send_data(const char* data_send) {
 	return true;
 }
 
-bool ClientTCPSocket::receive_data(char* data_receive, int size) {
+bool ClientTCPSocket::receiveData(char* data_receive, int size) {
 	int retval = recv(client_socket_, data_receive, size, 0);
 	if (retval > 0) {
 		data_receive[retval] = '\0';
@@ -100,7 +100,7 @@ bool ClientTCPSocket::receive_data(char* data_receive, int size) {
 	return retval > 0;
 }
 
-void ClientTCPSocket::close_client() {
+void ClientTCPSocket::closeClient() {
 	if (client_socket_ != INVALID_SOCKET) {
 		closesocket(client_socket_);
 		client_socket_ = INVALID_SOCKET;

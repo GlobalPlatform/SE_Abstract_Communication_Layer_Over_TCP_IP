@@ -38,11 +38,11 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 #include "plog/include/plog/Log.h"
 #include "plog/include/plog/Appenders/ColorConsoleAppender.h"
 
-#include "server/client_data.h"
-#include "server/server_engine.h"
-#include "config/config_wrapper.h"
-#include "constants/request_code.h"
-#include "constants/response_packet.h"
+#include <server/client_data.hpp>
+#include <server/server_engine.hpp>
+#include <config/config_wrapper.hpp>
+#include <constants/request_code.hpp>
+#include <constants/response_packet.hpp>
 
 namespace server {
 
@@ -85,7 +85,7 @@ ResponsePacket ServerEngine::startListening(const char* ip, const char* port) {
 		return response_packet;
 	}
 
-	socket_response = socket_->start_server(ip, port);
+	socket_response = socket_->startServer(ip, port);
 	if (!socket_response) {
 		ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_NETWORK, .err_server_description = "Failed to start server" };
 		return response_packet;
@@ -109,7 +109,7 @@ ResponsePacket ServerEngine::handleConnections() {
 	while (!stop_.load()) {
 		SOCKET client_socket = INVALID_SOCKET;
 
-		socket_response = socket_->accept_connection(&client_socket, default_timeout);
+		socket_response = socket_->acceptConnection(&client_socket, default_timeout);
 		if (!socket_response) {
 			ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_NETWORK, .err_server_description = "Connection with client failed" };
 			return response_packet;
@@ -133,7 +133,7 @@ ResponsePacket ServerEngine::connectionHandshake(SOCKET client_socket) {
 	char recvbuf[DEFAULT_BUFLEN];
 	std::string timeout = config_.getValue("timeout", DEFAULT_TIMEOUT);
 
-	response = socket_->receive_data(client_socket, recvbuf, DEFAULT_BUFLEN);
+	response = socket_->receiveData(client_socket, recvbuf, DEFAULT_BUFLEN);
 	if (!response) {
 		ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_NETWORK, .err_server_description = "Network error on receive" };
 		return response_packet;
@@ -186,13 +186,13 @@ ResponsePacket ServerEngine::asyncRequest(SOCKET client_socket, std::string to_s
 	bool socket_response;
 	char recvbuf[DEFAULT_BUFLEN];
 
-	socket_response = socket_->send_data(client_socket, to_send.c_str());
+	socket_response = socket_->sendData(client_socket, to_send.c_str());
 	if (!socket_response) {
 		ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_NETWORK, .err_server_description = "Network error on send request" };
 	}
 	LOG_INFO << "Data sent to client: " << to_send.c_str();
 
-	socket_response = socket_->receive_data(client_socket, recvbuf, DEFAULT_BUFLEN);
+	socket_response = socket_->receiveData(client_socket, recvbuf, DEFAULT_BUFLEN);
 	if (!socket_response) {
 		ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_NETWORK, .err_server_description = "Network error on receive" };
 		return response_packet;
@@ -225,7 +225,7 @@ ResponsePacket ServerEngine::stopAllClients() {
 	}
 
 	stop_ = true; // stop active threads
-	socket_->close_server();
+	socket_->closeServer();
 	connection_thread_.join();
 
 	for (const auto &p : clients_) {

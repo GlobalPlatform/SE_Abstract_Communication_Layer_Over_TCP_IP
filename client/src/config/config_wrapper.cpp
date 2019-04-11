@@ -15,10 +15,10 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
  limitations under the License.
 *********************************************************************************/
 
+#include <config/config_wrapper.hpp>
 #include <fstream>
 #include <iostream>
 #include <string>
-#include "config/config_wrapper.h"
 #include "nlohmann/json.hpp"
 
 namespace client {

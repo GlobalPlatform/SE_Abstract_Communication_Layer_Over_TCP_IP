@@ -15,16 +15,16 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
  limitations under the License.
 *********************************************************************************/
 
-#include <terminal/terminals/example_pcsc_contact.h>
-#include "constants/request_code.h"
-#include "client/client_api.h"
-#include "client/requests/command.h"
-#include "client/requests/diag.h"
-#include "client/requests/disconnect.h"
-#include "client/requests/echo.h"
-#include "client/requests/request.h"
-#include "client/requests/flyweight_requests.h"
-#include "terminal/flyweight_terminal_factory.h"
+#include <client/client_api.hpp>
+#include <client/requests/command.hpp>
+#include <client/requests/diag.hpp>
+#include <client/requests/disconnect.hpp>
+#include <client/requests/echo.hpp>
+#include <client/requests/flyweight_requests.hpp>
+#include <client/requests/request.hpp>
+#include <constants/request_code.hpp>
+#include <terminal/flyweight_terminal_factory.hpp>
+#include <terminal/terminals/example_pcsc_contact.hpp>
 #include "plog/include/plog/Log.h"
 
 using namespace client;
