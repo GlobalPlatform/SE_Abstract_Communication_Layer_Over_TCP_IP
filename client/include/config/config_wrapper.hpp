@@ -15,8 +15,8 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
  limitations under the License.
 *********************************************************************************/
 
-#ifndef SRC_CONFIG_WRAPPER_H_
-#define SRC_CONFIG_WRAPPER_H_
+#ifndef SRC_CONFIG_WRAPPER_HPP_
+#define SRC_CONFIG_WRAPPER_HPP_
 
 #include <string>
 #include "nlohmann/json.hpp"
@@ -61,5 +61,5 @@ public:
 
 } /* namespace client */
 
-#endif /* SRC_CONFIG_WRAPPER_H_ */
+#endif /* SRC_CONFIG_WRAPPER_HPP_ */
 

@@ -15,8 +15,8 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
  limitations under the License.
 *********************************************************************************/
 
-#ifndef SRC_SERVER_ENGINE_H_
-#define SRC_SERVER_ENGINE_H_
+#ifndef SRC_SERVER_ENGINE_HPP_
+#define SRC_SERVER_ENGINE_HPP_
 
 #include <config/config_wrapper.hpp>
 #include <constants/request_code.hpp>
@@ -27,11 +27,9 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 #include <map>
 #include <thread>
 
-
 namespace server {
 
 typedef void (__stdcall *Callback)(int id_client, const char* name_client);
-
 
 class ServerEngine {
 private:
@@ -126,4 +124,4 @@ public:
 
 } /* namespace server */
 
-#endif /* SRC_SERVER_ENGINE_H_ */
+#endif /* SRC_SERVER_ENGINE_HPP_ */

@@ -15,8 +15,8 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
  limitations under the License.
 *********************************************************************************/
 
-#ifndef SRC_CLIENT_REQUESTS_DIAG_H_
-#define SRC_CLIENT_REQUESTS_DIAG_H_
+#ifndef SRC_CLIENT_REQUESTS_DIAG_HPP_
+#define SRC_CLIENT_REQUESTS_DIAG_HPP_
 
 #include <client/requests/request.hpp>
 
@@ -32,4 +32,4 @@ public:
 
 } /* namespace client */
 
-#endif /* SRC_CLIENT_REQUESTS_DIAG_H_ */
+#endif /* SRC_CLIENT_REQUESTS_DIAG_HPP_ */

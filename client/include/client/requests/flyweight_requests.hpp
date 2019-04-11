@@ -15,8 +15,8 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
  limitations under the License.
 *********************************************************************************/
 
-#ifndef SRC_CLIENT_REQUESTS_FLYWEIGHT_REQUESTS_H_
-#define SRC_CLIENT_REQUESTS_FLYWEIGHT_REQUESTS_H_
+#ifndef SRC_CLIENT_REQUESTS_FLYWEIGHT_REQUESTS_HPP_
+#define SRC_CLIENT_REQUESTS_FLYWEIGHT_REQUESTS_HPP_
 
 #include <client/requests/request.hpp>
 #include <constants/request_code.hpp>
@@ -39,4 +39,4 @@ public:
 
 } /* namespace client */
 
-#endif /* SRC_CLIENT_REQUESTS_FLYWEIGHT_REQUESTS_H_ */
+#endif /* SRC_CLIENT_REQUESTS_FLYWEIGHT_REQUESTS_HPP_ */

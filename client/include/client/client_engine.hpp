@@ -15,8 +15,8 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
  limitations under the License.
 *********************************************************************************/
 
-#ifndef CLIENT_ENGINE_H_
-#define CLIENT_ENGINE_H_
+#ifndef CLIENT_ENGINE_HPP_
+#define CLIENT_ENGINE_HPP_
 
 #include <client/client_tcp_socket.hpp>
 #include <client/requests/flyweight_requests.hpp>
@@ -26,7 +26,6 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 #include <terminal/terminals/terminal.hpp>
 #include <atomic>
 #include <thread>
-
 
 namespace client {
 
@@ -106,4 +105,4 @@ public:
 
 } /* namespace client */
 
-#endif /* CLIENT_ENGINE_H_ */
+#endif /* CLIENT_ENGINE_HPP_ */

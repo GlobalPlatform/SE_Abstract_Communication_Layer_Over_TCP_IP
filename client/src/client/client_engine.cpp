@@ -124,7 +124,6 @@ ResponsePacket ClientEngine::connectClient(const char* reader, const char* ip, c
 		return response_packet;
 	}
 
-
 	std::string name = config_.getValue("name", DEFAULT_NAME).append(" - ").append(reader);
 	socket_->sendData(name.c_str());
 	Sleep(1000);

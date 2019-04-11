@@ -15,8 +15,8 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
  limitations under the License.
 *********************************************************************************/
 
-#ifndef SRC_REQUEST_CODE_H_
-#define SRC_REQUEST_CODE_H_
+#ifndef SRC_REQUEST_CODE_HPP_
+#define SRC_REQUEST_CODE_HPP_
 
 #include <string>
 
@@ -67,4 +67,4 @@ inline const std::string requestCodeToString(RequestCode r) {
 
 } /* namespace server */
 
-#endif /* SRC_REQUEST_CODE_H_ */
+#endif /* SRC_REQUEST_CODE_HPP_ */

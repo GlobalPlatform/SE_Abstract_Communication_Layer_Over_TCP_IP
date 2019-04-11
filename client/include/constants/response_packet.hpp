@@ -15,8 +15,8 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
  limitations under the License.
 *********************************************************************************/
 
-#ifndef SRC_RESPONSE_PACKET_H_
-#define SRC_RESPONSE_PACKET_H_
+#ifndef SRC_RESPONSE_PACKET_HPP_
+#define SRC_RESPONSE_PACKET_HPP_
 
 #include <string>
 #include "nlohmann/json.hpp"
@@ -78,4 +78,4 @@ inline void from_json(const nlohmann::json& j, ResponsePacket& e) {
 
 } // Namespace client
 
-#endif /* SRC_RESPONSE_PACKET_H_ */
+#endif /* SRC_RESPONSE_PACKET_HPP_ */

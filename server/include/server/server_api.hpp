@@ -15,8 +15,8 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
  limitations under the License.
 *********************************************************************************/
 
-#ifndef SERVER_H_
-#define SERVER_H_
+#ifndef SERVER_HPP_
+#define SERVER_HPP_
 
 #include <constants/request_code.hpp>
 #include <server/client_data.hpp>
@@ -156,4 +156,4 @@ public:
 
 }  // namespace server
 
-#endif /* SERVER_H_ */
+#endif /* SERVER_HPP_ */
