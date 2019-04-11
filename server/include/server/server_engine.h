@@ -21,9 +21,9 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 #include <atomic>
 #include <map>
 #include <thread>
-#include <winsock2.h>
 
 #include "client_data.h"
+#include "server_tcp_socket.h"
 #include "config/config_wrapper.h"
 #include "constants/request_code.h"
 #include "constants/response_packet.h"
@@ -38,11 +38,11 @@ private:
 	enum class State { INSTANCIED, INITIALIZED, STARTED, DISCONNECTED };
 	State state_;
 	ConfigWrapper& config_ = ConfigWrapper::getInstance();
+	ServerTCPSocket* socket_;
 	std::map<int, ClientData*> clients_;
 	std::thread connection_thread_;
 	int next_client_id_ = 0;
 	std::atomic<bool> stop_ { false };
-	SOCKET listen_socket_ = INVALID_SOCKET;
 	Callback notifyConnectionAccepted_;
 protected:
 public:
@@ -73,12 +73,11 @@ public:
 	 * @param listen_socket the socket used to listen for connections.
 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
 	 */
-	ResponsePacket handleConnections(SOCKET listen_socket);
+	ResponsePacket handleConnections();
 
 	/**
 	 * connectionHandshake - helper function used to handle a connection asynchronously.
 	 * The handshake ensures that the client send its data (such as its name) after requesting for a connection.
-	 * @param client_socket the socket where the handshake is performed.
 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
 	 */
 	ResponsePacket connectionHandshake(SOCKET client_socket);

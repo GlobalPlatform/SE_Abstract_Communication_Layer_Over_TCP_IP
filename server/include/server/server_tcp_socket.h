@@ -24,7 +24,7 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 
 class ServerTCPSocket {
 private:
-	SOCKET client_socket_;
+	SOCKET server_socket_;
 	WSADATA wsaData_;
 	const char* ip_;
 	const char* port_;
@@ -34,11 +34,11 @@ private:
 public:
 	ServerTCPSocket() {}
 	virtual ~ServerTCPSocket() {}
-	bool init_client(const char* ip, const char* port);
-	bool connect_client();
-	bool send_data(const char* data_send);
-	bool receive_data(char* data_receive, int size);
-	void close_client();
+	bool start_server(const char* ip, const char* port);
+	bool accept_connection(SOCKET* client_socket, int timeout);
+	bool receive_data(SOCKET client_socket, char* data_receive, int size);
+	bool send_data(SOCKET client_socket, const char* data_send);
+	void close_server();
 };
 
 #endif /* INCLUDE_SERVER_SERVER_TCP_SOCKET_H_ */

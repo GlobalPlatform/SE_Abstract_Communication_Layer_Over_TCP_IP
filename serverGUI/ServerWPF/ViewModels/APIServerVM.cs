@@ -6,8 +6,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Windows.Inpu
-    t;
+using System.Windows.Input;
 
 namespace ServerWPF.ViewModels
 {

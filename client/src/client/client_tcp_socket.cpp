@@ -68,7 +68,6 @@ bool ClientTCPSocket::connect_client() {
 		}
 		break;
 	}
-
 	freeaddrinfo(result_);
 
 	if (client_socket_ == INVALID_SOCKET) {
@@ -98,11 +97,13 @@ bool ClientTCPSocket::receive_data(char* data_receive, int size) {
 		LOG_DEBUG << "Failed to receive data from server " << "[socket:" << client_socket_ << "][recvbuf:" << data_receive << "][size:"
 				  << size << "][flags:" << NULL << "][WSAError:" << WSAGetLastError() << "]";
 	}
-	return retval >= 0;
+	return retval > 0;
 }
 
 void ClientTCPSocket::close_client() {
-	closesocket(client_socket_);
-	client_socket_ = INVALID_SOCKET;
+	if (client_socket_ != INVALID_SOCKET) {
+		closesocket(client_socket_);
+		client_socket_ = INVALID_SOCKET;
+	}
 	WSACleanup();
 }
