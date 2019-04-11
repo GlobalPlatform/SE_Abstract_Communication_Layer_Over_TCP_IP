@@ -1,4 +1,4 @@
-/*********************************************************************************
+ /*********************************************************************************
  Copyright 2017 GlobalPlatform, Inc.
 
  Licensed under the GlobalPlatform/Apache License, Version 2.0 (the "License");

@@ -6,8 +6,8 @@ using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Input;
+using System.Windows.Inpu
+    t;
 
 namespace ServerWPF.ViewModels
 {
@@ -19,12 +19,12 @@ namespace ServerWPF.ViewModels
         private APIServerWrapper _server;
         private ActionFlyweight _actions = new ActionFlyweight();
 
-        private readonly IMessageDialogService _dialogService;
+        private readonly IMessageDialogService _messageDialogService;
         private readonly IFileDialogService _fileDialogService;
 
         public APIServerVM(IMessageDialogService dialogService, IFileDialogService fileDialogService) // injects services
         {
-            _dialogService = dialogService;
+            _messageDialogService = dialogService;
             _fileDialogService = fileDialogService;
 
             _connectionAccepted = new Callback(ConnectionAccepted);
@@ -377,30 +377,10 @@ namespace ServerWPF.ViewModels
         #region utils
         private bool CheckError(ResponseDLL packet)
         {
-            bool hasError = false;
-            string description = "none";
-            if (packet.err_server_code != 0)
-            {
-                description = packet.err_server_description;
-                hasError = true;
-            }
-            else if (packet.err_client_code != 0)
-            {
-                description = packet.err_client_description;
-                hasError = true;
-            }
-            else if (packet.err_terminal_code != 0)
-            {
-                description = packet.err_terminal_description;
-                hasError = true;
-            }
-            else if (packet.err_card_code != 0)
-            {
-                description = packet.err_card_description;
-                hasError = true;
-            }
-            if (hasError) _dialogService.ShowError(description);
-            return hasError;
+            string description = APIServerWrapper.RetrieveErrorDescription(packet);
+            if (description.Equals(APIServerWrapper.NO_ERROR)) return false;
+            _messageDialogService.ShowError(description);
+            return true;
         }
         #endregion
     }

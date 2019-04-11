@@ -146,10 +146,10 @@
                   ScrollViewer.CanContentScroll="True" 
                   ScrollViewer.HorizontalScrollBarVisibility="Auto" 
                   ScrollViewer.VerticalScrollBarVisibility="Auto" 
-                  AutoGenerateColumns="False" IsReadOnly="True" >
+                  AutoGenerateColumns="False" IsReadOnly="True">
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding LogType}" Header="Type" Width="100" />
-                <DataGridTextColumn Binding="{Binding LogTime}" Header="Time" Width="150" />
+                <DataGridTextColumn Binding="{Binding LogType}" Header="Type" Width="60" />
+                <DataGridTextColumn Binding="{Binding LogTime}" Header="Time" Width="130" />
                 <DataGridTextColumn Binding="{Binding LogData}" Header="Data" Width="Auto" />
             </DataGrid.Columns>
         </DataGrid>

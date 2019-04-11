@@ -57,7 +57,6 @@ ResponsePacket ServerEngine::initServer(std::string path) {
 		ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_INVALID_STATE, .err_server_description = "Server already initialized" };
 		return response_packet;
 	}
-
 	config_.init(path);
 
 	// setup logger

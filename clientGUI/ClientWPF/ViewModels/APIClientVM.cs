@@ -145,7 +145,7 @@ namespace ClientWPF.ViewModels
 
         public ObservableCollection<LogModel> LogsList
         {
-            get { return _logsList = _logsList ?? new ObservableCollection<LogModel>(); }
+            get => _logsList = _logsList ?? new ObservableCollection<LogModel>(); 
         }
         #endregion observable collections
 

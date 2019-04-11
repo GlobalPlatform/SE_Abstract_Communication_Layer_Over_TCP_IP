@@ -20,8 +20,8 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 
 #include <atomic>
 #include <thread>
-#include <ws2tcpip.h>
 
+#include "client_tcp_socket.h"
 #include "requests/flyweight_requests.h"
 #include "../config/config_wrapper.h"
 #include "../constants/response_packet.h"
@@ -35,11 +35,11 @@ typedef void (__stdcall *Callback)(const char* text);
 class ClientEngine {
 private:
 	ConfigWrapper& config_ = ConfigWrapper::getInstance();
-	SOCKET client_socket_;
+	ClientTCPSocket* socket_;
+	ITerminalLayer* terminal_;
 	std::thread requests_thread_;
 	std::atomic<bool> connected_ { false };
 	std::atomic<bool> initialized_ { false };
-	ITerminalLayer* terminal_;
 	FlyweightRequests requests_;
 	Callback notifyConnectionLost_, notifyRequestReceived_, notifyResponseSent_;
 public:
@@ -48,6 +48,7 @@ public:
 		this->notifyRequestReceived_ = notifyRequestReceived;
 		this->notifyResponseSent_ = notifyResponseSent;
 	}
+
 	virtual ~ClientEngine();
 
 	/**
@@ -91,11 +92,10 @@ public:
 	/**
 	 * handleRequest - helper function that performs async actions according to the given request.
 	 * The response will be sent back to the given socket.
-	 * @param socket the socket to which the response will be sent.
 	 * @param request the request to be performed.
 	 * @return a ResponsePacket struct containing either the request's response or error codes (under 0) and error descriptions.
 	 */
-	ResponsePacket handleRequest(SOCKET socket, std::string request);
+	ResponsePacket handleRequest(std::string request);
 
 	/**
 	 * setStopFlag - set the flag used to stop (or not) waiting for requests.
