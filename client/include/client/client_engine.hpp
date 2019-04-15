@@ -18,12 +18,13 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 #ifndef CLIENT_ENGINE_HPP_
 #define CLIENT_ENGINE_HPP_
 
-#include <client/client_tcp_socket.hpp>
-#include <client/requests/flyweight_requests.hpp>
-#include <config/config_wrapper.hpp>
-#include <constants/response_packet.hpp>
-#include <terminal/flyweight_terminal_factory.hpp>
-#include <terminal/terminals/terminal.hpp>
+#include "client/client_tcp_socket.hpp"
+#include "client/requests/flyweight_requests.hpp"
+#include "config/config_wrapper.hpp"
+#include "constants/response_packet.hpp"
+#include "terminal/flyweight_terminal_factory.hpp"
+#include "terminal/terminals/terminal.hpp"
+
 #include <atomic>
 #include <thread>
 

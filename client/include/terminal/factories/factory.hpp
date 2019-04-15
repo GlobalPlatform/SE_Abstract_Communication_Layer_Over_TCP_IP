@@ -18,7 +18,7 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 #ifndef TERMINAL_BASE_TERMINAL_FACTORY_H_
 #define TERMINAL_BASE_TERMINAL_FACTORY_H_
 
-#include <terminal/terminals/terminal.hpp>
+#include "terminal/terminals/terminal.hpp"
 
 namespace client {
 

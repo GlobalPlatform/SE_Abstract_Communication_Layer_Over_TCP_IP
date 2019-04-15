@@ -15,10 +15,11 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
  limitations under the License.
 *********************************************************************************/
 
-#include <client/requests/command.hpp>
+#include "client/requests/command.hpp"
+#include "plog/include/plog/Log.h"
+
 #include <winsock2.h>
 #include <windows.h>
-#include "plog/include/plog/Log.h"
 
 namespace client {
 

@@ -15,8 +15,9 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
  limitations under the License.
 *********************************************************************************/
 
-#include <client/requests/flyweight_requests.hpp>
-#include <client/requests/request.hpp>
+#include "client/requests/flyweight_requests.hpp"
+#include "client/requests/request.hpp"
+
 #include <map>
 
 namespace client {

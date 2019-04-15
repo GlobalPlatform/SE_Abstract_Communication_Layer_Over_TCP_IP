@@ -15,19 +15,18 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
  limitations under the License.
 *********************************************************************************/
 
-#include <constants/request_code.hpp>
-#include <constants/response_packet.hpp>
-#include <server/server_api.hpp>
-#include <server/server_engine.hpp>
+#include "constants/request_code.hpp"
+#include "constants/response_packet.hpp"
+#include "server/server_api.hpp"
+#include "server/server_engine.hpp"
+#include "nlohmann/json.hpp"
+
+#include "plog/include/plog/Log.h"
+#include "plog/include/plog/Appenders/ColorConsoleAppender.h"
 #include <fstream>
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
-
-#include "nlohmann/json.hpp"
-#include "plog/include/plog/Log.h"
-#include "plog/include/plog/Appenders/ColorConsoleAppender.h"
-
 
 namespace server {
 

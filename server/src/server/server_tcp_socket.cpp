@@ -18,7 +18,7 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 #define _WIN32_WINNT 0x501
 #define WIN32_LEAN_AND_MEAN
 
-#include <server/server_tcp_socket.hpp>
+#include "server/server_tcp_socket.hpp"
 #include "plog/include/plog/Log.h"
 
 #include <winsock2.h>

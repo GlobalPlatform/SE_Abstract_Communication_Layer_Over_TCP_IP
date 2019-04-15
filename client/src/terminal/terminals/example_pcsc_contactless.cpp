@@ -15,14 +15,14 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
  limitations under the License.
 *********************************************************************************/
 
-#include <constants/response_packet.hpp>
-#include <terminal/terminals/example_pcsc_contactless.hpp>
-#include <terminal/terminals/utils/type_converter.hpp>
+#include "constants/response_packet.hpp"
+#include "terminal/terminals/example_pcsc_contactless.hpp"
+#include "terminal/terminals/utils/type_converter.hpp"
+#include "plog/include/plog/Log.h"
+
 #include <iostream>
 #include <winscard.h>
 #include <map>
-
-#include "plog/include/plog/Log.h"
 
 #define TRIES_LIMIT 3
 

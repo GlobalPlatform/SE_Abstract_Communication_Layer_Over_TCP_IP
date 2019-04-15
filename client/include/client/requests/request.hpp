@@ -18,8 +18,8 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 #ifndef SRC_CLIENT_REQUESTS_REQUEST_HPP_
 #define SRC_CLIENT_REQUESTS_REQUEST_HPP_
 
-#include <constants/response_packet.hpp>
-#include <terminal/terminals/terminal.hpp>
+#include "constants/response_packet.hpp"
+#include "terminal/terminals/terminal.hpp"
 
 namespace client {
 

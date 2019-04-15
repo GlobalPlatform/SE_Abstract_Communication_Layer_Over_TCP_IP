@@ -18,7 +18,8 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 #ifndef TERMINAL_LAYER_H_
 #define TERMINAL_LAYER_H_
 
-#include <constants/response_packet.hpp>
+#include "constants/response_packet.hpp"
+
 #include <windows.h>
 
 namespace client {

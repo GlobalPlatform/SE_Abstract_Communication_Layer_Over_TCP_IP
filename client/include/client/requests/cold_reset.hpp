@@ -18,8 +18,8 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 #ifndef INCLUDE_CLIENT_REQUESTS_COLD_RESET_HPP_
 #define INCLUDE_CLIENT_REQUESTS_COLD_RESET_HPP_
 
-#include <client/requests/request.hpp>
-#include <terminal/terminals/terminal.hpp>
+#include "client/requests/request.hpp"
+#include "terminal/terminals/terminal.hpp"
 
 namespace client {
 class ClientEngine;

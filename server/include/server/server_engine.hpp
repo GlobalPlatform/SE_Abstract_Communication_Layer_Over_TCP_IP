@@ -18,11 +18,12 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 #ifndef SRC_SERVER_ENGINE_HPP_
 #define SRC_SERVER_ENGINE_HPP_
 
-#include <config/config_wrapper.hpp>
-#include <constants/request_code.hpp>
-#include <constants/response_packet.hpp>
-#include <server/client_data.hpp>
-#include <server/server_tcp_socket.hpp>
+#include "config/config_wrapper.hpp"
+#include "constants/request_code.hpp"
+#include "constants/response_packet.hpp"
+#include "server/client_data.hpp"
+#include "server/server_tcp_socket.hpp"
+
 #include <atomic>
 #include <map>
 #include <thread>

@@ -18,7 +18,7 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 #ifndef SRC_CLIENT_REQUESTS_DIAG_HPP_
 #define SRC_CLIENT_REQUESTS_DIAG_HPP_
 
-#include <client/requests/request.hpp>
+#include "client/requests/request.hpp"
 
 namespace client {
 class ClientEngine;
@@ -31,5 +31,6 @@ public:
 };
 
 } /* namespace client */
+
 
 #endif /* SRC_CLIENT_REQUESTS_DIAG_HPP_ */

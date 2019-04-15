@@ -25,6 +25,19 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 #define DEFAULT_LOG_MAX_SIZE "1000" // bytes
 #define DEFAULT_LOG_MAX_FILES "5"
 
+#include "client/client_engine.hpp"
+#include "client/client_tcp_socket.hpp"
+#include "config/config_wrapper.hpp"
+#include "constants/request_code.hpp"
+#include "constants/response_packet.hpp"
+#include "terminal/flyweight_terminal_factory.hpp"
+#include "terminal/terminals/terminal.hpp"
+#include "terminal/terminals/utils/type_converter.hpp"
+#include "nlohmann/json.hpp"
+#include "plog/include/plog/Log.h"
+#include "plog/include/plog/Appenders/ColorConsoleAppender.h"
+#include "plog/include/plog/Appenders/RollingFileAppender.h"
+
 #include <fstream>
 #include <future>
 #include <iostream>
@@ -32,20 +45,6 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 #include <stdio.h>
 #include <stdlib.h>
 #include <thread>
-
-#include "nlohmann/json.hpp"
-#include "plog/include/plog/Log.h"
-#include "plog/include/plog/Appenders/ColorConsoleAppender.h"
-#include "plog/include/plog/Appenders/RollingFileAppender.h"
-
-#include <client/client_engine.hpp>
-#include <client/client_tcp_socket.hpp>
-#include <config/config_wrapper.hpp>
-#include <constants/request_code.hpp>
-#include <constants/response_packet.hpp>
-#include <terminal/flyweight_terminal_factory.hpp>
-#include <terminal/terminals/terminal.hpp>
-#include <terminal/terminals/utils/type_converter.hpp>
 
 namespace client {
 
@@ -69,7 +68,7 @@ ResponsePacket ClientEngine::initClient(std::string path, FlyweightTerminalFacto
 	int log_max_files = std::stoi(config_.getValue("log_max_files", DEFAULT_LOG_MAX_FILES));
 	static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
 	std::string log_path = log_directory + "/" + log_filename;
-	if (log_level.compare("debug") == 0) {;
+	if (log_level.compare("debug") == 0) {
 		plog::init(plog::debug, log_path.c_str(), log_max_size, log_max_files).addAppender(&consoleAppender);
 	} else {
 		plog::init(plog::info, log_path.c_str(), log_max_size, log_max_files).addAppender(&consoleAppender);
@@ -111,6 +110,7 @@ ResponsePacket ClientEngine::connectClient(const char* reader, const char* ip, c
 		return response_packet;
 	}
 
+	// init socket
 	LOG_INFO << "Client trying to connect on IP " << ip << " port " << port;
 	response = socket_->initClient(ip, port);
 	if (!response) {
@@ -118,25 +118,29 @@ ResponsePacket ClientEngine::connectClient(const char* reader, const char* ip, c
 		return response_packet;
 	}
 
+	// connect to the server
 	response = socket_->connectClient();
 	if (!response) {
 		ResponsePacket response_packet = { .response = "KO", .err_client_code = ERR_NETWORK, .err_client_description = "Failed to connect: check the server" };
 		return response_packet;
 	}
 
-	std::string name = config_.getValue("name", DEFAULT_NAME).append(" - ").append(reader);
-	socket_->sendData(name.c_str());
-	Sleep(1000);
-
+	// connect to the terminal
 	packet = terminal_->connect(reader);
 	if (packet.err_card_code < 0 || packet.err_terminal_code < 0) {
 		socket_ ->closeClient();
 		return packet;
 	}
 
+	// perform handshake procedure
+	std::string name = config_.getValue("name", DEFAULT_NAME).append(" - ").append(reader);
+	socket_->sendData(name.c_str());
+	Sleep(1000);
+
 	connected_ = true;
 	LOG_INFO << "Client connected on IP " << ip << " port " << port;
 
+	// start waiting for requests on a different thread
 	std::thread thr(&ClientEngine::waitingRequests, this);
 	thr.detach();
 
@@ -154,26 +158,29 @@ ResponsePacket ClientEngine::disconnectClient() {
 	socket_->closeClient();
 	ResponsePacket response = terminal_->disconnect();
 	if (notifyConnectionLost_ != 0) notifyConnectionLost_("End of connection");
+
 	LOG_INFO << "Client disconnected successfully";
 	return response;
 }
 
 ResponsePacket ClientEngine::waitingRequests() {
-	char recvbuf[DEFAULT_BUFLEN];
-	int recvbuflen = DEFAULT_BUFLEN;
+	char request[DEFAULT_BUFLEN];
+	int request_length = DEFAULT_BUFLEN;
 	bool response;
 
 	LOG_INFO << "Client ready to process incoming requests";
 
 	// receives until the server closes the connection
 	while (connected_.load()) {
-		response = socket_->receiveData(recvbuf, recvbuflen);
+		response = socket_->receiveData(request, request_length);
 		if (response) {
-			std::async(std::launch::async, &ClientEngine::handleRequest, this, recvbuf);
+			// std::async(std::launch::async, &ClientEngine::handleRequest, this, request);
+			handleRequest(request);
 		} else {
 			disconnectClient();
 		}
 	}
+
 	LOG_INFO << "Client not waiting for requests";
 
 	ResponsePacket response_packet;
@@ -184,13 +191,16 @@ ResponsePacket ClientEngine::handleRequest(std::string request) {
 	nlohmann::json response;
 	ResponsePacket response_packet;
 
+	// build the request using json
 	nlohmann::json j = nlohmann::json::parse(request);
-	IRequest* request_handler = requests_.getRequest(j["request"]);
 	unsigned long int length;
 	unsigned char* command = utils::stringToUnsignedChar(j["data"].get<std::string>(), &length);
+
+	// launch a thread to perform the request
+	IRequest* request_handler = requests_.getRequest(j["request"]);
 	std::future<ResponsePacket> future = std::async(std::launch::async, &IRequest::run, request_handler, terminal_, this, command, length);
 
-	// blocks until the timeout has elapsed or the result becomes available
+	// block until the timeout has elapsed or the result becomes available
 	if (future.wait_for(std::chrono::milliseconds(j["timeout"])) == std::future_status::timeout) {
 		LOG_DEBUG << "Response time from terminal has elapsed "
 				  << "[request:" << request << "]";
@@ -200,6 +210,7 @@ ResponsePacket ClientEngine::handleRequest(std::string request) {
 		response = future.get();
 	}
 
+	// send result to the server
 	std::string to_send = response.dump();
 	if (socket_->sendData(to_send.c_str())) {
 		LOG_INFO << "Data sent to server: " << to_send;

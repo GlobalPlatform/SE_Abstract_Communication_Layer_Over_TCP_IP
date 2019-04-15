@@ -15,10 +15,10 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
  limitations under the License.
 *********************************************************************************/
 
-#include <terminal/flyweight_terminal_factory.hpp>
-#include <terminal/terminals/terminal.hpp>
-#include <map>
+#include "terminal/flyweight_terminal_factory.hpp"
+#include "terminal/terminals/terminal.hpp"
 
+#include <map>
 
 namespace client {
 

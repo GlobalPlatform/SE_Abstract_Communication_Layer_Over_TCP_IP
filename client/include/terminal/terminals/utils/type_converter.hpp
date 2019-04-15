@@ -18,11 +18,11 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 #ifndef UTILS_TYPE_CONVERTER_H_
 #define UTILS_TYPE_CONVERTER_H_
 
+#include "plog/include/plog/Log.h"
+
 #include <sstream>
 #include <string>
 #include <vector>
-
-#include "plog/include/plog/Log.h"
 
 namespace utils {
 

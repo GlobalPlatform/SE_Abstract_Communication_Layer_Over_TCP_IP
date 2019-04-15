@@ -18,8 +18,9 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 #ifndef SRC_CONFIG_WRAPPER_HPP_
 #define SRC_CONFIG_WRAPPER_HPP_
 
-#include <string>
 #include "nlohmann/json.hpp"
+
+#include <string>
 
 namespace server {
 

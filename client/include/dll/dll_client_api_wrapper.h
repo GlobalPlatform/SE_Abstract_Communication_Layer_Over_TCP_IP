@@ -22,6 +22,7 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 #endif
 
 #define ADDCALL __cdecl
+
 #include "client/client_api.hpp"
 #include "constants/response_packet.hpp"
 

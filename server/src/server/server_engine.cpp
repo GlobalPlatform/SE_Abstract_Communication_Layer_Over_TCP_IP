@@ -25,6 +25,15 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 #define DEFAULT_LOG_MAX_SIZE "1000" // bytes
 #define DEFAULT_LOG_MAX_FILES "5"
 
+#include "server/client_data.hpp"
+#include "server/server_engine.hpp"
+#include "config/config_wrapper.hpp"
+#include "constants/request_code.hpp"
+#include "constants/response_packet.hpp"
+#include "nlohmann/json.hpp"
+#include "plog/include/plog/Log.h"
+#include "plog/include/plog/Appenders/ColorConsoleAppender.h"
+
 #include <cstdlib>
 #include <fstream>
 #include <future>
@@ -33,16 +42,6 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 #include <stdio.h>
 #include <stdlib.h>
 #include <thread>
-
-#include "nlohmann/json.hpp"
-#include "plog/include/plog/Log.h"
-#include "plog/include/plog/Appenders/ColorConsoleAppender.h"
-
-#include <server/client_data.hpp>
-#include <server/server_engine.hpp>
-#include <config/config_wrapper.hpp>
-#include <constants/request_code.hpp>
-#include <constants/response_packet.hpp>
 
 namespace server {
 

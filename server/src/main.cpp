@@ -15,10 +15,10 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
  limitations under the License.
 *********************************************************************************/
 
-#include <server/server_api.hpp>
-#include <iostream>
-
+#include "server/server_api.hpp"
 using namespace server;
+
+#include <iostream>
 
 int __cdecl main(void) {
 //	ServerAPI server;

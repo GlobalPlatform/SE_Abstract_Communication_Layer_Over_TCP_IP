@@ -20,11 +20,11 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 
 #define DEFAULT_BUFLEN 1024 * 64
 
+#include "terminal/terminals/terminal.hpp"
+#include "constants/response_packet.hpp"
+
 #include <map>
 #include <winscard.h>
-
-#include <terminal/terminals/terminal.hpp>
-#include <constants/response_packet.hpp>
 
 namespace client {
 

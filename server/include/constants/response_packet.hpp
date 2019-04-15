@@ -18,9 +18,10 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 #ifndef SRC_RESPONSE_PACKET_HPP_
 #define SRC_RESPONSE_PACKET_HPP_
 
-#include <string>
 #include "nlohmann/json.hpp"
 using nlohmann::json;
+
+#include <string>
 
 namespace server {
 
