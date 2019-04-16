@@ -128,7 +128,7 @@ ResponsePacket ServerEngine::connectionHandshake(SOCKET client_socket) {
 	bool response;
 	char client_name[DEFAULT_BUFLEN];
 
-	response = socket_->receiveData(client_socket, client_name);
+	response = socket_->receivePacket(client_socket, client_name);
 	if (!response) {
 		LOG_INFO << "Handshake with client failed";
 		ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_NETWORK, .err_server_description = "Network error on receive" };
@@ -182,13 +182,13 @@ ResponsePacket ServerEngine::asyncRequest(SOCKET client_socket, std::string to_s
 	bool socket_response;
 	char recvbuf[DEFAULT_BUFLEN];
 
-	socket_response = socket_->sendData(client_socket, to_send.c_str());
+	socket_response = socket_->sendPacket(client_socket, to_send.c_str());
 	if (!socket_response) {
 		ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_NETWORK, .err_server_description = "Network error on send request" };
 	}
 	LOG_INFO << "Data sent to client: " << to_send.c_str();
 
-	socket_response = socket_->receiveData(client_socket, recvbuf);
+	socket_response = socket_->receivePacket(client_socket, recvbuf);
 	if (!socket_response) {
 		ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_NETWORK, .err_server_description = "Network error on receive" };
 		return response_packet;

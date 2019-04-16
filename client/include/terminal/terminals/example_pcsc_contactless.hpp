@@ -38,6 +38,11 @@ private:
 	DWORD dwReaders_, dwActiveProtocol_, dwRecvLength_;
 	SCARD_IO_REQUEST pioSendPci_;
 	BYTE pbRecvBuffer_[DEFAULT_BUFLEN];
+private:
+	ResponsePacket handleErrorResponse(std::string context_message, LONG error);
+	ResponsePacket retrieveAtr(BYTE* bAttr, DWORD* cByte);
+	std::string errorToString(LONG error);
+	LONG handleRetry();
 public:
 	ExampleTerminalPCSCContactless() {};
 	~ExampleTerminalPCSCContactless();
@@ -56,10 +61,6 @@ public:
 	ResponsePacket warmReset();
 	ResponsePacket powerOFFField();
 	ResponsePacket powerONField();
-	ResponsePacket handleErrorResponse(std::string context_message, LONG error);
-	ResponsePacket retrieveAtr(BYTE* bAttr, DWORD* cByte);
-	std::string errorToString(LONG error);
-	LONG handleRetry();
 };
 
 } /* namespace client */

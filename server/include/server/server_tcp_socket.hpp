@@ -30,7 +30,9 @@ private:
 	const char* port_;
 	struct addrinfo* result_;
 	struct addrinfo hints_;
-
+private:
+	bool sendData(SOCKET socket, const char* data, int size);
+	bool receiveData(SOCKET socket, char* data, int size);
 public:
 	ServerTCPSocket() {}
 	virtual ~ServerTCPSocket() {}
@@ -52,20 +54,18 @@ public:
 	bool acceptConnection(SOCKET* client_socket, int timeout);
 
 	/**
-	 * receiveData - wait for data on the given socket.
-	 * @param client_client the client socket.
-	 * @param data_receive the data to be received.
+	 * sendPacket - send packet on the socket.
+	 * @param packet the packet to be sent.
 	 * @return a boolean indicating whether an error occurred.
 	 */
-	bool receiveData(SOCKET client_socket, char* data_receive);
+	bool sendPacket(SOCKET socket, const char* packet);
 
 	/**
-	 * sendData - send data on the given client socket.
-	 * @param client_socket the client socket to sent data on.
-	 * @param data_send the data to be sent.
+	 * receivePacket - receivePacket packet on the socket.
+	 * @param packet the packet to be received.
 	 * @return a boolean indicating whether an error occurred.
 	 */
-	bool sendData(SOCKET client_socket, const char* data_send);
+	bool receivePacket(SOCKET socket, char* packet);
 
 	/**
 	 * closeServer - cleanup and close the server.

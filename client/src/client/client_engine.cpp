@@ -133,7 +133,7 @@ ResponsePacket ClientEngine::connectClient(const char* reader, const char* ip, c
 
 	// perform handshake procedure
 	std::string name = config_.getValue("name", DEFAULT_NAME).append(" - ").append(reader);
-	socket_->sendData(name.c_str());
+	socket_->sendPacket(name.c_str());
 	Sleep(1000);
 
 	connected_ = true;
@@ -170,7 +170,7 @@ ResponsePacket ClientEngine::waitingRequests() {
 
 	// receives until the server closes the connection
 	while (connected_.load()) {
-		response = socket_->receiveData(request);
+		response = socket_->receivePacket(request);
 		if (response) {
 			// std::async(std::launch::async, &ClientEngine::handleRequest, this, request);
 			handleRequest(request);
@@ -210,7 +210,7 @@ ResponsePacket ClientEngine::handleRequest(std::string request) {
 
 	// send result to the server
 	std::string to_send = response.dump();
-	if (socket_->sendData(to_send.c_str())) {
+	if (socket_->sendPacket(to_send.c_str())) {
 		LOG_INFO << "Data sent to server: " << to_send;
 		if (notifyResponseSent_ != 0) notifyResponseSent_(to_send.c_str());
 	} else {

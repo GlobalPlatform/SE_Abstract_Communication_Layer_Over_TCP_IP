@@ -469,6 +469,8 @@ ResponsePacket ExampleTerminalPCSCContactless::warmReset() {
 
 std::string ExampleTerminalPCSCContactless::errorToString(LONG error) {
 	switch (error) {
+	case ERROR_INVALID_PARAMETER:
+		return "The parameter is incorrect.";
 	case ERROR_INVALID_HANDLE:
 		return "The handle is invalid. Try to manually reconnect the reader.";
 	case ERROR_BROKEN_PIPE:

@@ -428,6 +428,10 @@ ResponsePacket ExampleTerminalPCSCContact::powerONField() {
 
 std::string ExampleTerminalPCSCContact::errorToString(LONG error) {
 	switch (error) {
+	case ERROR_INVALID_PARAMETER:
+		return "The parameter is incorrect.";
+	case ERROR_INVALID_HANDLE:
+		return "The handle is invalid. Try to manually reconnect the reader.";
 	case ERROR_BROKEN_PIPE:
 		return "The client attempted a smart card operation in a remote session, such as a client session running on a terminal server, and the operating system in use does not support smart card redirection";
 	case SCARD_E_BAD_SEEK:

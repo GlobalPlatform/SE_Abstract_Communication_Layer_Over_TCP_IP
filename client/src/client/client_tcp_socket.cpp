@@ -79,47 +79,71 @@ bool ClientTCPSocket::connectClient() {
 	return true;
 }
 
-bool ClientTCPSocket::sendData(const char* data_send) {
-	int sent_size = strlen(data_send);
-	int retval = send(client_socket_, (char*) &sent_size, sizeof(int), 0);
-
-	int idx = 0;
-	while (sent_size > 0) {
-		retval = send(client_socket_, data_send, sent_size, 0);
+bool ClientTCPSocket::sendData(const char* data, int size) {
+	int idx, retval = 0;
+	while (size > 0) {
+		retval = send(client_socket_, data, size, 0);
 		if (retval == SOCKET_ERROR) {
-			LOG_DEBUG << "Failed to send data to client -  " << "[socket:" << client_socket_ << "][buffer:" << data_send << "][size:" << sent_size << "][flags:" << NULL << "]";
+			LOG_DEBUG << "Failed to send data to server -  " << "[socket:" << client_socket_ << "][buffer:" << data << "][size:" << size << "][flags:" << NULL << "]";
 			return false;
 		}
 		idx += retval;
-		sent_size -= retval;
+		size -= retval;
 	}
-
-	LOG_INFO << "Data sent to client: " << data_send;
 	return true;
 }
 
-bool ClientTCPSocket::receiveData(char* data_receive) {
-	int received_size = 0;
-	int retval = recv(client_socket_, (char*) &received_size, sizeof(int), 0);
+bool ClientTCPSocket::sendPacket(const char* packet) {
+	int packet_size = strlen(packet);
+	int net_packet_size = htonl(packet_size); // deals with endianness
 
-	int idx = 0;
-	while (received_size > 0) {
-		retval = recv(client_socket_, &data_receive[idx], received_size, 0);
+	// send packet's content size
+	if (!sendData((const char*) &net_packet_size, sizeof(int))) return false;
 
-		if (retval == SOCKET_ERROR) {
-			if (WSAGetLastError() != WSAETIMEDOUT) {
-				LOG_DEBUG << "Failed to receive data from client - TIMEOUT " << "[socket:" << client_socket_ << "][buffer:" << data_receive << "][size:" << received_size << "][flags:" << NULL << "]";
-			} else {
-				LOG_DEBUG << "Failed to receive data from client -  " << "[socket:" << client_socket_ << "][buffer:" << data_receive << "][size:" << received_size << "][flags:" << NULL << "]";
-			}
+	// send packet's content
+	if (!sendData(packet, packet_size)) return false;
+
+	LOG_INFO << "Data sent to server: " << packet;
+	return true;
+}
+
+bool ClientTCPSocket::receiveData(char* data, int size) {
+	if (size <= 0) return false;
+	int idx, retval = 0;
+	while (size > 0) {
+		retval = recv(client_socket_, &data[idx], size, 0);
+		if (retval == SOCKET_ERROR || retval == 0) {
+			LOG_DEBUG << "Failed to receive data from server -  " << "[socket:" << client_socket_ << "][buffer:" << data << "][size:" << size << "][flags:" << NULL << "]";
 			return false;
 		}
 		idx += retval;
-		received_size -= retval;
+		size -= retval;
 	}
 
-	data_receive[idx] = '\0';
-	return received_size == 0;
+	data[idx] = '\0';
+	return true;
+}
+
+bool ClientTCPSocket::receivePacket(char* packet) {
+	int received_size = 0;
+	int net_received_size = 0;
+
+	// retrieve packet size
+	int retval = recv(client_socket_, (char*) &net_received_size, sizeof(int), 0);
+	if (retval == SOCKET_ERROR || retval == 0) {
+		LOG_DEBUG << "Failed to receive data from server -  " << "[socket:" << client_socket_ << "][buffer:" << received_size << "][size:" << sizeof(int) << "][flags:" << NULL << "]";
+		return false;
+	}
+	received_size = ntohl(net_received_size); // deal with endianness
+	LOG_DEBUG << "SIZE = " <<  received_size;
+
+	// receive packet's content
+	if (!receiveData(packet, received_size)) {
+		return false;
+	}
+	LOG_DEBUG << "DATA = " <<  packet;
+
+	return true;
 }
 
 void ClientTCPSocket::closeClient() {
