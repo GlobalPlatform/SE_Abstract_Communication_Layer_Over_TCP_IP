@@ -58,7 +58,7 @@ public:
 	ResponsePacket handleErrorResponse(std::string context_message, LONG error);
 	ResponsePacket retrieveAtr(BYTE* bAttr, DWORD* cByte);
 	std::string errorToString(LONG error);
-	LONG handleRetry(LONG error);
+	LONG handleRetry();
 };
 
 } /* namespace client */

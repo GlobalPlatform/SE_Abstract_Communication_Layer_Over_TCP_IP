@@ -5,7 +5,7 @@
  you may not use this file except in compliance with the License.
  You may obtain a copy of the License at
 
-https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and%20Rules%20for%20the%20SE%20IP%20connector.docx
+ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and%20Rules%20for%20the%20SE%20IP%20connector.docx
 
  Unless required by applicable law or agreed to in writing, software
  distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,7 +13,7 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
  implied.
  See the License for the specific language governing permissions and
  limitations under the License.
-*********************************************************************************/
+ *********************************************************************************/
 
 #define _WIN32_WINNT 0x501
 #define WIN32_LEAN_AND_MEAN
@@ -77,6 +77,8 @@ bool ServerTCPSocket::startServer(const char* ip, const char* port) {
 }
 
 bool ServerTCPSocket::acceptConnection(SOCKET* client_socket, int default_timeout) {
+	LOG_INFO << "acceptConnection started";
+
 	*client_socket = accept(server_socket_, NULL, NULL);
 	if (*client_socket == INVALID_SOCKET) {
 		LOG_DEBUG << "Failed to call accept() " << "[listen_socket:" << server_socket_ << "][WSAError:" << WSAGetLastError() << "]";
@@ -88,40 +90,51 @@ bool ServerTCPSocket::acceptConnection(SOCKET* client_socket, int default_timeou
 		return false;
 	}
 
+	LOG_INFO << "acceptConnection succeeded";
 	return true;
 }
 
 bool ServerTCPSocket::sendData(SOCKET client_socket, const char* data_send) {
-	int retval = send(client_socket, data_send, strlen(data_send), 0);
-	if (retval == SOCKET_ERROR) {
-		LOG_DEBUG << "Failed to send response to server " << "[socket:" << client_socket << "][buffer:" << data_send << "][size:" << strlen(data_send) << "][flags:" << NULL << "]";
-		return false;
+	int sent_size = strlen(data_send);
+	int retval = send(client_socket, (char*) &sent_size, sizeof(int), 0);
+
+	int idx = 0;
+	while (sent_size > 0) {
+		retval = send(client_socket, data_send, sent_size, 0);
+		if (retval == SOCKET_ERROR) {
+			LOG_DEBUG << "Failed to send data to client -  " << "[socket:" << client_socket << "][buffer:" << data_send << "][size:" << sent_size << "][flags:" << NULL << "]";
+			return false;
+		}
+		idx += retval;
+		sent_size -= retval;
 	}
+
 	LOG_INFO << "Data sent to client: " << data_send;
 	return true;
 }
 
-bool ServerTCPSocket::receiveData(SOCKET client_socket, char* data_receive, int size) {
-	int retval = recv(client_socket, data_receive, size, 0);
+bool ServerTCPSocket::receiveData(SOCKET client_socket, char* data_receive) {
+	int received_size = 0;
+	int retval = recv(client_socket, (char*) &received_size, sizeof(int), 0);
 
-	if (retval == SOCKET_ERROR) {
-		if (WSAGetLastError() != WSAETIMEDOUT) {
-			LOG_DEBUG << "Failed to receive data from client - TIMEOUT " << "[socket:" << client_socket << "][buffer:" << data_receive << "][size:" << size << "][flags:" << NULL << "]";
-		} else {
-			LOG_DEBUG << "Failed to receive data from client -  " << "[socket:" << client_socket << "][buffer:" << data_receive << "][size:" << size << "][flags:" << NULL << "]";
+	int idx = 0;
+	while (received_size > 0) {
+		retval = recv(client_socket, &data_receive[idx], received_size, 0);
+
+		if (retval == SOCKET_ERROR) {
+			if (WSAGetLastError() != WSAETIMEDOUT) {
+				LOG_DEBUG << "Failed to receive data from client - TIMEOUT " << "[socket:" << client_socket << "][buffer:" << data_receive << "][size:" << received_size << "][flags:" << NULL << "]";
+			} else {
+				LOG_DEBUG << "Failed to receive data from client -  " << "[socket:" << client_socket << "][buffer:" << data_receive << "][size:" << received_size << "][flags:" << NULL << "]";
+			}
+			return false;
 		}
-		return false;
+		idx += retval;
+		received_size -= retval;
 	}
 
-	if (retval > 0) {
-		data_receive[retval] = '\0';
-		LOG_INFO << "Data received from client: " << data_receive;
-	} else if (retval < 0) {
-		LOG_DEBUG << "Failed to receive data from client " << "[socket:" << client_socket << "][recvbuf:" << data_receive << "][size:"
-				  << size << "][flags:" << NULL << "][WSAError:" << WSAGetLastError() << "]";
-	}
-
-	return retval > 0;
+	data_receive[idx] = '\0';
+	return received_size == 0;
 }
 
 void ServerTCPSocket::closeServer() {

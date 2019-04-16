@@ -3,5 +3,5 @@
   "ip": "127.0.0.1",
   "log_path": "./logs/basics",
   "log_level": "debug",
-  "timeout": "10000"
+  "timeout": "2000"
 }

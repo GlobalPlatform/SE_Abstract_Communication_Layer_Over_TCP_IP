@@ -13,7 +13,7 @@ namespace ClientWPF.ViewModels
         private readonly int logsLimit = 100;
         private int logsPointer = 0;
 
-        private APIClientWrapper _client;
+        private APIClientWrapper _client; 
         private readonly IDialogService _dialogService;
 
         public APIClientVM(IDialogService dialogService) // injects services

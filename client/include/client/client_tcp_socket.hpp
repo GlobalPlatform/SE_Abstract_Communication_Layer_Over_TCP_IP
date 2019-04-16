@@ -59,10 +59,9 @@ public:
 	/**
 	 * receiveData - wait for data on the socket.
 	 * @param data_receive the data to be received.
-	 * @param size size of the data_received parameter.
 	 * @return a boolean indicating whether an error occurred.
 	 */
-	bool receiveData(char* data_receive, int size);
+	bool receiveData(char* data_receive);
 
 	/**
 	 * closeClient - cleanup and close socket.

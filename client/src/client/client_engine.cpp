@@ -99,7 +99,6 @@ ResponsePacket ClientEngine::loadAndListReaders() {
 ResponsePacket ClientEngine::connectClient(const char* reader, const char* ip, const char* port) {
 	ResponsePacket packet;
 	bool response;
-
 	if (!initialized_.load()) {
 		ResponsePacket response_packet = { .response = "KO", .err_client_code = ERR_INVALID_STATE, .err_client_description = "Failed to connect: client must be initialized correctly" };
 		return response_packet;
@@ -165,14 +164,13 @@ ResponsePacket ClientEngine::disconnectClient() {
 
 ResponsePacket ClientEngine::waitingRequests() {
 	char request[DEFAULT_BUFLEN];
-	int request_length = DEFAULT_BUFLEN;
 	bool response;
 
 	LOG_INFO << "Client ready to process incoming requests";
 
 	// receives until the server closes the connection
 	while (connected_.load()) {
-		response = socket_->receiveData(request, request_length);
+		response = socket_->receiveData(request);
 		if (response) {
 			// std::async(std::launch::async, &ClientEngine::handleRequest, this, request);
 			handleRequest(request);
@@ -204,7 +202,7 @@ ResponsePacket ClientEngine::handleRequest(std::string request) {
 	if (future.wait_for(std::chrono::milliseconds(j["timeout"])) == std::future_status::timeout) {
 		LOG_DEBUG << "Response time from terminal has elapsed "
 				  << "[request:" << request << "]";
-		ResponsePacket response_packet = { .response = "KO", .err_client_code = ERR_TIMEOUT, .err_client_description = "Request terminal time elapsed" };
+		ResponsePacket response_packet = { .response = "KO", .err_client_code = ERR_TIMEOUT, .err_client_description = "Response time from terminal has elapsed" };
 		response = response_packet;
 	} else {
 		response = future.get();

@@ -1,5 +1,5 @@
 {
-	"name": "client_1",
+	"name": "client_contactless",
   	"port": "62111",
   	"ip": "127.0.0.1",
   	"log_directory": "./logs/",
@@ -8,5 +8,5 @@
 	"log_max_size": "1000",
 	"log_max_files": "5",
   	"default_timeout": 2000,
-  	"terminal": "EXAMPLE_PCSC_CONTACT"
+  	"terminal": "EXAMPLE_PCSC_CONTACTLESS"
 }

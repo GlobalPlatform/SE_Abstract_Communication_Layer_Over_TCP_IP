@@ -63,7 +63,7 @@ ResponsePacket ExampleTerminalPCSCContactless::loadAndListReaders() {
 	int tries = 0;
 	if ((resp = SCardListReaders(hContext_, NULL, (LPTSTR) &mszReaders_, &dwReaders_)) != SCARD_S_SUCCESS) {
 		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
-			resp = handleRetry(resp);
+			resp = handleRetry();
 			resp = SCardListReaders(hContext_, NULL, (LPTSTR) &mszReaders_, &dwReaders_);
 			if (resp != SCARD_S_SUCCESS) {
 				tries++;
@@ -96,7 +96,7 @@ ResponsePacket ExampleTerminalPCSCContactless::connect(const char* reader) {
 	int tries = 0;
 	if ((resp = SCardConnect(hContext_, reader, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, &hCard_, &dwActiveProtocol_)) != SCARD_S_SUCCESS) {
 		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
-			resp = handleRetry(resp);
+			resp = handleRetry();
 			resp = SCardConnect(hContext_, reader, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, &hCard_, &dwActiveProtocol_);
 			tries++;
 		}
@@ -131,7 +131,7 @@ ResponsePacket ExampleTerminalPCSCContactless::sendCommand(unsigned char command
 	int tries = 0;
 	if ((resp = SCardTransmit(hCard_, &pioSendPci_, command, command_length, NULL, pbRecvBuffer_, &dwRecvLength_)) != SCARD_S_SUCCESS) {
 		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
-			resp = handleRetry(resp);
+			resp = handleRetry();
 			resp = SCardTransmit(hCard_, &pioSendPci_, command, command_length, NULL, pbRecvBuffer_, &dwRecvLength_);
 			tries++;
 		}
@@ -216,7 +216,7 @@ ResponsePacket ExampleTerminalPCSCContactless::diag() {
 	int tries = 0;
 	if ((resp = SCardStatus(hCard_, szReader, &cch, &dwState, &dwProtocol, (LPBYTE) &bAttr, &cByte)) != SCARD_S_SUCCESS) {
 		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
-			resp = handleRetry(resp);
+			resp = handleRetry();
 			resp = SCardStatus(hCard_, szReader, &cch, &dwState, &dwProtocol, (LPBYTE) &bAttr, &cByte);
 			tries++;
 		}
@@ -279,7 +279,7 @@ ResponsePacket ExampleTerminalPCSCContactless::disconnect() {
 	int tries = 0;
 	if ((resp = SCardDisconnect(hCard_, SCARD_LEAVE_CARD)) != SCARD_S_SUCCESS) {
 		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
-			resp = handleRetry(resp);
+			resp = handleRetry();
 			resp = SCardDisconnect(hCard_, SCARD_LEAVE_CARD);
 			tries++;
 		}
@@ -300,9 +300,11 @@ ResponsePacket ExampleTerminalPCSCContactless::restart() {
 	DWORD dwProtocol;
 
 	int tries = 0;
+	LOG_INFO << "SCardReconnect called";
 	if ((resp = SCardReconnect(hCard_, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_LEAVE_CARD, &dwProtocol)) != SCARD_S_SUCCESS) {
 		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
-			resp = handleRetry(resp);
+			resp = handleRetry();
+			LOG_INFO << "[Retry] SCardReconnect called";
 			resp = SCardReconnect(hCard_, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_LEAVE_CARD, &dwProtocol);
 			tries++;
 		}
@@ -326,18 +328,6 @@ ResponsePacket ExampleTerminalPCSCContactless::restart() {
 	return response;
 }
 
-ResponsePacket ExampleTerminalPCSCContactless::coldReset() {
-	ResponsePacket response;
-	response.response = "Not supported";
-	return response;
-}
-
-ResponsePacket ExampleTerminalPCSCContactless::warmReset() {
-	ResponsePacket response;
-	response.response = "Not supported";
-	return response;
-}
-
 ResponsePacket ExampleTerminalPCSCContactless::retrieveAtr(BYTE* bAttr, DWORD* cByte) {
 	LONG resp;
 	ResponsePacket response;
@@ -347,7 +337,7 @@ ResponsePacket ExampleTerminalPCSCContactless::retrieveAtr(BYTE* bAttr, DWORD* c
 	int tries = 0;
 	if ((resp = SCardStatus(hCard_, mszReaders_, &cch, &dwState, &dwActiveProtocol_, (LPBYTE) bAttr, cByte)) != SCARD_S_SUCCESS) {
 		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
-			resp = handleRetry(resp);
+			resp = handleRetry();
 			resp = SCardStatus(hCard_, mszReaders_, &cch, &dwState, &dwActiveProtocol_, (LPBYTE) bAttr, cByte);
 			tries++;
 		}
@@ -372,10 +362,13 @@ ResponsePacket ExampleTerminalPCSCContactless::powerONField() {
 	LONG resp;
 	ResponsePacket response;
 
+	disconnect();
 	int tries = 0;
+	LOG_INFO << "SCardConnect called";
 	if ((resp = SCardConnect(hContext_, current_reader_.c_str(), SCARD_SHARE_DIRECT, 0, &hCard_, &dwActiveProtocol_)) != SCARD_S_SUCCESS) {
 		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
-			resp = handleRetry(resp);
+			resp = handleRetry();
+			LOG_INFO << "[Retry] SCardConnect called";
 			resp = SCardConnect(hContext_, current_reader_.c_str(), SCARD_SHARE_DIRECT, 0, &hCard_, &dwActiveProtocol_);
 			tries++;
 		}
@@ -393,13 +386,91 @@ ResponsePacket ExampleTerminalPCSCContactless::powerONField() {
 		return response;
 	}
 
+	Sleep(500); // hardware needs delay
 	// reconnect shared & T0|T1 protocol
-	Sleep(1000);
 	return restart();
+}
+
+ResponsePacket ExampleTerminalPCSCContactless::coldReset() {
+	ResponsePacket response;
+	LONG resp;
+	DWORD dwProtocol;
+
+	int tries = 0;
+	LOG_INFO << "SCardReconnect called";
+	if ((resp = SCardReconnect(hCard_, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_UNPOWER_CARD, &dwProtocol)) != SCARD_S_SUCCESS) {
+		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
+			resp = handleRetry();
+			LOG_INFO << "[Retry] SCardReconnect called";
+			resp = SCardReconnect(hCard_, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_UNPOWER_CARD, &dwProtocol);
+			tries++;
+		}
+		if (resp != SCARD_S_SUCCESS) {
+			LOG_DEBUG << "Failed to call SCardReconnect() "
+					  << "[hCard_:" << hCard_ << "][[dwShareMode:" << SCARD_SHARE_SHARED << "]"
+					  << "[dwActiveProtocol:" << dwActiveProtocol_ << "]";
+			return handleErrorResponse("Failed to cold reset", resp);
+		}
+	}
+
+	switch (dwActiveProtocol_) {
+	case SCARD_PROTOCOL_T0:
+		pioSendPci_ = *SCARD_PCI_T0;
+		break;
+	case SCARD_PROTOCOL_T1:
+		pioSendPci_ = *SCARD_PCI_T1;
+		break;
+	}
+
+	BYTE bAttr[32];
+	DWORD cByte = 32;
+	response = retrieveAtr(bAttr, &cByte);
+	response.response = utils::unsignedCharToString(bAttr, cByte);
+	return response;
+}
+
+ResponsePacket ExampleTerminalPCSCContactless::warmReset() {
+	ResponsePacket response;
+	LONG resp;
+	DWORD dwProtocol;
+
+	int tries = 0;
+	LOG_INFO << "SCardReconnect called";
+	if ((resp = SCardReconnect(hCard_, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_RESET_CARD, &dwProtocol)) != SCARD_S_SUCCESS) {
+		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
+			resp = handleRetry();
+			LOG_INFO << "[Retry] SCardReconnect called";
+			resp = SCardReconnect(hCard_, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_RESET_CARD, &dwProtocol);
+			tries++;
+		}
+		if (resp != SCARD_S_SUCCESS) {
+			LOG_DEBUG << "Failed to call SCardReconnect() "
+					  << "[hCard_:" << hCard_ << "][[dwShareMode:" << SCARD_SHARE_SHARED << "]"
+					  << "[dwActiveProtocol:" << dwActiveProtocol_ << "]";
+			return handleErrorResponse("Failed to warm reset", resp);
+		}
+	}
+
+	switch (dwActiveProtocol_) {
+	case SCARD_PROTOCOL_T0:
+		pioSendPci_ = *SCARD_PCI_T0;
+		break;
+	case SCARD_PROTOCOL_T1:
+		pioSendPci_ = *SCARD_PCI_T1;
+		break;
+	}
+
+	BYTE bAttr[32];
+	DWORD cByte = 32;
+	response = retrieveAtr(bAttr, &cByte);
+	response.response = utils::unsignedCharToString(bAttr, cByte);
+	return response;
 }
 
 std::string ExampleTerminalPCSCContactless::errorToString(LONG error) {
 	switch (error) {
+	case ERROR_INVALID_HANDLE:
+		return "The handle is invalid. Try to manually reconnect the reader.";
 	case ERROR_BROKEN_PIPE:
 		return "The client attempted a smart card operation in a remote session, such as a client session running on a terminal server, and the operating system in use does not support smart card redirection";
 	case SCARD_E_BAD_SEEK:
@@ -539,7 +610,7 @@ ResponsePacket ExampleTerminalPCSCContactless::handleErrorResponse(std::string c
 	return response;
 }
 
-LONG ExampleTerminalPCSCContactless::handleRetry(LONG error) {
+LONG ExampleTerminalPCSCContactless::handleRetry() {
 	LONG response = SCardEstablishContext(SCARD_SCOPE_SYSTEM, NULL, NULL, &hContext_);
 	response = SCardConnect(hContext_, current_reader_.c_str(), SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, &hCard_, &dwActiveProtocol_);
 	return response;

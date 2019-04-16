@@ -5,7 +5,7 @@
  you may not use this file except in compliance with the License.
  You may obtain a copy of the License at
 
-https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and%20Rules%20for%20the%20SE%20IP%20connector.docx
+ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and%20Rules%20for%20the%20SE%20IP%20connector.docx
 
  Unless required by applicable law or agreed to in writing, software
  distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,7 +13,7 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
  implied.
  See the License for the specific language governing permissions and
  limitations under the License.
-*********************************************************************************/
+ *********************************************************************************/
 
 #define DEFAULT_BUFLEN 1024 * 64
 #define DEFAULT_IP "127.0.0.1"
@@ -84,17 +84,18 @@ ResponsePacket ServerEngine::startListening(const char* ip, const char* port) {
 		return response_packet;
 	}
 
+	// start the server
 	socket_response = socket_->startServer(ip, port);
 	if (!socket_response) {
 		ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_NETWORK, .err_server_description = "Failed to start server" };
 		return response_packet;
 	}
-	LOG_INFO << "Start listening on IP " << ip << " and port " << port;
-
 	state_ = State::STARTED;
 	stop_ = false;
+	LOG_INFO << "Start listening on IP " << ip << " and port " << port;
 
-	std::thread thr(&ServerEngine::handleConnections, this); // async handler for incoming connections
+	// launch a thread to handle incoming connections
+	std::thread thr(&ServerEngine::handleConnections, this);
 	std::swap(thr, connection_thread_);
 
 	ResponsePacket response_packet;
@@ -108,19 +109,15 @@ ResponsePacket ServerEngine::handleConnections() {
 	while (!stop_.load()) {
 		SOCKET client_socket = INVALID_SOCKET;
 
+		// accept incoming connection
 		socket_response = socket_->acceptConnection(&client_socket, default_timeout);
 		if (!socket_response) {
 			ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_NETWORK, .err_server_description = "Connection with client failed" };
 			return response_packet;
 		}
 
+		// launch a thread to perform the connection handshake
 		std::future<ResponsePacket> fut = std::async(std::launch::async, &ServerEngine::connectionHandshake, this, client_socket);
-		// blocks until the timeout has elapsed or the result becomes available.
-		if (fut.wait_for(std::chrono::milliseconds(default_timeout)) == std::future_status::timeout) {
-			LOG_DEBUG << "Connection thread with client has elapsed " << "[client_socket:" << client_socket << "][connection_timeout:" << default_timeout << "]";
-		} else {
-			fut.get();
-		}
 	}
 
 	ResponsePacket response_packet;
@@ -129,16 +126,16 @@ ResponsePacket ServerEngine::handleConnections() {
 
 ResponsePacket ServerEngine::connectionHandshake(SOCKET client_socket) {
 	bool response;
-	char recvbuf[DEFAULT_BUFLEN];
-	std::string timeout = config_.getValue("timeout", DEFAULT_TIMEOUT);
+	char client_name[DEFAULT_BUFLEN];
 
-	response = socket_->receiveData(client_socket, recvbuf, DEFAULT_BUFLEN);
+	response = socket_->receiveData(client_socket, client_name);
 	if (!response) {
+		LOG_INFO << "Handshake with client failed";
 		ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_NETWORK, .err_server_description = "Network error on receive" };
 		return response_packet;
 	}
 
-	ClientData* client = new ClientData(client_socket, ++next_client_id_, recvbuf);
+	ClientData* client = new ClientData(client_socket, ++next_client_id_, client_name);
 	clients_.insert(std::make_pair(client->getId(), client));
 	LOG_INFO << "Client connected [id:" << client->getId() << "][name:" << client->getName() << "]";
 	if (notifyConnectionAccepted_ != 0) notifyConnectionAccepted_(client->getId(), client->getName().c_str());
@@ -169,7 +166,7 @@ ResponsePacket ServerEngine::handleRequest(int id_client, RequestCode request, s
 
 	// sends async request to client
 	std::future<ResponsePacket> fut = std::async(std::launch::async, &asyncRequest, this, client_socket, j.dump(), timeout);
-	// blocks until the timeout has elapsed or the result becomes available.
+	// blocks until the timeout has elapsed or the result became available
 	if (fut.wait_for(std::chrono::milliseconds(timeout)) == std::future_status::timeout) {
 		// thread has timed out
 		LOG_DEBUG << "Response time from client has elapsed "
@@ -191,7 +188,7 @@ ResponsePacket ServerEngine::asyncRequest(SOCKET client_socket, std::string to_s
 	}
 	LOG_INFO << "Data sent to client: " << to_send.c_str();
 
-	socket_response = socket_->receiveData(client_socket, recvbuf, DEFAULT_BUFLEN);
+	socket_response = socket_->receiveData(client_socket, recvbuf);
 	if (!socket_response) {
 		ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_NETWORK, .err_server_description = "Network error on receive" };
 		return response_packet;
