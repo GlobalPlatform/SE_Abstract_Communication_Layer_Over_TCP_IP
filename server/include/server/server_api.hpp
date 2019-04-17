@@ -18,13 +18,12 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 #ifndef SERVER_HPP_
 #define SERVER_HPP_
 
+#include "constants/callback.hpp"
 #include "constants/request_code.hpp"
 #include "server/client_data.hpp"
 #include "server/server_engine.hpp"
 
 namespace server {
-
-typedef void (__stdcall *Callback)(int id_client, const char* name_client);
 
 class ServerAPI {
 private:

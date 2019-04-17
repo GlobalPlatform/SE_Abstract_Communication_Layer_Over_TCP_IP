@@ -20,6 +20,7 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 
 #include "client/client_tcp_socket.hpp"
 #include "client/requests/flyweight_requests.hpp"
+#include "constants/callback.hpp"
 #include "config/config_wrapper.hpp"
 #include "constants/response_packet.hpp"
 #include "terminal/flyweight_terminal_factory.hpp"
@@ -29,8 +30,6 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 #include <thread>
 
 namespace client {
-
-typedef void (__stdcall *Callback)(const char* text);
 
 class ClientEngine {
 private:

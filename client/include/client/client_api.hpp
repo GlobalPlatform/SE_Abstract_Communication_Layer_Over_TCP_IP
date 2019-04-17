@@ -20,17 +20,15 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 
 #include "client/client_engine.hpp"
 #include "client/requests/flyweight_requests.hpp"
+#include "constants/callback.hpp"
 #include "constants/response_packet.hpp"
 #include "terminal/flyweight_terminal_factory.hpp"
 
 namespace client {
 
-typedef void (__stdcall *Callback)(const char* text);
-
 class ClientAPI {
 private:
 	ClientEngine* engine_;
-protected:
 public:
 	ClientAPI(Callback notifyConnectionLost, Callback notifyRequestReceived, Callback notifyResponseSent) {
 		this->engine_ = new ClientEngine(notifyConnectionLost, notifyRequestReceived, notifyResponseSent);

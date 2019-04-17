@@ -105,7 +105,6 @@ ResponsePacket ServerEngine::startListening(const char* ip, const char* port) {
 ResponsePacket ServerEngine::handleConnections() {
 	bool socket_response;
 	int default_timeout = std::atoi(config_.getValue("timeout", DEFAULT_TIMEOUT).c_str());
-	LOG_ERROR << "DEFAULT TM " << default_timeout;
 
 	while (!stop_.load()) {
 		SOCKET client_socket = INVALID_SOCKET;

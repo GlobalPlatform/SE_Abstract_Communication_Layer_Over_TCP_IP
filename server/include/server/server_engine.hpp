@@ -19,6 +19,7 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 #define SRC_SERVER_ENGINE_HPP_
 
 #include "config/config_wrapper.hpp"
+#include "constants/callback.hpp"
 #include "constants/request_code.hpp"
 #include "constants/response_packet.hpp"
 #include "server/client_data.hpp"
@@ -29,8 +30,6 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 #include <thread>
 
 namespace server {
-
-typedef void (__stdcall *Callback)(int id_client, const char* name_client);
 
 class ServerEngine {
 private:

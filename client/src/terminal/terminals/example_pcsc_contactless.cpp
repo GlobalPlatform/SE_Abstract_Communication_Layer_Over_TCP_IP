@@ -200,7 +200,6 @@ ResponsePacket ExampleTerminalPCSCContactless::sendTypeF(unsigned char command[]
 }
 
 ResponsePacket ExampleTerminalPCSCContactless::isAlive() {
-	Sleep(5000);
 	unsigned char command[] = { 0x00, 0x00, 0x00, 0x00 };
 	return sendCommand(command, sizeof(command));
 }

@@ -5,7 +5,7 @@
  you may not use this file except in compliance with the License.
  You may obtain a copy of the License at
 
-https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and%20Rules%20for%20the%20SE%20IP%20connector.docx
+ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and%20Rules%20for%20the%20SE%20IP%20connector.docx
 
  Unless required by applicable law or agreed to in writing, software
  distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,7 +13,7 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
  implied.
  See the License for the specific language governing permissions and
  limitations under the License.
-*********************************************************************************/
+ *********************************************************************************/
 
 #ifdef ADD_EXPORTS
 #define ADDAPI __declspec(dllexport)
@@ -24,6 +24,7 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 #define ADDCALL __cdecl
 
 #include "server/server_api.hpp"
+#include "constants/callback.hpp"
 #include "constants/response_packet.hpp"
 
 struct ResponseDLL {
@@ -42,9 +43,9 @@ struct ResponseDLL {
 extern "C" {
 #endif
 
-server::Callback notifyConnectionAccepted = 0;
+Callback notifyConnectionAccepted = 0;
 
-ADDAPI void setCallbackConnectionAccepted(server::Callback handler);
+ADDAPI void setCallbackConnectionAccepted(Callback handler);
 
 ADDAPI server::ServerAPI* createServerAPI();
 ADDAPI void disposeServerAPI(server::ServerAPI* server);

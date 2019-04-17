@@ -24,6 +24,7 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 #define ADDCALL __cdecl
 
 #include "client/client_api.hpp"
+#include "constants/callback.hpp"
 #include "constants/response_packet.hpp"
 
 struct ResponseDLL {
@@ -46,13 +47,13 @@ struct ResponseDLL {
 extern "C" {
 #endif
 
-client::Callback notifyConnectionLost = 0;
-client::Callback notifyRequestReceived = 0;
-client::Callback notifyResponseSent = 0;
+Callback notifyConnectionLost = 0;
+Callback notifyRequestReceived = 0;
+Callback notifyResponseSent = 0;
 
-ADDAPI void setCallbackConnectionLost(client::Callback handler);
-ADDAPI void setCallbackRequestsReceived(client::Callback handler);
-ADDAPI void setCallbackResponseSent(client::Callback handler);
+ADDAPI void setCallbackConnectionLost(Callback handler);
+ADDAPI void setCallbackRequestsReceived(Callback handler);
+ADDAPI void setCallbackResponseSent(Callback handler);
 
 ADDAPI client::ClientAPI* createClientAPI();
 ADDAPI void connectClient(client::ClientAPI* client, const char* reader, const char* ip, const char* port, ResponseDLL& response_packet);
