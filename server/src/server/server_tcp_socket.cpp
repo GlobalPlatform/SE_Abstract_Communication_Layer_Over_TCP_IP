@@ -138,7 +138,8 @@ bool ServerTCPSocket::receivePacket(SOCKET client_socket, char* packet) {
 	}
 	received_size = ntohl(net_received_size); // deal with endianness
 
-	retval = recv(client_socket, packet, received_size, MSG_WAITALL);
+	// retrieve packet
+	retval = recv(client_socket, packet, received_size, MSG_WAITALL); // keep receiving until received_size bytes are received
 	if (retval == SOCKET_ERROR || retval == 0) {
 		LOG_DEBUG << "Failed to receive data size from client -  " << "[socket:" << client_socket << "][buffer:" << received_size << "][size:" << sizeof(int) << "][flags:" << NULL << "]";
 		return false;
