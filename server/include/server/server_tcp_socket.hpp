@@ -32,7 +32,6 @@ private:
 	struct addrinfo hints_;
 private:
 	bool sendData(SOCKET socket, const char* data, int size);
-	bool receiveData(SOCKET socket, char* data, int size);
 public:
 	ServerTCPSocket() {}
 	virtual ~ServerTCPSocket() {}

@@ -105,6 +105,7 @@ ResponsePacket ServerEngine::startListening(const char* ip, const char* port) {
 ResponsePacket ServerEngine::handleConnections() {
 	bool socket_response;
 	int default_timeout = std::atoi(config_.getValue("timeout", DEFAULT_TIMEOUT).c_str());
+	LOG_ERROR << "DEFAULT TM " << default_timeout;
 
 	while (!stop_.load()) {
 		SOCKET client_socket = INVALID_SOCKET;
@@ -164,17 +165,18 @@ ResponsePacket ServerEngine::handleRequest(int id_client, RequestCode request, s
 	j["data"] = data;
 	j["timeout"] = timeout;
 
+	DWORD socket_timeout = std::atoi(config_.getValue("timeout", DEFAULT_TIMEOUT).c_str());
+
 	// sends async request to client
-	std::future<ResponsePacket> fut = std::async(std::launch::async, &asyncRequest, this, client_socket, j.dump(), timeout);
+	std::future<ResponsePacket> fut = std::async(std::launch::async, &asyncRequest, this, client_socket, j.dump(), socket_timeout);
 	// blocks until the timeout has elapsed or the result became available
-	if (fut.wait_for(std::chrono::milliseconds(timeout)) == std::future_status::timeout) {
+	if (fut.wait_for(std::chrono::milliseconds(socket_timeout)) == std::future_status::timeout) {
 		// thread has timed out
 		LOG_DEBUG << "Response time from client has elapsed "
 		          << "[client_socket:" << client_socket << "][request:" << j.dump << "[timeout:" << timeout << "]";
 		ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_TIMEOUT, .err_server_description = "Request time elapsed" };
 		return response_packet;
 	}
-
 	return fut.get();
 }
 

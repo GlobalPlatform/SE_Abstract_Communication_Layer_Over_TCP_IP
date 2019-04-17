@@ -80,16 +80,17 @@ bool ClientTCPSocket::connectClient() {
 }
 
 bool ClientTCPSocket::sendData(const char* data, int size) {
-	int idx, retval = 0;
-	while (size > 0) {
+	int retval = 0;
+	do {
 		retval = send(client_socket_, data, size, 0);
 		if (retval == SOCKET_ERROR) {
-			LOG_DEBUG << "Failed to send data to server -  " << "[socket:" << client_socket_ << "][buffer:" << data << "][size:" << size << "][flags:" << NULL << "]";
+			LOG_DEBUG << "Failed to send data to server - " << "[socket:" << client_socket_ << "][buffer:" << data << "][size:" << size << "][flags:" << NULL << "]";
 			return false;
 		}
-		idx += retval;
 		size -= retval;
-	}
+		data += retval;
+	} while (size > 0);
+
 	return true;
 }
 
@@ -98,29 +99,15 @@ bool ClientTCPSocket::sendPacket(const char* packet) {
 	int net_packet_size = htonl(packet_size); // deals with endianness
 
 	// send packet's content size
-	if (!sendData((const char*) &net_packet_size, sizeof(int))) return false;
+	int retval = send(client_socket_, (char*) &net_packet_size, sizeof(int), 0);
+	if (retval == SOCKET_ERROR || retval == 0) {
+		LOG_DEBUG << "Failed to receive data from server -  " << "[socket:" << client_socket_ << "][buffer:" << net_packet_size << "][size:" << sizeof(int) << "][flags:" << NULL << "]";
+		return false;
+	}
 
 	// send packet's content
 	if (!sendData(packet, packet_size)) return false;
 
-	LOG_INFO << "Data sent to server: " << packet;
-	return true;
-}
-
-bool ClientTCPSocket::receiveData(char* data, int size) {
-	if (size <= 0) return false;
-	int idx, retval = 0;
-	while (size > 0) {
-		retval = recv(client_socket_, &data[idx], size, 0);
-		if (retval == SOCKET_ERROR || retval == 0) {
-			LOG_DEBUG << "Failed to receive data from server -  " << "[socket:" << client_socket_ << "][buffer:" << data << "][size:" << size << "][flags:" << NULL << "]";
-			return false;
-		}
-		idx += retval;
-		size -= retval;
-	}
-
-	data[idx] = '\0';
 	return true;
 }
 
@@ -129,20 +116,20 @@ bool ClientTCPSocket::receivePacket(char* packet) {
 	int net_received_size = 0;
 
 	// retrieve packet size
-	int retval = recv(client_socket_, (char*) &net_received_size, sizeof(int), 0);
+	int retval = recv(client_socket_, (char*) &net_received_size, sizeof(int), MSG_WAITALL);
 	if (retval == SOCKET_ERROR || retval == 0) {
-		LOG_DEBUG << "Failed to receive data from server -  " << "[socket:" << client_socket_ << "][buffer:" << received_size << "][size:" << sizeof(int) << "][flags:" << NULL << "]";
+		LOG_DEBUG << "Failed to receive data size from client -  " << "[socket:" << client_socket_ << "][buffer:" << received_size << "][size:" << sizeof(int) << "][flags:" << NULL << "]";
 		return false;
 	}
 	received_size = ntohl(net_received_size); // deal with endianness
-	LOG_DEBUG << "SIZE = " <<  received_size;
 
-	// receive packet's content
-	if (!receiveData(packet, received_size)) {
+	// retrieve packet
+	retval = recv(client_socket_, packet, received_size, MSG_WAITALL); // wait all received_size bytes to be received
+	if (retval == SOCKET_ERROR || retval == 0) {
+		LOG_DEBUG << "Failed to receive data size from client -  " << "[socket:" << client_socket_ << "][buffer:" << received_size << "][size:" << sizeof(int) << "][flags:" << NULL << "]";
 		return false;
 	}
-	LOG_DEBUG << "DATA = " <<  packet;
-
+	packet[retval] = '\0';
 	return true;
 }
 

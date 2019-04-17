@@ -198,6 +198,7 @@ ResponsePacket ClientEngine::handleRequest(std::string request) {
 	IRequest* request_handler = requests_.getRequest(j["request"]);
 	std::future<ResponsePacket> future = std::async(std::launch::async, &IRequest::run, request_handler, terminal_, this, command, length);
 
+	LOG_ERROR << "RCV TIMEOUT = " << j["timeout"];
 	// block until the timeout has elapsed or the result becomes available
 	if (future.wait_for(std::chrono::milliseconds(j["timeout"])) == std::future_status::timeout) {
 		LOG_DEBUG << "Response time from terminal has elapsed "
