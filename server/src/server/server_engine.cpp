@@ -15,19 +15,10 @@
  limitations under the License.
  *********************************************************************************/
 
-#define DEFAULT_BUFLEN 1024 * 64
-#define DEFAULT_IP "127.0.0.1"
-#define DEFAULT_PORT "66611"
-#define DEFAULT_TIMEOUT "1000" // milliseconds
-#define DEFAULT_LOG_DIRECTORY "./logs"
-#define DEFAULT_LOG_FILENAME "basics"
-#define DEFAULT_LOG_LEVEL "info"
-#define DEFAULT_LOG_MAX_SIZE "1000" // bytes
-#define DEFAULT_LOG_MAX_FILES "5"
-
 #include "server/client_data.hpp"
 #include "server/server_engine.hpp"
 #include "config/config_wrapper.hpp"
+#include "constants/default_values.hpp"
 #include "constants/request_code.hpp"
 #include "constants/response_packet.hpp"
 #include "nlohmann/json.hpp"
@@ -63,7 +54,7 @@ ResponsePacket ServerEngine::initServer(std::string path) {
 	int log_max_files = std::stoi(config_.getValue("log_max_files", DEFAULT_LOG_MAX_FILES));
 	static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
 	std::string log_path = log_directory + "/" + log_filename;
-	if (log_level.compare("debug") == 0) {;
+	if (log_level.compare("debug") == 0) {
 		plog::init(plog::debug, log_path.c_str(), log_max_size, log_max_files).addAppender(&consoleAppender);
 	} else {
 		plog::init(plog::info, log_path.c_str(), log_max_size, log_max_files).addAppender(&consoleAppender);

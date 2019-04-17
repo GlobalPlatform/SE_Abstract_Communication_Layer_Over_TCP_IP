@@ -15,19 +15,10 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
  limitations under the License.
 *********************************************************************************/
 
-#define DEFAULT_BUFLEN 1024 * 64
-#define DEFAULT_IP "127.0.0.1"
-#define DEFAULT_PORT "66611"
-#define DEFAULT_NAME "default_name"
-#define DEFAULT_LOG_DIRECTORY "./logs"
-#define DEFAULT_LOG_FILENAME "basics"
-#define DEFAULT_LOG_LEVEL "info"
-#define DEFAULT_LOG_MAX_SIZE "1000" // bytes
-#define DEFAULT_LOG_MAX_FILES "5"
-
 #include "client/client_engine.hpp"
 #include "client/client_tcp_socket.hpp"
 #include "config/config_wrapper.hpp"
+#include "constants/default_values.hpp"
 #include "constants/request_code.hpp"
 #include "constants/response_packet.hpp"
 #include "terminal/flyweight_terminal_factory.hpp"
