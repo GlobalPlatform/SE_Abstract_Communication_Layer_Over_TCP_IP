@@ -6,6 +6,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace ServerWPF.ViewModels
@@ -45,7 +46,7 @@ namespace ServerWPF.ViewModels
             _powerONField = new DelegateCommand(OnPowerONField, IsClientSelected);
             _clearLogs = new DelegateCommand(OnClearLogs, null);
             _browseFile = new DelegateCommand(OnBrowseFile, IsClientSelected);
-            _sendCommandsBatch = new DelegateCommand(OnSendCommandBatch, CanSendCommandBatch);
+            _sendCommandsBatch = new DelegateCommand(async () => await OnSendCommandBatch(), CanSendCommandBatch);
 
             _actions.AddAction(ActionMethod.COMMAND.ToString(), OnSendCommandClient);
             _actions.AddAction(ActionMethod.SEND_TYPE_A.ToString(), OnSendTypeA);
@@ -75,7 +76,8 @@ namespace ServerWPF.ViewModels
         public string CurrentFilePath
         {
             get => _currentFilePath;
-            set {
+            set
+            {
                 SetProperty(ref _currentFilePath, value);
                 _sendCommandsBatch.InvokeCanExecuteChanged();
             }
@@ -131,7 +133,8 @@ namespace ServerWPF.ViewModels
         public ClientModel SelectedClient
         {
             get => _selectedClient;
-            set {
+            set
+            {
                 SetProperty(ref _selectedClient, value);
                 _sendCommandClient.InvokeCanExecuteChanged();
                 _sendTypeA.InvokeCanExecuteChanged();
@@ -325,7 +328,7 @@ namespace ServerWPF.ViewModels
             CurrentFilePath = _fileDialogService.OpenFileDialog(@"C:\Users\st\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\clientGUI\ClientWPF\bin\Debug") ?? String.Empty;
         }
 
-        private void OnSendCommandBatch()
+        private async Task OnSendCommandBatch()
         {
             var lines = File.ReadLines(CurrentFilePath);
             foreach (string line in lines)
@@ -333,21 +336,24 @@ namespace ServerWPF.ViewModels
                 if (SelectedClient == null) break;
                 string[] tokens = line.Split(' ');
                 if (tokens.Length == 2) CurrentCommand = tokens[1];
-               _actions.GetAction(tokens[0]).DynamicInvoke();
+                await Task.Run(_actions.GetAction(tokens[0]));
             }
         }
 
         private void AppendLog(string request, ResponseDLL response)
         {
-            if (_logsList.Count == logsLimit)
+            App.Current.Dispatcher.Invoke((Action)delegate
             {
-                _logsList[logsPointer] = new LogModel(_selectedClient.ClientID, _selectedClient.ClientName, request, response);
-            }
-            else
-            {
-                _logsList.Add(new LogModel(_selectedClient.ClientID, _selectedClient.ClientName, request, response));
-            }
-            logsPointer = (logsPointer + 1) % logsLimit;
+                if (_logsList.Count == logsLimit)
+                {
+                    _logsList[logsPointer] = new LogModel(_selectedClient.ClientID, _selectedClient.ClientName, request, response);
+                }
+                else
+                {
+                    _logsList.Add(new LogModel(_selectedClient.ClientID, _selectedClient.ClientName, request, response));
+                }
+                logsPointer = (logsPointer + 1) % logsLimit;
+            });
         }
 
         private bool IsClientSelected()

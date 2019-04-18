@@ -77,6 +77,7 @@
     <Compile Include="ViewModels\ActionMethod.cs" />
     <Compile Include="ViewModels\APIServerModel.cs" />
     <Compile Include="ViewModels\APIServerVM.cs" />
+    <Compile Include="ViewModels\AsyncDelegateCommand.cs" />
     <Compile Include="ViewModels\ClientModel.cs" />
     <Compile Include="ViewModels\DelegateCommand.cs" />
     <Compile Include="ViewModels\LogModel.cs" />
