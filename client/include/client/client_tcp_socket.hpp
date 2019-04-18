@@ -22,6 +22,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+namespace client {
+
 class ClientTCPSocket {
 private:
 	SOCKET client_socket_;
@@ -69,5 +71,7 @@ public:
 	 */
 	void closeClient();
 };
+
+} /* namespace client */
 
 #endif /* INCLUDE_CLIENT_CLIENT_TCP_SOCKET_HPP_ */

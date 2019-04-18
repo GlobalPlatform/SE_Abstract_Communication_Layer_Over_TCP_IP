@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ClientWPF.ViewModels
+﻿namespace ClientWPF.ViewModels
 {
     class APIClientModel
     {

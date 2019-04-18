@@ -5,14 +5,14 @@ namespace ServerWPF.ViewModels
 {
     public class ActionFlyweight
     {
-        private Dictionary<string, Action<object>> flyweightActions = new Dictionary<string, Action<object>>();
+        private Dictionary<string, Action> flyweightActions = new Dictionary<string, Action>();
 
-        public void addAction(string key, Action<object> value)
+        public void AddAction(string key, Action value)
         {
             flyweightActions.Add(key.ToString(), value);
         }
 
-        public Action<object> getAction(string key)
+        public Action GetAction(string key)
         {
             return flyweightActions[key];
         }

@@ -22,6 +22,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+namespace server {
+
 class ServerTCPSocket {
 private:
 	SOCKET server_socket_;
@@ -71,5 +73,7 @@ public:
 	 */
 	void closeServer();
 };
+
+} /* namespace server */
 
 #endif /* INCLUDE_SERVER_SERVER_TCP_SOCKET_HPP_ */

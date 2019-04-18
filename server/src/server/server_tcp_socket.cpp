@@ -25,6 +25,8 @@
 #include <ws2tcpip.h>
 #include <windows.h>
 
+namespace server {
+
 bool ServerTCPSocket::startServer(const char* ip, const char* port) {
 	int retval = 0;
 
@@ -156,3 +158,5 @@ void ServerTCPSocket::closeServer() {
 	}
 	WSACleanup();
 }
+
+} /* namespace server */

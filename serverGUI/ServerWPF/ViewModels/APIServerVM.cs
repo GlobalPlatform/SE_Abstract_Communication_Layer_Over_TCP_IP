@@ -47,18 +47,18 @@ namespace ServerWPF.ViewModels
             _browseFile = new DelegateCommand(OnBrowseFile, IsClientSelected);
             _sendCommandsBatch = new DelegateCommand(OnSendCommandBatch, CanSendCommandBatch);
 
-            _actions.addAction(ActionMethod.COMMAND.ToString(), OnSendCommandClient);
-            _actions.addAction(ActionMethod.SEND_TYPE_A.ToString(), OnSendTypeA);
-            _actions.addAction(ActionMethod.SEND_TYPE_B.ToString(), OnSendTypeB);
-            _actions.addAction(ActionMethod.SEND_TYPE_F.ToString(), OnSendTypeF);
-            _actions.addAction(ActionMethod.ECHO.ToString(), OnEchoClient);
-            _actions.addAction(ActionMethod.DIAG.ToString(), OnDiagnoseClient);
-            _actions.addAction(ActionMethod.RESTART.ToString(), OnRestartTarget);
-            _actions.addAction(ActionMethod.STOP_CLIENT.ToString(), OnStopClient);
-            _actions.addAction(ActionMethod.COLD_RESET.ToString(), OnColdReset);
-            _actions.addAction(ActionMethod.WARM_RESET.ToString(), OnWarmReset);
-            _actions.addAction(ActionMethod.POWER_OFF_FIELD.ToString(), OnPowerOFFField);
-            _actions.addAction(ActionMethod.POWER_ON_FIELD.ToString(), OnPowerONField);
+            _actions.AddAction(ActionMethod.COMMAND.ToString(), OnSendCommandClient);
+            _actions.AddAction(ActionMethod.SEND_TYPE_A.ToString(), OnSendTypeA);
+            _actions.AddAction(ActionMethod.SEND_TYPE_B.ToString(), OnSendTypeB);
+            _actions.AddAction(ActionMethod.SEND_TYPE_F.ToString(), OnSendTypeF);
+            _actions.AddAction(ActionMethod.ECHO.ToString(), OnEchoClient);
+            _actions.AddAction(ActionMethod.DIAG.ToString(), OnDiagnoseClient);
+            _actions.AddAction(ActionMethod.RESTART.ToString(), OnRestartTarget);
+            _actions.AddAction(ActionMethod.STOP_CLIENT.ToString(), OnStopClient);
+            _actions.AddAction(ActionMethod.COLD_RESET.ToString(), OnColdReset);
+            _actions.AddAction(ActionMethod.WARM_RESET.ToString(), OnWarmReset);
+            _actions.AddAction(ActionMethod.POWER_OFF_FIELD.ToString(), OnPowerOFFField);
+            _actions.AddAction(ActionMethod.POWER_ON_FIELD.ToString(), OnPowerONField);
 
             LoadServerData();
             APIServerWrapper.InitServer();
@@ -212,7 +212,7 @@ namespace ServerWPF.ViewModels
         #endregion
 
         #region delegates implementations
-        private void OnStartServer(object commandParameter)
+        private void OnStartServer()
         {
             APIServerModel old = _serverData.FirstOrDefault();
             ResponseDLL response = APIServerWrapper.StartServer(old.ServerIP, old.ServerPort);
@@ -223,7 +223,7 @@ namespace ServerWPF.ViewModels
             _stopServer.InvokeCanExecuteChanged();
         }
 
-        private void OnStopServer(object commandParameter)
+        private void OnStopServer()
         {
             ResponseDLL response = APIServerWrapper.StopServer();
             if (CheckError(response)) return;
@@ -235,7 +235,7 @@ namespace ServerWPF.ViewModels
             _stopServer.InvokeCanExecuteChanged();
         }
 
-        private void OnSendCommandClient(object commandParameter)
+        private void OnSendCommandClient()
         {
             ResponseDLL response = APIServerWrapper.SendCommand(_selectedClient.ClientID, _currentCommand);
             AppendLog(String.Format("{0} {1}", ActionMethod.COMMAND.ToString(), _currentCommand), response);
@@ -247,67 +247,67 @@ namespace ServerWPF.ViewModels
             }
         }
 
-        private void OnSendTypeA(object commandParameter)
+        private void OnSendTypeA()
         {
             ResponseDLL response = APIServerWrapper.SendTypeA(_selectedClient.ClientID, _currentCommand);
             AppendLog(String.Format("{0} {1}", ActionMethod.SEND_TYPE_A.ToString(), _currentCommand), response);
         }
 
-        private void OnSendTypeB(object commandParameter)
+        private void OnSendTypeB()
         {
             ResponseDLL response = APIServerWrapper.SendTypeB(_selectedClient.ClientID, _currentCommand);
             AppendLog(String.Format("{0} {1}", ActionMethod.SEND_TYPE_B.ToString(), _currentCommand), response);
         }
 
-        private void OnSendTypeF(object commandParameter)
+        private void OnSendTypeF()
         {
             ResponseDLL response = APIServerWrapper.SendTypeF(_selectedClient.ClientID, _currentCommand);
             AppendLog(String.Format("{0} {1}", ActionMethod.SEND_TYPE_F.ToString(), _currentCommand), response);
         }
 
-        private void OnEchoClient(object commandParameter)
+        private void OnEchoClient()
         {
             ResponseDLL response = APIServerWrapper.EchoClient(_selectedClient.ClientID);
             AppendLog(ActionMethod.ECHO.ToString(), response);
         }
 
-        private void OnDiagnoseClient(object commandParameter)
+        private void OnDiagnoseClient()
         {
             ResponseDLL response = APIServerWrapper.DiagClient(_selectedClient.ClientID);
             AppendLog(ActionMethod.DIAG.ToString(), response);
         }
 
-        private void OnColdReset(object commandParameter)
+        private void OnColdReset()
         {
             ResponseDLL response = APIServerWrapper.ColdReset(_selectedClient.ClientID);
             AppendLog(ActionMethod.COLD_RESET.ToString(), response);
         }
 
-        private void OnWarmReset(object commandParameter)
+        private void OnWarmReset()
         {
             ResponseDLL response = APIServerWrapper.WarmReset(_selectedClient.ClientID);
             AppendLog(ActionMethod.WARM_RESET.ToString(), response);
         }
 
-        private void OnPowerOFFField(object commandParameter)
+        private void OnPowerOFFField()
         {
             ResponseDLL response = APIServerWrapper.PowerOFFField(_selectedClient.ClientID);
             AppendLog(ActionMethod.POWER_OFF_FIELD.ToString(), response);
         }
 
-        private void OnPowerONField(object commandParameter)
+        private void OnPowerONField()
         {
             ResponseDLL response = APIServerWrapper.PowerONField(_selectedClient.ClientID);
             AppendLog(ActionMethod.POWER_ON_FIELD.ToString(), response);
         }
 
-        private void OnRestartTarget(object commandParameter)
+        private void OnRestartTarget()
         {
             ResponseDLL response = APIServerWrapper.RestartTarget(_selectedClient.ClientID);
             AppendLog(ActionMethod.RESTART.ToString(), response);
         }
 
-        private void OnStopClient(object commandParameter)
+        private void OnStopClient()
         {
             ResponseDLL response = APIServerWrapper.StopClient(_selectedClient.ClientID);
             AppendLog(ActionMethod.STOP_CLIENT.ToString(), response);
@@ -315,17 +315,17 @@ namespace ServerWPF.ViewModels
             _selectedClient = null;
         }
 
-        private void OnClearLogs(object commandParameter)
+        private void OnClearLogs()
         {
             _logsList.Clear();
         }
 
-        private void OnBrowseFile(object commandParameter)
+        private void OnBrowseFile()
         {
             CurrentFilePath = _fileDialogService.OpenFileDialog(@"C:\Users\st\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\clientGUI\ClientWPF\bin\Debug") ?? String.Empty;
         }
 
-        private void OnSendCommandBatch(object commandParameter)
+        private void OnSendCommandBatch()
         {
             var lines = File.ReadLines(CurrentFilePath);
             foreach (string line in lines)
@@ -333,7 +333,7 @@ namespace ServerWPF.ViewModels
                 if (SelectedClient == null) break;
                 string[] tokens = line.Split(' ');
                 if (tokens.Length == 2) CurrentCommand = tokens[1];
-               _actions.getAction(tokens[0]).DynamicInvoke(new object());
+               _actions.GetAction(tokens[0]).DynamicInvoke();
             }
         }
 
@@ -350,24 +350,24 @@ namespace ServerWPF.ViewModels
             logsPointer = (logsPointer + 1) % logsLimit;
         }
 
-        private bool IsClientSelected(object commandParameter)
+        private bool IsClientSelected()
         {
             return _selectedClient != null;
         }
 
-        private bool CanStartServer(object commandParameter)
+        private bool CanStartServer()
         {
             APIServerModel client = _serverData.FirstOrDefault();
             return client.State.Equals(ServerState.DISCONNECTED.ToString()) || client.State.Equals(ServerState.INITIALIZED.ToString());
         }
 
-        private bool CanStopServer(object commandParameter)
+        private bool CanStopServer()
         {
             APIServerModel client = _serverData.FirstOrDefault();
             return client != null && client.State.Equals(ServerState.STARTED.ToString());
         }
 
-        private bool CanSendCommandBatch(object commandParameter)
+        private bool CanSendCommandBatch()
         {
             return SelectedClient != null && File.Exists(CurrentFilePath);
         }

@@ -5,10 +5,10 @@ namespace ClientWPF.ViewModels
 {
     public class DelegateCommand : ICommand
     {
-        private Action<object> _executeAction;
-        private Func<object, bool> _canExecuteAction;
+        private Action _executeAction;
+        private Func<bool> _canExecuteAction;
 
-        public DelegateCommand(Action<object> executeAction, Func<object, bool> canExecuteAction)
+        public DelegateCommand(Action executeAction, Func<bool> canExecuteAction)
         {
             _executeAction = executeAction;
             _canExecuteAction = canExecuteAction;
@@ -16,14 +16,14 @@ namespace ClientWPF.ViewModels
 
         public bool CanExecute(object parameter)
         {
-            return _canExecuteAction?.Invoke(parameter) ?? true;
+            return _canExecuteAction?.Invoke() ?? true;
         }
 
         public event EventHandler CanExecuteChanged;
 
         public void Execute(object parameter)
         {
-            _executeAction(parameter);
+            _executeAction();
         }
 
         public void InvokeCanExecuteChanged()

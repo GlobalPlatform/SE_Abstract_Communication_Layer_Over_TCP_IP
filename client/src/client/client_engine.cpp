@@ -124,8 +124,10 @@ ResponsePacket ClientEngine::connectClient(const char* reader, const char* ip, c
 
 	// perform handshake procedure
 	std::string name = config_.getValue("name", DEFAULT_NAME).append(" - ").append(reader);
-	socket_->sendPacket(name.c_str());
-	Sleep(1000);
+	if (!socket_->sendPacket(name.c_str())) {
+		ResponsePacket response_packet = { .response = "KO", .err_client_code = ERR_NETWORK, .err_client_description = "Failed to connect: failed to perform handshake" };
+		return response_packet;
+	}
 
 	connected_ = true;
 	LOG_INFO << "Client connected on IP " << ip << " port " << port;
@@ -163,7 +165,6 @@ ResponsePacket ClientEngine::waitingRequests() {
 	while (connected_.load()) {
 		response = socket_->receivePacket(request);
 		if (response) {
-			// std::async(std::launch::async, &ClientEngine::handleRequest, this, request);
 			handleRequest(request);
 		} else {
 			disconnectClient();

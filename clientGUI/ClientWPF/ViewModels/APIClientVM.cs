@@ -162,13 +162,13 @@ namespace ClientWPF.ViewModels
         private readonly DelegateCommand _clearLogs;
         public ICommand ClearLogs => _clearLogs;
 
-        private void OnReloadReaders(object commandParameter)
+        private void OnReloadReaders()
         {
             SelectedReader = null;
             LoadReaders();
         }
 
-        private void OnConnectClient(object commandParameter)
+        private void OnConnectClient()
         {
             APIClientModel old = _clientData.FirstOrDefault();
             ResponseDLL response = APIClientWrapper.ConnectClient(_selectedReader.ReaderName, old.IpClientConnected, old.PortClientConnected);
@@ -179,7 +179,7 @@ namespace ClientWPF.ViewModels
             _disconnectClient.InvokeCanExecuteChanged();
         }
 
-        private void OnDisconnectClient(object commandParameter)
+        private void OnDisconnectClient()
         {
             ResponseDLL response = APIClientWrapper.DisconnectClient();
             if (CheckError(response)) return;
@@ -191,18 +191,18 @@ namespace ClientWPF.ViewModels
             _disconnectClient.InvokeCanExecuteChanged();
         }
 
-        private void OnClearLogs(object commandParameter)
+        private void OnClearLogs()
         {
             _logsList.Clear();
         }
 
-        private bool CanConnectClient(object commandParameter)
+        private bool CanConnectClient()
         {
             APIClientModel client = _clientData.FirstOrDefault();
             return !client.ClientState.Equals(ClientState.CONNECTED.ToString()) && _selectedReader != null;
         }
 
-        private bool CanDisconnectClient(object commandParameter)
+        private bool CanDisconnectClient()
         {
             APIClientModel client = _clientData.FirstOrDefault();
             return client.ClientState.Equals(ClientState.CONNECTED.ToString());

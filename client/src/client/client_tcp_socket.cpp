@@ -26,6 +26,8 @@
 #include <ws2tcpip.h>
 #include <windows.h>
 
+namespace client {
+
 bool ClientTCPSocket::initClient(const char* ip, const char* port) {
 	// initialises Winsock
 	int retval = WSAStartup(MAKEWORD(2, 2), &wsaData_);
@@ -140,3 +142,5 @@ void ClientTCPSocket::closeClient() {
 	}
 	WSACleanup();
 }
+
+} /* namespace client */
