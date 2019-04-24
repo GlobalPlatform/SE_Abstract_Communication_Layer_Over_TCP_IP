@@ -41,7 +41,7 @@ public:
 	/**
 	 * getFactory - retrieve to factory at the given key.
 	 * @param key the key used to retrieve the factory.
-	 * @return the factory at the given key.
+	 * @return the factory at the given key or null.
 	 */
 	ITerminalFactory* getFactory(std::string key);
 };

@@ -22,6 +22,7 @@
 #include "constants/request_code.hpp"
 #include "constants/response_packet.hpp"
 #include "logger/logger.hpp"
+#include "terminal/factories/factory.hpp"
 #include "terminal/flyweight_terminal_factory.hpp"
 #include "terminal/terminals/terminal.hpp"
 #include "terminal/terminals/utils/type_converter.hpp"
@@ -47,7 +48,14 @@ ClientEngine::~ClientEngine() {
 
 ResponsePacket ClientEngine::initClient(std::string path, FlyweightTerminalFactory available_terminals, FlyweightRequests available_requests) {
 	config_.init(path);
-	terminal_ = available_terminals.getFactory(config_.getValue("terminal"))->create();
+
+	ITerminalFactory* terminal_factory =  available_terminals.getFactory(config_.getValue("terminal"));
+	if (terminal_factory == NULL) {
+		ResponsePacket response_packet = { .response = "KO", .err_client_code = ERR_INVALID_TERMINAL, .err_client_description = "Failed to initialize the client: terminal not found" };
+		return response_packet;
+	}
+
+	terminal_ = terminal_factory->create();
 	requests_ = available_requests;
 	socket_ = new ClientTCPSocket();
 	logger::setup(&config_);
@@ -136,7 +144,9 @@ ResponsePacket ClientEngine::disconnectClient() {
 	connected_ = false;
 	socket_->closeClient();
 	ResponsePacket response = terminal_->disconnect();
-	if (notifyConnectionLost_ != 0) notifyConnectionLost_("End of connection");
+	if (notifyConnectionLost_ != 0) {
+		notifyConnectionLost_("End of connection");
+	}
 
 	LOG_INFO << "Client disconnected successfully";
 	return response;

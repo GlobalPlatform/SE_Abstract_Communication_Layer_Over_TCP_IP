@@ -27,6 +27,9 @@ void FlyweightTerminalFactory::addFactory(std::string key, ITerminalFactory* fac
 }
 
 ITerminalFactory* FlyweightTerminalFactory::getFactory(std::string key) {
+	if (factories_.count(key) != 1) {
+		return NULL;
+	}
 	return factories_.at(key);
 }
 

@@ -30,7 +30,7 @@ namespace ClientWPF.ViewModels
             _disconnectClient = new DelegateCommand(OnDisconnectClient, CanDisconnectClient);
             _clearLogs = new DelegateCommand(OnClearLogs, null);
 
-            APIClientWrapper.InitClient();
+            CheckError(APIClientWrapper.InitClient());
         }
 
         #region callbacks
