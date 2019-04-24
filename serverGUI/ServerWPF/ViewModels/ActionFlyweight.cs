@@ -14,7 +14,7 @@ namespace ServerWPF.ViewModels
 
         public Action GetAction(string key)
         {
-            return flyweightActions[key];
+            return flyweightActions.ContainsKey(key) ? flyweightActions[key] : null;
         }
     }
 }

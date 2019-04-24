@@ -336,7 +336,11 @@ namespace ServerWPF.ViewModels
                 if (SelectedClient == null) break;
                 string[] tokens = line.Split(' ');
                 if (tokens.Length == 2) CurrentCommand = tokens[1];
-                await Task.Run(_actions.GetAction(tokens[0]));
+                Action action = _actions.GetAction(tokens[0]);
+                if (action != null)
+                {
+                    await Task.Run(action);
+                }
             }
         }
 

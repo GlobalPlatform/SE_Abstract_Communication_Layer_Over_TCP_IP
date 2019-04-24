@@ -108,9 +108,7 @@ bool ClientTCPSocket::sendPacket(const char* packet) {
 	}
 
 	// send packet's content
-	if (!sendData(packet, packet_size)) return false;
-
-	return true;
+	return sendData(packet, packet_size);
 }
 
 bool ClientTCPSocket::receivePacket(char* packet) {

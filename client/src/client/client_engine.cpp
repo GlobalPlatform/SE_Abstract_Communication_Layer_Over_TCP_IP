@@ -21,6 +21,7 @@
 #include "constants/default_values.hpp"
 #include "constants/request_code.hpp"
 #include "constants/response_packet.hpp"
+#include "logger/logger.hpp"
 #include "terminal/flyweight_terminal_factory.hpp"
 #include "terminal/terminals/terminal.hpp"
 #include "terminal/terminals/utils/type_converter.hpp"
@@ -49,21 +50,7 @@ ResponsePacket ClientEngine::initClient(std::string path, FlyweightTerminalFacto
 	terminal_ = available_terminals.getFactory(config_.getValue("terminal"))->create();
 	requests_ = available_requests;
 	socket_ = new ClientTCPSocket();
-
-	// setup logger
-	std::string log_directory = config_.getValue("log_directory", DEFAULT_LOG_DIRECTORY);
-	std::string log_filename = config_.getValue("log_filename", DEFAULT_LOG_FILENAME);
-	CreateDirectory(log_directory.c_str(), NULL);
-	std::string log_level = config_.getValue("log_level", DEFAULT_LOG_LEVEL);
-	int log_max_size = std::stoi(config_.getValue("log_max_size", DEFAULT_LOG_MAX_SIZE));
-	int log_max_files = std::stoi(config_.getValue("log_max_files", DEFAULT_LOG_MAX_FILES));
-	static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
-	std::string log_path = log_directory + "/" + log_filename;
-	if (log_level.compare("debug") == 0) {
-		plog::init(plog::debug, log_path.c_str(), log_max_size, log_max_files).addAppender(&consoleAppender);
-	} else {
-		plog::init(plog::info, log_path.c_str(), log_max_size, log_max_files).addAppender(&consoleAppender);
-	}
+	logger::setup(&config_);
 
 	// launch terminal
 	ResponsePacket response_packet;
@@ -178,39 +165,64 @@ ResponsePacket ClientEngine::waitingRequests() {
 }
 
 ResponsePacket ClientEngine::handleRequest(std::string request) {
-	nlohmann::json response;
+	nlohmann::json jrequest;
+	nlohmann::json jresponse;
 	ResponsePacket response_packet;
-	if (notifyRequestReceived_ != 0) notifyRequestReceived_(request.c_str());
 
-	// build the request using json
-	nlohmann::json j = nlohmann::json::parse(request);
-	unsigned long int length;
-	unsigned char* command = utils::stringToUnsignedChar(j["data"].get<std::string>(), &length);
-
-	// launch a thread to perform the request
-	IRequest* request_handler = requests_.getRequest(j["request"]);
-	std::future<ResponsePacket> future = std::async(std::launch::async, &IRequest::run, request_handler, terminal_, this, command, length);
-
-	// block until the timeout has elapsed or the result becomes available
-	if (future.wait_for(std::chrono::milliseconds(j["timeout"])) == std::future_status::timeout) {
-		LOG_DEBUG << "Response time from terminal has elapsed "
-				  << "[request:" << request << "]";
-		ResponsePacket response_packet = { .response = "KO", .err_client_code = ERR_TIMEOUT, .err_client_description = "Response time from terminal has elapsed" };
-		response = response_packet;
-	} else {
-		response = future.get();
+	LOG_INFO << "Request received from server: " << request;
+	if (notifyRequestReceived_ != 0) {
+		notifyRequestReceived_(request.c_str());
 	}
 
-	// send result to the server
-	std::string to_send = response.dump();
-	if (socket_->sendPacket(to_send.c_str())) {
-		LOG_INFO << "Data sent to server: " << to_send;
-		if (notifyResponseSent_ != 0) notifyResponseSent_(to_send.c_str());
+	// build the request using json
+	try {
+		jrequest = nlohmann::json::parse(request);
+	} catch (json::parse_error &err) {
+		LOG_DEBUG << "Error while parsing the request [request:" << request << "]";
+		ResponsePacket response_packet = { .response = "KO", .err_client_code = ERR_JSON_PARSING, .err_client_description = "Error while parsing the request" };
+		jresponse = response_packet;
+		return sendResult(jresponse.dump());
+	}
+
+	unsigned long int length;
+	unsigned char* command = utils::stringToUnsignedChar(jrequest["data"].get<std::string>(), &length);
+
+	// retrieve the request handler
+	IRequest* request_handler = requests_.getRequest(jrequest["request"]);
+
+	if (request_handler == NULL) {
+		LOG_DEBUG << "The request doesn't exist [request:" << request << "]";
+		ResponsePacket response_packet = { .response = "KO", .err_client_code = ERR_INVALID_REQUEST, .err_client_description = "The request doesn't exist" };
+		jresponse = response_packet;
+		return sendResult(jresponse.dump());
+	}
+
+	// launch a thread to perform the request
+	std::future<ResponsePacket> future = std::async(std::launch::async, &IRequest::run, request_handler, terminal_, this, command, length);
+	// block until the timeout has elapsed or the result becomes available
+	if (future.wait_for(std::chrono::milliseconds(jrequest["timeout"])) == std::future_status::timeout) {
+		LOG_DEBUG << "Response time from terminal has elapsed [request:" << request << "]";
+		ResponsePacket response_packet = { .response = "KO", .err_client_code = ERR_TIMEOUT, .err_client_description = "Response time from terminal has elapsed" };
+		jresponse = response_packet;
 	} else {
+		jresponse = future.get();
+	}
+
+	return sendResult(jresponse.dump());
+}
+
+ResponsePacket ClientEngine::sendResult(std::string result) {
+	if (!socket_->sendPacket(result.c_str())) {
 		ResponsePacket response_packet = { .response = "KO", .err_client_code = ERR_NETWORK, .err_client_description = "Network error on send response" };
 		return response_packet;
 	}
 
+	LOG_INFO << "Response sent to server: " << result;
+	if (notifyResponseSent_ != 0) {
+		notifyResponseSent_(result.c_str());
+	}
+
+	ResponsePacket response_packet;
 	return response_packet;
 }
 

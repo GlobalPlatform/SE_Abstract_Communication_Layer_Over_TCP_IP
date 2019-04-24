@@ -30,11 +30,21 @@ private:
 	std::map<RequestCode, IRequest*> requests;
 public:
 	FlyweightRequests() {};
-
 	virtual ~FlyweightRequests() {};
 
-	void addRequest(RequestCode key, IRequest* request);
+	/**
+	 * addRequest - insert the pair <key, request> in the map.
+	 * @param key the key matching the request.
+	 * @param request the request object to be stored.
+	 * @return true if the request is inserted, false if the key already exist.
+	 */
+	boolean addRequest(RequestCode key, IRequest* request);
 
+	/**
+	 * getRequest - retrieve a request.
+	 * @param key the key matching the request.
+	 * @return the request object or null if the key is not found.
+	 */
 	IRequest* getRequest(RequestCode key);
 };
 

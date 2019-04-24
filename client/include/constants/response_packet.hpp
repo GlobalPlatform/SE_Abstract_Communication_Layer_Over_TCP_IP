@@ -26,7 +26,13 @@ using nlohmann::json;
 namespace client {
 
 enum ErrorCode {
-	SUCCESS = 0, ERR_TIMEOUT = -1, ERR_NETWORK = -2, ERR_CLIENT_CLOSED = -3, ERR_INVALID_STATE = -4
+	SUCCESS = 0,
+	ERR_TIMEOUT = -1,
+	ERR_NETWORK = -2,
+	ERR_CLIENT_CLOSED = -3,
+	ERR_INVALID_STATE = -4,
+	ERR_INVALID_REQUEST = -5,
+	ERR_JSON_PARSING = - 6
 };
 
 /**

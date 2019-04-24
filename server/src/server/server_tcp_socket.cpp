@@ -123,7 +123,6 @@ bool ServerTCPSocket::sendPacket(SOCKET client_socket, const char* packet) {
 
 	// send packet's content
 	if (!sendData(client_socket, packet, packet_size)) return false;
-	LOG_INFO << "Data sent to client: " << packet;
 
 	return true;
 }

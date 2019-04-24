@@ -20,12 +20,12 @@
 
 #define DEFAULT_BUFLEN 1024 * 64
 #define DEFAULT_IP "127.0.0.1"
-#define DEFAULT_PORT "66611"
-#define DEFAULT_TIMEOUT "1000" // milliseconds
+#define DEFAULT_PORT "62111"
+#define DEFAULT_TIMEOUT "5000" // milliseconds
 #define DEFAULT_LOG_DIRECTORY "./logs"
-#define DEFAULT_LOG_FILENAME "basics"
+#define DEFAULT_LOG_FILENAME "basics.csv"
 #define DEFAULT_LOG_LEVEL "info"
-#define DEFAULT_LOG_MAX_SIZE "1000" // bytes
-#define DEFAULT_LOG_MAX_FILES "5"
+#define DEFAULT_LOG_MAX_SIZE "1000000" // bytes
+#define DEFAULT_LOG_MAX_FILES "10"
 
 #endif /* INCLUDE_CONSTANTS_DEFAULT_VALUES_HPP_ */

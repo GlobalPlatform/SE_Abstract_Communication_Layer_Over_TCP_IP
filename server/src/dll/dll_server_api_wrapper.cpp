@@ -33,7 +33,7 @@ ADDAPI void setCallbackConnectionAccepted(Callback handler) {
 }
 
 ADDAPI void initServer(server::ServerAPI* server, ResponseDLL& response_packet) {
-	ResponsePacket response = server->initServer("./config/init.json");
+	ResponsePacket response = server->initServer("config/init.json");
 	responsePacketForDll(response, response_packet);
 }
 

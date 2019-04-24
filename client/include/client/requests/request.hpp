@@ -28,6 +28,15 @@ class IRequest {
 public:
 	IRequest() {}
 	virtual ~IRequest() {}
+
+	/**
+	 * run - execute the request.
+	 * @param terminal configuration to terminal used to perform the request.
+	 * @param client_engine the caller.
+	 * @param command to perform if required.
+	 * @param command_length the length of the command parameter.
+	 * @return a
+	 */
 	virtual ResponsePacket run(ITerminalLayer* terminal, ClientEngine* client_engine, char unsigned command[], DWORD command_length) = 0;
 };
 

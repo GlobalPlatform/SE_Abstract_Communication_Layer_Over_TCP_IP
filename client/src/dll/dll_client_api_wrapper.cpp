@@ -89,7 +89,7 @@ ADDAPI void initClient(client::ClientAPI* client, ResponseDLL& response_packet_d
 	available_requests.addRequest(REQ_POWER_OFF_FIELD, new PowerOffField());
 	available_requests.addRequest(REQ_POWER_ON_FIELD, new PowerOnField());
 
-	ResponsePacket response_packet = client->initClient("./config/init.json", available_terminals, available_requests);
+	ResponsePacket response_packet = client->initClient("config/init.json", available_terminals, available_requests);
 	responsePacketForDll(response_packet, response_packet_dll);
 }
 

@@ -21,6 +21,7 @@
 #include "constants/default_values.hpp"
 #include "constants/request_code.hpp"
 #include "constants/response_packet.hpp"
+#include "logger/logger.hpp"
 #include "nlohmann/json.hpp"
 #include "plog/include/plog/Log.h"
 #include "plog/include/plog/Appenders/ColorConsoleAppender.h"
@@ -44,21 +45,7 @@ ResponsePacket ServerEngine::initServer(std::string path) {
 
 	socket_ = new ServerTCPSocket();
 	config_.init(path);
-
-	// setup logger
-	std::string log_directory = config_.getValue("log_directory", DEFAULT_LOG_DIRECTORY);
-	std::string log_filename = config_.getValue("log_filename", DEFAULT_LOG_FILENAME);
-	CreateDirectory(log_directory.c_str(), NULL);
-	std::string log_level = config_.getValue("log_level", DEFAULT_LOG_LEVEL);
-	int log_max_size = std::stoi(config_.getValue("log_max_size", DEFAULT_LOG_MAX_SIZE));
-	int log_max_files = std::stoi(config_.getValue("log_max_files", DEFAULT_LOG_MAX_FILES));
-	static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
-	std::string log_path = log_directory + "/" + log_filename;
-	if (log_level.compare("debug") == 0) {
-		plog::init(plog::debug, log_path.c_str(), log_max_size, log_max_files).addAppender(&consoleAppender);
-	} else {
-		plog::init(plog::info, log_path.c_str(), log_max_size, log_max_files).addAppender(&consoleAppender);
-	}
+	logger::setup(&config_);
 
 	// launch engine
 	LOG_INFO << "Server launched";
@@ -128,8 +115,11 @@ ResponsePacket ServerEngine::connectionHandshake(SOCKET client_socket) {
 
 	ClientData* client = new ClientData(client_socket, ++next_client_id_, client_name);
 	clients_.insert(std::make_pair(client->getId(), client));
+
 	LOG_INFO << "Client connected [id:" << client->getId() << "][name:" << client->getName() << "]";
-	if (notifyConnectionAccepted_ != 0) notifyConnectionAccepted_(client->getId(), client->getName().c_str());
+	if (notifyConnectionAccepted_ != 0)  {
+		notifyConnectionAccepted_(client->getId(), client->getName().c_str());
+	}
 
 	ResponsePacket response_packet;
 	return response_packet;
@@ -142,8 +132,7 @@ ResponsePacket ServerEngine::handleRequest(int id_client, RequestCode request, s
 	}
 
 	if (clients_.find(id_client) == clients_.end()) {
-		LOG_DEBUG << "Failed to retrieve client "
-		          << "[id_client:" << id_client << "][request:" << requestCodeToString(request) << "]";
+		LOG_DEBUG << "Failed to retrieve client [id_client:" << id_client << "][request:" << requestCodeToString(request) << "]";
 		ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_CLIENT_CLOSED, .err_server_description = "Client closed or not found" };
 		return response_packet;
 	}
@@ -162,8 +151,7 @@ ResponsePacket ServerEngine::handleRequest(int id_client, RequestCode request, s
 	// blocks until the timeout has elapsed or the result became available
 	if (fut.wait_for(std::chrono::milliseconds(socket_timeout)) == std::future_status::timeout) {
 		// thread has timed out
-		LOG_DEBUG << "Response time from client has elapsed "
-		          << "[client_socket:" << client_socket << "][request:" << j.dump << "[timeout:" << timeout << "]";
+		LOG_DEBUG << "Response time from client has elapsed [client_socket:" << client_socket << "][request:" << j.dump << "[timeout:" << timeout << "]";
 		ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_TIMEOUT, .err_server_description = "Request time elapsed" };
 		return response_packet;
 	}
@@ -173,6 +161,7 @@ ResponsePacket ServerEngine::handleRequest(int id_client, RequestCode request, s
 ResponsePacket ServerEngine::asyncRequest(SOCKET client_socket, std::string to_send, DWORD timeout) {
 	bool socket_response;
 	char recvbuf[DEFAULT_BUFLEN];
+	nlohmann::json jresponse;
 
 	socket_response = socket_->sendPacket(client_socket, to_send.c_str());
 	if (!socket_response) {
@@ -185,10 +174,17 @@ ResponsePacket ServerEngine::asyncRequest(SOCKET client_socket, std::string to_s
 		ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_NETWORK, .err_server_description = "Network error on receive" };
 		return response_packet;
 	}
-
 	LOG_INFO << "Data received: " << recvbuf;
-	nlohmann::json response = nlohmann::json::parse(recvbuf); // parses response to json object
-	ResponsePacket response_packet = response.get<ResponsePacket>();
+
+	try {
+		jresponse = nlohmann::json::parse(recvbuf); // parses response to json object
+	} catch (json::parse_error &err) {
+		LOG_DEBUG << "Error while parsing the response [recvbuf:" << recvbuf << "]";
+		ResponsePacket response_packet = { .response = "KO", .err_client_code = ERR_JSON_PARSING, .err_client_description = "Error while parsing the request" };
+		return response_packet;
+	}
+
+	ResponsePacket response_packet = jresponse.get<ResponsePacket>();
 	return response_packet;
 }
 
@@ -202,6 +198,7 @@ ResponsePacket ServerEngine::listClients() {
 	for (const auto &p : clients_) {
 		output += std::to_string(p.second->getId()) + "|" + p.second->getName() + "|";
 	}
+
 	ResponsePacket response_packet = { .response = output };
 	return response_packet;
 }
@@ -231,6 +228,12 @@ ResponsePacket ServerEngine::stopClient(int id_client) {
 		return response_packet;
 	}
 
+	if (clients_.find(id_client) == clients_.end()) {
+		LOG_DEBUG << "Failed to retrieve client [id_client:" << id_client << "]";
+		ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_CLIENT_CLOSED, .err_server_description = "Client closed or not found" };
+		return response_packet;
+	}
+
 	SOCKET client_socket = clients_.at(id_client)->getSocket();
 	ResponsePacket response_packet = handleRequest(id_client, REQ_DISCONNECT);
 	if (response_packet.err_server_code  < 0) {
@@ -239,8 +242,7 @@ ResponsePacket ServerEngine::stopClient(int id_client) {
 
 	int retval = shutdown(client_socket, SD_SEND);
 	if (retval == SOCKET_ERROR) {
-		LOG_DEBUG << "Failed to shutdown client "
-				  << "[client_socket:" << client_socket << "][how:" << SD_SEND << "]";
+		LOG_DEBUG << "Failed to shutdown client [client_socket:" << client_socket << "][how:" << SD_SEND << "]";
 		ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_NETWORK, .err_server_description = "Client shutdown failed" };
 		return response_packet;
 	}

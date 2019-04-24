@@ -101,6 +101,9 @@ public:
 	 * @param stop_flag the new value of the stop flag.
 	 */
 	void setConnectedFlag(bool stop_flag);
+private:
+	ResponsePacket sendResult(std::string result);
+
 };
 
 } /* namespace client */

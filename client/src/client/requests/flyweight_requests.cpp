@@ -22,11 +22,14 @@
 
 namespace client {
 
-void FlyweightRequests::addRequest(RequestCode key, IRequest* factory) {
-	requests.insert(std::make_pair(key, factory));
+boolean FlyweightRequests::addRequest(RequestCode key, IRequest* factory) {
+	return requests.insert(std::make_pair(key, factory)).second;
 }
 
 IRequest* FlyweightRequests::getRequest(RequestCode key) {
+	if (requests.count(key) != 1) {
+		return NULL;
+	}
 	return requests.at(key);
 }
 
