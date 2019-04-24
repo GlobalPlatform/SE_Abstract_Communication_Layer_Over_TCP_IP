@@ -22,8 +22,8 @@
 #include "terminal/terminals/terminal.hpp"
 
 namespace client {
-class ClientEngine;
 
+class ClientEngine;
 class Disconnect : public IRequest {
 public:
 	Disconnect() {}

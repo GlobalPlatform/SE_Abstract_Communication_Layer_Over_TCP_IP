@@ -19,10 +19,11 @@
 #define SRC_CLIENT_REQUESTS_DIAG_HPP_
 
 #include "client/requests/request.hpp"
+#include "terminal/terminals/terminal.hpp"
 
 namespace client {
-class ClientEngine;
 
+class ClientEngine;
 class Diag : public IRequest {
 public:
 	Diag() {}

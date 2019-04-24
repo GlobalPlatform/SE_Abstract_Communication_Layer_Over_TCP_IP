@@ -22,8 +22,8 @@
 #include "terminal/terminals/terminal.hpp"
 
 namespace client {
-class ClientEngine;
 
+class ClientEngine;
 class ColdReset: public IRequest {
 public:
 	ColdReset() {}

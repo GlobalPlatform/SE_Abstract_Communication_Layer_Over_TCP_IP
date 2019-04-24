@@ -21,8 +21,8 @@
 #include "client/requests/request.hpp"
 
 namespace client {
-class ClientEngine;
 
+class ClientEngine;
 class RestartTarget : public IRequest {
 public:
 	RestartTarget() {}
