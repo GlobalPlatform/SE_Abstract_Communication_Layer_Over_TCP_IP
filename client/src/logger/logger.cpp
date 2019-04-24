@@ -43,5 +43,5 @@ void setup(client::ConfigWrapper* config) {
 	}
 }
 
-}
+} /* namespace logger */
 

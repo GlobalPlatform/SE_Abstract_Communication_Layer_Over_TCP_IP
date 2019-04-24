@@ -43,9 +43,9 @@ struct ResponseDLL {
 extern "C" {
 #endif
 
-Callback notifyConnectionAccepted = 0;
+server::Callback notifyConnectionAccepted = 0;
 
-ADDAPI void setCallbackConnectionAccepted(Callback handler);
+ADDAPI void setCallbackConnectionAccepted(server::Callback handler);
 
 ADDAPI server::ServerAPI* createServerAPI();
 ADDAPI void disposeServerAPI(server::ServerAPI* server);

@@ -51,5 +51,5 @@ void setup(server::ConfigWrapper* config) {
 	}
 }
 
-}
+} /* namespace logger */
 

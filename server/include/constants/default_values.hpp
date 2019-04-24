@@ -18,6 +18,8 @@
 #ifndef INCLUDE_CONSTANTS_DEFAULT_VALUES_HPP_
 #define INCLUDE_CONSTANTS_DEFAULT_VALUES_HPP_
 
+namespace server {
+
 #define DEFAULT_BUFLEN 1024 * 64
 #define DEFAULT_IP "127.0.0.1"
 #define DEFAULT_PORT "62111"
@@ -27,5 +29,7 @@
 #define DEFAULT_LOG_LEVEL "info"
 #define DEFAULT_LOG_MAX_SIZE "1000000" // bytes
 #define DEFAULT_LOG_MAX_FILES "10"
+
+} /* namespace server */
 
 #endif /* INCLUDE_CONSTANTS_DEFAULT_VALUES_HPP_ */

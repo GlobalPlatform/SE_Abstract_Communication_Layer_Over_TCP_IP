@@ -24,7 +24,11 @@
 
 namespace logger {
 
+/**
+ * setup - setup the logger.
+ * @param config the configuration wrapper used to setup the logger.
+ */
 void setup(server::ConfigWrapper* config);
 
-}
+} /* namespace logger */
 

@@ -82,6 +82,6 @@ inline void from_json(const nlohmann::json& j, ResponsePacket& e) {
 	j.at("err_card_description").get_to(e.err_card_description);
 }
 
-} // Namespace server
+} // namespace server
 
 #endif /* SRC_RESPONSE_PACKET_HPP_ */

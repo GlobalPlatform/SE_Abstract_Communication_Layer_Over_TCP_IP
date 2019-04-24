@@ -47,13 +47,13 @@ struct ResponseDLL {
 extern "C" {
 #endif
 
-Callback notifyConnectionLost = 0;
-Callback notifyRequestReceived = 0;
-Callback notifyResponseSent = 0;
+client::Callback notifyConnectionLost = 0;
+client::Callback notifyRequestReceived = 0;
+client::Callback notifyResponseSent = 0;
 
-ADDAPI void setCallbackConnectionLost(Callback handler);
-ADDAPI void setCallbackRequestsReceived(Callback handler);
-ADDAPI void setCallbackResponseSent(Callback handler);
+ADDAPI void setCallbackConnectionLost(client::Callback handler);
+ADDAPI void setCallbackRequestsReceived(client::Callback handler);
+ADDAPI void setCallbackResponseSent(client::Callback handler);
 
 ADDAPI client::ClientAPI* createClientAPI();
 ADDAPI void connectClient(client::ClientAPI* client, const char* reader, const char* ip, const char* port, ResponseDLL& response_packet);

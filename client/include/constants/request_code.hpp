@@ -41,11 +41,11 @@ enum RequestCode {
 
 /**
  * requestCodeToString - convert an enum value to the matching string description.
- * @param r the request code to be converted.
+ * @param request_code the request code to be converted.
  * @return the matching string description.
  */
-inline const std::string requestCodeToString(RequestCode r) {
-	switch (r) {
+inline const std::string requestCodeToString(RequestCode request_code) {
+	switch (request_code) {
 	case REQ_CONNECT:
 		return "REQ_CONNECT";
 	case REQ_DIAG:
@@ -60,6 +60,20 @@ inline const std::string requestCodeToString(RequestCode r) {
 		return "REQ_RESTART";
 	case REQ_COMMAND:
 		return "REQ_COMMAND";
+	case REQ_COMMAND_A:
+		return "REQ_COMMAND_A";
+	case REQ_COMMAND_B:
+		return "REQ_COMMAND_B";
+	case REQ_COMMAND_F:
+		return "REQ_COMMAND_F";
+	case REQ_COLD_RESET:
+		return "REQ_COLD_RESET";
+	case REQ_WARM_RESET:
+		return "REQ_WARM_RESET";
+	case REQ_POWER_OFF_FIELD:
+		return "REQ_POWER_OFF_FIELD";
+	case REQ_POWER_ON_FIELD:
+		return "REQ_POWER_ON_FIELD";
 	default:
 		return "[Unknown Request Code]";
 	}

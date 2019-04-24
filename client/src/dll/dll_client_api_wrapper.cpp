@@ -41,15 +41,15 @@
 
 using namespace client;
 
-ADDAPI void setCallbackConnectionLost(Callback handler) {
+ADDAPI void setCallbackConnectionLost(client::Callback handler) {
 	notifyConnectionLost = handler;
 }
 
-ADDAPI void setCallbackRequestsReceived(Callback handler) {
+ADDAPI void setCallbackRequestsReceived(client::Callback handler) {
 	notifyRequestReceived = handler;
 }
 
-ADDAPI void setCallbackResponseSent(Callback handler) {
+ADDAPI void setCallbackResponseSent(client::Callback handler) {
 	notifyResponseSent = handler;
 }
 

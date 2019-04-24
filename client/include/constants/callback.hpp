@@ -18,6 +18,10 @@
 #ifndef INCLUDE_CONSTANTS_CALLBACK_HPP_
 #define INCLUDE_CONSTANTS_CALLBACK_HPP_
 
+namespace client {
+
 typedef void (__stdcall *Callback)(const char* text);
+
+} /* namespace client */
 
 #endif /* INCLUDE_CONSTANTS_CALLBACK_HPP_ */

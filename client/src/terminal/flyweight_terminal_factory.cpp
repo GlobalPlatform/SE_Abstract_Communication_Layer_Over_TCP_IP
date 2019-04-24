@@ -33,4 +33,4 @@ ITerminalFactory* FlyweightTerminalFactory::getFactory(std::string key) {
 	return factories_.at(key);
 }
 
-} /* namespace terminal */
+} /* namespace client */

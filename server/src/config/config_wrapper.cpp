@@ -38,4 +38,4 @@ std::string ConfigWrapper::getValue(std::string key, std::string default_value) 
 	return config_[key].is_null() ? default_value : config_[key].get<std::string>();
 }
 
-} /* namespace client */
+} /* namespace server */
