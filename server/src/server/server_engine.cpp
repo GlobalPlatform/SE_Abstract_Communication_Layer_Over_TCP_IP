@@ -82,7 +82,7 @@ ResponsePacket ServerEngine::startListening(const char* ip, const char* port) {
 
 ResponsePacket ServerEngine::handleConnections() {
 	bool socket_response;
-	int default_timeout = std::atoi(config_.getValue("timeout", DEFAULT_TIMEOUT).c_str());
+	int default_timeout = std::atoi(config_.getValue("timeout", DEFAULT_SOCKET_TIMEOUT).c_str());
 
 	while (!stop_.load()) {
 		SOCKET client_socket = INVALID_SOCKET;
@@ -144,7 +144,7 @@ ResponsePacket ServerEngine::handleRequest(int id_client, RequestCode request, D
 	j["data"] = data;
 	j["timeout"] = timeout;
 
-	DWORD socket_timeout = std::atoi(config_.getValue("timeout", DEFAULT_TIMEOUT).c_str());
+	DWORD socket_timeout = std::atoi(config_.getValue("timeout", DEFAULT_SOCKET_TIMEOUT).c_str());
 	if (socket_timeout < timeout) {
 		socket_timeout = 2 * timeout;
 	}
