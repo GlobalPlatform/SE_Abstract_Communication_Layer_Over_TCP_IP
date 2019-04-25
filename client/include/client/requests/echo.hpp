@@ -26,9 +26,9 @@ namespace client {
 class ClientEngine;
 class Echo : public IRequest {
 public:
-	Echo() {}
-	~Echo() {}
-	ResponsePacket run(ITerminalLayer* terminal, ClientEngine* client_engine, char unsigned command[], DWORD command_length);
+	Echo() = default;
+	~Echo() = default;
+	ResponsePacket run(ITerminalLayer* terminal, ClientEngine* client_engine, char unsigned command[], DWORD command_length) override;
 };
 
 } /* namespace client */

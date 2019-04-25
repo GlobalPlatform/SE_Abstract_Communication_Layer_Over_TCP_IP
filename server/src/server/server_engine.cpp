@@ -55,16 +55,13 @@ ResponsePacket ServerEngine::initServer(std::string path) {
 }
 
 ResponsePacket ServerEngine::startListening(const char* ip, const char* port) {
-	bool socket_response;
-
 	if (state_ != State::INITIALIZED && state_ != State::DISCONNECTED) {
 		ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_INVALID_STATE, .err_server_description = "Server invalid state" };
 		return response_packet;
 	}
 
 	// start the server
-	socket_response = socket_->startServer(ip, port);
-	if (!socket_response) {
+	if (!socket_->startServer(ip, port)) {
 		ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_NETWORK, .err_server_description = "Failed to start server" };
 		return response_packet;
 	}
@@ -81,15 +78,13 @@ ResponsePacket ServerEngine::startListening(const char* ip, const char* port) {
 }
 
 ResponsePacket ServerEngine::handleConnections() {
-	bool socket_response;
 	int default_timeout = std::atoi(config_.getValue("timeout", DEFAULT_SOCKET_TIMEOUT).c_str());
 
 	while (!stop_.load()) {
 		SOCKET client_socket = INVALID_SOCKET;
 
 		// accept incoming connection
-		socket_response = socket_->acceptConnection(&client_socket, default_timeout);
-		if (!socket_response) {
+		if (!socket_->acceptConnection(&client_socket, default_timeout)) {
 			ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_NETWORK, .err_server_description = "Connection with client failed" };
 			return response_packet;
 		}
@@ -103,11 +98,9 @@ ResponsePacket ServerEngine::handleConnections() {
 }
 
 ResponsePacket ServerEngine::connectionHandshake(SOCKET client_socket) {
-	bool response;
 	char client_name[DEFAULT_BUFLEN];
 
-	response = socket_->receivePacket(client_socket, client_name);
-	if (!response) {
+	if (!socket_->receivePacket(client_socket, client_name)) {
 		LOG_INFO << "Handshake with client failed";
 		ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_NETWORK, .err_server_description = "Network error on receive" };
 		return response_packet;
@@ -125,7 +118,7 @@ ResponsePacket ServerEngine::connectionHandshake(SOCKET client_socket) {
 	return response_packet;
 }
 
-ResponsePacket ServerEngine::handleRequest(int id_client, RequestCode request, DWORD timeout, std::string data) {
+ResponsePacket ServerEngine::handleRequest(int id_client, RequestCode request, DWORD request_timeout, std::string data) {
 	if (state_ != State::STARTED) {
 		ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_INVALID_STATE, .err_server_description = "Server must be started" };
 		return response_packet;
@@ -142,38 +135,32 @@ ResponsePacket ServerEngine::handleRequest(int id_client, RequestCode request, D
 	nlohmann::json j;
 	j["request"] = request;
 	j["data"] = data;
-	j["timeout"] = timeout;
+	j["timeout"] = request_timeout;
 
 	DWORD socket_timeout = std::atoi(config_.getValue("timeout", DEFAULT_SOCKET_TIMEOUT).c_str());
-	if (socket_timeout < timeout) {
-		socket_timeout = 2 * timeout;
-	}
 
 	// sends async request to client
 	std::future<ResponsePacket> fut = std::async(std::launch::async, &asyncRequest, this, client_socket, j.dump(), socket_timeout);
 	// blocks until the timeout has elapsed or the result became available
 	if (fut.wait_for(std::chrono::milliseconds(socket_timeout)) == std::future_status::timeout) {
 		// thread has timed out
-		LOG_DEBUG << "Response time from client has elapsed [client_socket:" << client_socket << "][request:" << j.dump << "[timeout:" << timeout << "]";
+		LOG_DEBUG << "Response time from client has elapsed [client_socket:" << client_socket << "][request:" << j.dump << "[timeout:" << request_timeout << "]";
 		ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_TIMEOUT, .err_server_description = "Request time elapsed" };
 		return response_packet;
 	}
 	return fut.get();
 }
 
-ResponsePacket ServerEngine::asyncRequest(SOCKET client_socket, std::string to_send, DWORD timeout) {
-	bool socket_response;
+ResponsePacket ServerEngine::asyncRequest(SOCKET client_socket, std::string to_send, DWORD socket_timeout) {
 	char recvbuf[DEFAULT_BUFLEN];
 	nlohmann::json jresponse;
 
-	socket_response = socket_->sendPacket(client_socket, to_send.c_str());
-	if (!socket_response) {
+	if (!socket_->sendPacket(client_socket, to_send.c_str())) {
 		ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_NETWORK, .err_server_description = "Network error on send request" };
 	}
 	LOG_INFO << "Data sent to client: " << to_send.c_str();
 
-	socket_response = socket_->receivePacket(client_socket, recvbuf);
-	if (!socket_response) {
+	if (!socket_->receivePacket(client_socket, recvbuf)) {
 		ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_NETWORK, .err_server_description = "Network error on receive" };
 		return response_packet;
 	}
@@ -243,8 +230,7 @@ ResponsePacket ServerEngine::stopClient(int id_client) {
 		return response_packet;
 	}
 
-	int retval = shutdown(client_socket, SD_SEND);
-	if (retval == SOCKET_ERROR) {
+	if (shutdown(client_socket, SD_SEND) == SOCKET_ERROR) {
 		LOG_DEBUG << "Failed to shutdown client [client_socket:" << client_socket << "][how:" << SD_SEND << "]";
 		ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_NETWORK, .err_server_description = "Client shutdown failed" };
 		return response_packet;
@@ -253,6 +239,7 @@ ResponsePacket ServerEngine::stopClient(int id_client) {
 	closesocket(client_socket);
 	delete clients_.at(id_client);
 	clients_.erase(id_client);
+
 	return response_packet;
 }
 

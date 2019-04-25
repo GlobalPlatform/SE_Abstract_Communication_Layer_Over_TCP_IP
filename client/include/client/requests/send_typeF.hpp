@@ -26,9 +26,9 @@ namespace client {
 class ClientEngine;
 class SendTypeF: public IRequest {
 public:
-	SendTypeF() {}
-	~SendTypeF() {}
-	ResponsePacket run(ITerminalLayer* terminal, ClientEngine* client_engine, char unsigned command[], DWORD command_length);
+	SendTypeF() = default;
+	~SendTypeF() = default;
+	ResponsePacket run(ITerminalLayer* terminal, ClientEngine* client_engine, char unsigned command[], DWORD command_length) override;
 };
 
 }

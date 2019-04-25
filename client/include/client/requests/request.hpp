@@ -26,8 +26,8 @@ namespace client {
 class ClientEngine;
 class IRequest {
 public:
-	IRequest() {}
-	virtual ~IRequest() {}
+	IRequest() = default;
+	virtual ~IRequest() = default;
 
 	/**
 	 * run - execute the request.

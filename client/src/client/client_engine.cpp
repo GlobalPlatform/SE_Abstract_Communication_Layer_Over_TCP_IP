@@ -41,11 +41,6 @@
 
 namespace client {
 
-ClientEngine::~ClientEngine() {
-	delete terminal_;
-	delete socket_;
-}
-
 ResponsePacket ClientEngine::initClient(std::string path, FlyweightTerminalFactory available_terminals, FlyweightRequests available_requests) {
 	config_.init(path);
 
@@ -84,7 +79,6 @@ ResponsePacket ClientEngine::loadAndListReaders() {
 
 ResponsePacket ClientEngine::connectClient(const char* reader, const char* ip, const char* port) {
 	ResponsePacket packet;
-	bool response;
 	if (!initialized_.load()) {
 		ResponsePacket response_packet = { .response = "KO", .err_client_code = ERR_INVALID_STATE, .err_client_description = "Failed to connect: client must be initialized correctly" };
 		return response_packet;
@@ -97,15 +91,13 @@ ResponsePacket ClientEngine::connectClient(const char* reader, const char* ip, c
 
 	// init socket
 	LOG_INFO << "Client trying to connect on IP " << ip << " port " << port;
-	response = socket_->initClient(ip, port);
-	if (!response) {
+	if (!socket_->initClient(ip, port)) {
 		ResponsePacket response_packet = { .response = "KO", .err_client_code = ERR_NETWORK, .err_client_description = "Failed to connect: initialization failed" };
 		return response_packet;
 	}
 
 	// connect to the server
-	response = socket_->connectClient();
-	if (!response) {
+	if (!socket_->connectClient()) {
 		ResponsePacket response_packet = { .response = "KO", .err_client_code = ERR_NETWORK, .err_client_description = "Failed to connect: check the server" };
 		return response_packet;
 	}

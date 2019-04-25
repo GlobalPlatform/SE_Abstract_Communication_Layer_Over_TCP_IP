@@ -26,9 +26,9 @@ namespace client {
 class ClientEngine;
 class PowerOnField : public IRequest {
 public:
-	PowerOnField() {}
-	~PowerOnField() {}
-	ResponsePacket run(ITerminalLayer* terminal, ClientEngine* client_engine, char unsigned command[], DWORD command_length);
+	PowerOnField() = default;
+	~PowerOnField() = default;
+	ResponsePacket run(ITerminalLayer* terminal, ClientEngine* client_engine, char unsigned command[], DWORD command_length) override;
 };
 
 } /* namespace client */

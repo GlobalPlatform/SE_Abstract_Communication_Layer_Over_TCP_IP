@@ -26,9 +26,9 @@ namespace client {
 class ClientEngine;
 class Diag : public IRequest {
 public:
-	Diag() {}
-	~Diag() {}
-	ResponsePacket run(ITerminalLayer* terminal, ClientEngine* client_engine, char unsigned command[], DWORD command_length);
+	Diag() = default;
+	~Diag() = default;
+	ResponsePacket run(ITerminalLayer* terminal, ClientEngine* client_engine, char unsigned command[], DWORD command_length) override;
 };
 
 } /* namespace client */

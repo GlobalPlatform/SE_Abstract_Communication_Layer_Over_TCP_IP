@@ -26,9 +26,9 @@ namespace client {
 class ClientEngine;
 class ColdReset: public IRequest {
 public:
-	ColdReset() {}
-	~ColdReset() {}
-	ResponsePacket run(ITerminalLayer* terminal, ClientEngine* client_engine, char unsigned command[], DWORD command_length);
+	ColdReset() = default;
+	~ColdReset() = default;
+	ResponsePacket run(ITerminalLayer* terminal, ClientEngine* client_engine, char unsigned command[], DWORD command_length) override;
 };
 
 }

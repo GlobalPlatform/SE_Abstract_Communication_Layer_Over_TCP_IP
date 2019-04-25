@@ -26,9 +26,9 @@ namespace client {
 class ClientEngine;
 class Disconnect : public IRequest {
 public:
-	Disconnect() {}
-	~Disconnect() {}
-	ResponsePacket run(ITerminalLayer* terminal, ClientEngine* client_engine, char unsigned command[], DWORD command_length);
+	Disconnect() = default;
+	~Disconnect() = default;
+	ResponsePacket run(ITerminalLayer* terminal, ClientEngine* client_engine, char unsigned command[], DWORD command_length) override;
 };
 
 } /* namespace client */

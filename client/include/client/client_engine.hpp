@@ -48,7 +48,10 @@ public:
 		this->notifyResponseSent_ = notifyResponseSent;
 	}
 
-	virtual ~ClientEngine();
+	~ClientEngine() {
+		delete terminal_;
+		delete socket_;
+	}
 
 	/**
 	 * initClient - initialize the client with the given configuration file.
@@ -103,7 +106,6 @@ public:
 	void setConnectedFlag(bool stop_flag);
 private:
 	ResponsePacket sendResult(std::string result);
-
 };
 
 } /* namespace client */

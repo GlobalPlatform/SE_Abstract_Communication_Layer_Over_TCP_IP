@@ -26,9 +26,9 @@ namespace client {
 class ClientEngine;
 class Command : public IRequest {
 public:
-	Command() {}
-	~Command() {}
-	ResponsePacket run(ITerminalLayer* terminal, ClientEngine* client_engine, char unsigned command[], DWORD command_length);
+	Command() = default;
+	~Command() = default;
+	ResponsePacket run(ITerminalLayer* terminal, ClientEngine* client_engine, char unsigned command[], DWORD command_length) override;
 };
 
 } /* namespace client */

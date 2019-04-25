@@ -38,29 +38,29 @@ private:
 	DWORD dwReaders_, dwActiveProtocol_, dwRecvLength_;
 	SCARD_IO_REQUEST pioSendPci_;
 	BYTE pbRecvBuffer_[DEFAULT_BUFLEN];
+public:
+	ExampleTerminalPCSCContactless() = default;
+	~ExampleTerminalPCSCContactless();
+	ResponsePacket init() override;
+	ResponsePacket loadAndListReaders() override;
+	ResponsePacket connect(const char* reader) override;
+	ResponsePacket sendCommand(unsigned char command[], unsigned long int command_length) override;
+	ResponsePacket sendTypeA(unsigned char command[], unsigned long int command_length) override;
+	ResponsePacket sendTypeB(unsigned char command[], unsigned long int command_length) override;
+	ResponsePacket sendTypeF(unsigned char command[], unsigned long int command_length) override;
+	ResponsePacket diag() override;
+	ResponsePacket disconnect() override;
+	ResponsePacket isAlive() override;
+	ResponsePacket restart() override;
+	ResponsePacket coldReset() override;
+	ResponsePacket warmReset() override;
+	ResponsePacket powerOFFField() override;
+	ResponsePacket powerONField() override;
 private:
 	ResponsePacket handleErrorResponse(std::string context_message, LONG error);
 	ResponsePacket retrieveAtr(BYTE* bAttr, DWORD* cByte);
 	std::string errorToString(LONG error);
 	LONG handleRetry();
-public:
-	ExampleTerminalPCSCContactless() {};
-	~ExampleTerminalPCSCContactless();
-	ResponsePacket init();
-	ResponsePacket loadAndListReaders();
-	ResponsePacket connect(const char* reader);
-	ResponsePacket sendCommand(unsigned char command[], unsigned long int command_length);
-	ResponsePacket sendTypeA(unsigned char command[], unsigned long int command_length);
-	ResponsePacket sendTypeB(unsigned char command[], unsigned long int command_length);
-	ResponsePacket sendTypeF(unsigned char command[], unsigned long int command_length);
-	ResponsePacket diag();
-	ResponsePacket disconnect();
-	ResponsePacket isAlive();
-	ResponsePacket restart();
-	ResponsePacket coldReset();
-	ResponsePacket warmReset();
-	ResponsePacket powerOFFField();
-	ResponsePacket powerONField();
 };
 
 } /* namespace client */

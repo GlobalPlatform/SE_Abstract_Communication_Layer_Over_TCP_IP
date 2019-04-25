@@ -29,8 +29,8 @@ class FlyweightRequests {
 private:
 	std::map<RequestCode, IRequest*> requests;
 public:
-	FlyweightRequests() {};
-	virtual ~FlyweightRequests() {};
+	FlyweightRequests() = default;
+	~FlyweightRequests() = default;
 
 	/**
 	 * addRequest - insert the pair <key, request> in the map.

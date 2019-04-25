@@ -26,7 +26,7 @@ namespace client {
 
 class ITerminalLayer {
 public:
-	ITerminalLayer() {};
+	ITerminalLayer() = default;
 	virtual ~ITerminalLayer() {};
 
 	/**

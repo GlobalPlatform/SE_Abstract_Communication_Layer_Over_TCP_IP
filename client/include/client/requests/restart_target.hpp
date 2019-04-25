@@ -25,9 +25,9 @@ namespace client {
 class ClientEngine;
 class RestartTarget : public IRequest {
 public:
-	RestartTarget() {}
-	~RestartTarget() {}
-	ResponsePacket run(ITerminalLayer* terminal, ClientEngine* client_engine, char unsigned command[], DWORD command_length);
+	RestartTarget() = default;
+	~RestartTarget() = default;
+	ResponsePacket run(ITerminalLayer* terminal, ClientEngine* client_engine, char unsigned command[], DWORD command_length) override;
 };
 
 } /* namespace client */

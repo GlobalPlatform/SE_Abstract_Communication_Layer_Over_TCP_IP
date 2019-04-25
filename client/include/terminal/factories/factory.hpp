@@ -24,8 +24,8 @@ namespace client {
 
 class ITerminalFactory {
 public:
-	ITerminalFactory() {};
-	virtual ~ITerminalFactory() {};
+	ITerminalFactory() = default;
+	virtual ~ITerminalFactory() = default;
 
 	/**
 	 * create - instantiate a terminal.

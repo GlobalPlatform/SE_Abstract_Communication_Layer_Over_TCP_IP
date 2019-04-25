@@ -35,8 +35,8 @@ private:
 private:
 	bool sendData(const char* data, int size);
 public:
-	ClientTCPSocket() {}
-	virtual ~ClientTCPSocket() {}
+	ClientTCPSocket() = default;
+	~ClientTCPSocket() = default;
 
 	/**
 	 * initClient - initialises Winsock and socket parameters

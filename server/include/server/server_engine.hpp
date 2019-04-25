@@ -43,14 +43,13 @@ private:
 	int next_client_id_ = 0;
 	std::atomic<bool> stop_ { false };
 	Callback notifyConnectionAccepted_;
-protected:
 public:
 	ServerEngine(Callback notifyConnectionAccepted) {
 		state_ = State::INSTANCIED;
 		this->notifyConnectionAccepted_ = notifyConnectionAccepted;
 	}
 
-	virtual ~ServerEngine() {}
+	~ServerEngine() = default;
 
 	/**
 	 * initServer - init the logger and the configuration values.

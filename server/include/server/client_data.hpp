@@ -34,7 +34,7 @@ protected:
 public:
 	ClientData() {}
 	ClientData(SOCKET socket, int id, std::string name);
-	virtual ~ClientData() {}
+	~ClientData() = default;
 
 	/**
 	 * getId - return the integer value of the field "id".

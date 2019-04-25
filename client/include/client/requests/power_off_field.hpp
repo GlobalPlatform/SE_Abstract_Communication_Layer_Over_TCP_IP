@@ -27,8 +27,8 @@ class ClientEngine;
 class PowerOffField : public IRequest {
 public:
 	PowerOffField() {}
-	~PowerOffField() {}
-	ResponsePacket run(ITerminalLayer* terminal, ClientEngine* client_engine, char unsigned command[], DWORD command_length);
+	~PowerOffField() = default;
+	ResponsePacket run(ITerminalLayer* terminal, ClientEngine* client_engine, char unsigned command[], DWORD command_length) override;
 };
 
 } /* namespace client */

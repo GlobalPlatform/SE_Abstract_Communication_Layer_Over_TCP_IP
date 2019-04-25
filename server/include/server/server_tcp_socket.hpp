@@ -32,11 +32,9 @@ private:
 	const char* port_;
 	struct addrinfo* result_;
 	struct addrinfo hints_;
-private:
-	bool sendData(SOCKET socket, const char* data, int size);
 public:
-	ServerTCPSocket() {}
-	virtual ~ServerTCPSocket() {}
+	ServerTCPSocket() = default;
+	~ServerTCPSocket() = default;
 
 	/**
 	 * startServer - initialize the server, after this call the server will listen to the incoming connections on the given ip and port.
@@ -72,6 +70,8 @@ public:
 	 * closeServer - cleanup and close the server.
 	 */
 	void closeServer();
+private:
+	bool sendData(SOCKET socket, const char* data, int size);
 };
 
 } /* namespace server */

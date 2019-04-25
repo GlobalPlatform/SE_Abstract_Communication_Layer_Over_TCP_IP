@@ -26,9 +26,9 @@ namespace client {
 class ClientEngine;
 class WarmReset: public IRequest {
 public:
-	WarmReset() {}
-	~WarmReset() {}
-	ResponsePacket run(ITerminalLayer* terminal, ClientEngine* client_engine, char unsigned command[], DWORD command_length);
+	WarmReset() = default;
+	~WarmReset() = default;
+	ResponsePacket run(ITerminalLayer* terminal, ClientEngine* client_engine, char unsigned command[], DWORD command_length) override;
 };
 
 }

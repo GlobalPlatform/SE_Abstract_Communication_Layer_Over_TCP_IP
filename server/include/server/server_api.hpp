@@ -34,7 +34,7 @@ public:
 		this->engine_ = new ServerEngine(notifyConnectionAccepted);
 	}
 
-	virtual ~ServerAPI() {}
+	~ServerAPI() = default;
 
 	/**
 	 * initServer - initialize the server with the given configuration file.
@@ -94,7 +94,7 @@ public:
 	 * @param timeout the waiting time of the execution of the request.
 	 * @return a ResponsePacket struct containing either the smartcard's response or error codes and error descriptions in case of error.
 	 */
-	virtual ResponsePacket sendTypeA(int id_client, std::string command, DWORD timeout = DEFAULT_REQUEST_TIMEOUT);
+	ResponsePacket sendTypeA(int id_client, std::string command, DWORD timeout = DEFAULT_REQUEST_TIMEOUT);
 
 	/**
 	 * sendTypeB - send an APDU command over RF Type B.

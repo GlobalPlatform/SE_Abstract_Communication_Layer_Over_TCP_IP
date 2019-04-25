@@ -28,8 +28,8 @@ class FlyweightTerminalFactory {
 private:
 	std::map<std::string, ITerminalFactory*> factories_;
 public:
-	FlyweightTerminalFactory() {};
-	virtual ~FlyweightTerminalFactory() {};
+	FlyweightTerminalFactory() = default;
+	virtual ~FlyweightTerminalFactory() = default;
 
 	/**
 	 * addFactory - add a factory in the cache at the given key.

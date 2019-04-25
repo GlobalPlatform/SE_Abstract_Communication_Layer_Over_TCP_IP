@@ -24,9 +24,9 @@ namespace client {
 
 class ExamplePCSCContactlessFactory : public ITerminalFactory {
 public:
-	ExamplePCSCContactlessFactory() {};
-	~ExamplePCSCContactlessFactory() {};
-	ITerminalLayer* create();
+	ExamplePCSCContactlessFactory() = default;
+	~ExamplePCSCContactlessFactory() = default;
+	ITerminalLayer* create() override;
 };
 
 } /* namespace client */

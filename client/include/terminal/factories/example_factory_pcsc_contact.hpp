@@ -24,9 +24,9 @@ namespace client {
 
 class ExamplePCSCContactFactory : public ITerminalFactory {
 public:
-	ExamplePCSCContactFactory() {};
-	~ExamplePCSCContactFactory() {};
-	ITerminalLayer* create();
+	ExamplePCSCContactFactory() = default;
+	~ExamplePCSCContactFactory() = default;
+	ITerminalLayer* create() override;
 };
 
 } /* namespace client */

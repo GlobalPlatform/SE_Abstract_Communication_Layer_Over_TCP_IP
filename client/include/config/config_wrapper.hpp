@@ -25,7 +25,7 @@
 namespace client {
 
 // singleton pattern
-class ConfigWrapper { // https://stackoverflow.com/a/1008289
+class ConfigWrapper {
 public:
 	static ConfigWrapper& getInstance() {
 		static ConfigWrapper instance;
