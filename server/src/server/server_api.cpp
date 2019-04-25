@@ -31,8 +31,7 @@
 namespace server {
 
 ResponsePacket ServerAPI::initServer(std::string path) {
-	ResponsePacket resp = engine_->initServer(path);
-	return resp;
+	return engine_->initServer(path);
 }
 
 ResponsePacket ServerAPI::startServer(const char* ip, const char* port) {
@@ -43,36 +42,36 @@ ResponsePacket ServerAPI::listClients() {
 	return engine_->listClients();
 }
 
-ResponsePacket ServerAPI::sendCommand(int id_client, std::string command) {
-	return engine_->handleRequest(id_client, REQ_COMMAND, command);
+ResponsePacket ServerAPI::sendCommand(int id_client, std::string command, DWORD timeout) {
+	return engine_->handleRequest(id_client, REQ_COMMAND, timeout, command);
 }
 
-ResponsePacket ServerAPI::sendTypeA(int id_client, std::string command) {
-	return engine_->handleRequest(id_client, REQ_COMMAND_A, command);
+ResponsePacket ServerAPI::sendTypeA(int id_client, std::string command, DWORD timeout) {
+	return engine_->handleRequest(id_client, REQ_COMMAND_A, timeout, command);
 }
 
-ResponsePacket ServerAPI::sendTypeB(int id_client, std::string command) {
-	return engine_->handleRequest(id_client, REQ_COMMAND_B, command);
+ResponsePacket ServerAPI::sendTypeB(int id_client, std::string command, DWORD timeout) {
+	return engine_->handleRequest(id_client, REQ_COMMAND_B, timeout, command);
 }
 
-ResponsePacket ServerAPI::sendTypeF(int id_client, std::string command) {
-	return engine_->handleRequest(id_client, REQ_COMMAND_F, command);
+ResponsePacket ServerAPI::sendTypeF(int id_client, std::string command, DWORD timeout) {
+	return engine_->handleRequest(id_client, REQ_COMMAND_F, timeout, command);
 }
 
-ResponsePacket ServerAPI::restartTarget(int id_client) {
-	return engine_->handleRequest(id_client, REQ_RESTART);
+ResponsePacket ServerAPI::restartTarget(int id_client, DWORD timeout) {
+	return engine_->handleRequest(id_client, REQ_RESTART, timeout);
 }
 
-ResponsePacket ServerAPI::echoClient(int id_client) {
-	return engine_->handleRequest(id_client, REQ_ECHO);
+ResponsePacket ServerAPI::echoClient(int id_client, DWORD timeout) {
+	return engine_->handleRequest(id_client, REQ_ECHO, timeout);
 }
 
-ResponsePacket ServerAPI::diagClient(int id_client) {
-	return engine_->handleRequest(id_client, REQ_DIAG);
+ResponsePacket ServerAPI::diagClient(int id_client, DWORD timeout) {
+	return engine_->handleRequest(id_client, REQ_DIAG, timeout);
 }
 
-ResponsePacket ServerAPI::stopClient(int id_client) {
-	ResponsePacket response = engine_->handleRequest(id_client, REQ_DISCONNECT);
+ResponsePacket ServerAPI::stopClient(int id_client, DWORD timeout) {
+	ResponsePacket response = engine_->handleRequest(id_client, REQ_DISCONNECT, timeout);
 	if (response.err_server_code == ERR_NETWORK) {
 		ResponsePacket okResponse;
 		return okResponse;
@@ -80,19 +79,19 @@ ResponsePacket ServerAPI::stopClient(int id_client) {
 	return response;
 }
 
-ResponsePacket ServerAPI::coldReset(int id_client) {
+ResponsePacket ServerAPI::coldReset(int id_client, DWORD timeout) {
 	return engine_->handleRequest(id_client, REQ_COLD_RESET);
 }
 
-ResponsePacket ServerAPI::warmReset(int id_client) {
+ResponsePacket ServerAPI::warmReset(int id_client, DWORD timeout) {
 	return engine_->handleRequest(id_client, REQ_WARM_RESET);
 }
 
-ResponsePacket ServerAPI::powerOFFField(int id_client) {
+ResponsePacket ServerAPI::powerOFFField(int id_client, DWORD timeout) {
 	return engine_->handleRequest(id_client, REQ_POWER_OFF_FIELD);
 }
 
-ResponsePacket ServerAPI::powerONField(int id_client) {
+ResponsePacket ServerAPI::powerONField(int id_client, DWORD timeout) {
 	return engine_->handleRequest(id_client, REQ_POWER_ON_FIELD);
 }
 

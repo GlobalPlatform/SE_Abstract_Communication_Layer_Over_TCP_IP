@@ -20,15 +20,20 @@
 
 namespace client {
 
-#define DEFAULT_BUFLEN 1024 * 64
+/* connections TCP/IP */
 #define DEFAULT_IP "127.0.0.1"
 #define DEFAULT_PORT "62111"
-#define DEFAULT_NAME "default_name"
+#define DEFAULT_BUFLEN 1024 * 64
+
+/* client information */
+#define DEFAULT_NAME "default_name" // client's name
+
+/* logs */
+#define DEFAULT_LOG_LEVEL "info" // debug level - info or debug (more verbose)
 #define DEFAULT_LOG_DIRECTORY "./logs"
 #define DEFAULT_LOG_FILENAME "basics.csv"
-#define DEFAULT_LOG_LEVEL "info"
-#define DEFAULT_LOG_MAX_SIZE "1000000" // bytes
-#define DEFAULT_LOG_MAX_FILES "10"
+#define DEFAULT_LOG_MAX_SIZE "1000000" // maximum bytes for each log file
+#define DEFAULT_LOG_MAX_FILES "10" // log files number for the rolling
 
 } /* namespace client */
 

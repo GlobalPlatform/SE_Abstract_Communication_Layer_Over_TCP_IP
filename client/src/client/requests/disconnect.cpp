@@ -19,8 +19,6 @@
 #include "client/requests/disconnect.hpp"
 #include "plog/include/plog/Log.h"
 
-#include <winsock2.h>
-
 namespace client {
 
 ResponsePacket Disconnect::run(ITerminalLayer* terminal, ClientEngine* client_engine, char unsigned command[], unsigned long int command_length) {

@@ -125,7 +125,7 @@ ResponsePacket ServerEngine::connectionHandshake(SOCKET client_socket) {
 	return response_packet;
 }
 
-ResponsePacket ServerEngine::handleRequest(int id_client, RequestCode request, std::string data, DWORD timeout) {
+ResponsePacket ServerEngine::handleRequest(int id_client, RequestCode request, DWORD timeout, std::string data) {
 	if (state_ != State::STARTED) {
 		ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_INVALID_STATE, .err_server_description = "Server must be started" };
 		return response_packet;
@@ -145,6 +145,9 @@ ResponsePacket ServerEngine::handleRequest(int id_client, RequestCode request, s
 	j["timeout"] = timeout;
 
 	DWORD socket_timeout = std::atoi(config_.getValue("timeout", DEFAULT_TIMEOUT).c_str());
+	if (socket_timeout < timeout) {
+		socket_timeout = 2 * timeout;
+	}
 
 	// sends async request to client
 	std::future<ResponsePacket> fut = std::async(std::launch::async, &asyncRequest, this, client_socket, j.dump(), socket_timeout);

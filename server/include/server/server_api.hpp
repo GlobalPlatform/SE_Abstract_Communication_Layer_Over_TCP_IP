@@ -1,4 +1,4 @@
-/*********************************************************************************
+ /*********************************************************************************
  Copyright 2017 GlobalPlatform, Inc.
 
  Licensed under the GlobalPlatform/Apache License, Version 2.0 (the "License");
@@ -19,6 +19,7 @@
 #define SERVER_HPP_
 
 #include "constants/callback.hpp"
+#include "constants/default_values.hpp"
 #include "constants/request_code.hpp"
 #include "server/client_data.hpp"
 #include "server/server_engine.hpp"
@@ -28,7 +29,6 @@ namespace server {
 class ServerAPI {
 private:
 	ServerEngine* engine_;
-protected:
 public:
 	ServerAPI(Callback notifyConnectionAccepted) {
 		this->engine_ = new ServerEngine(notifyConnectionAccepted);
@@ -63,88 +63,104 @@ public:
 	 * echoClient - return a ResponsePacket used to check that the client is working without error.
 	 * The ResponsePacket struct contains no data in the "response" field.
 	 * No errorvalue under 0 in the ResponsePacket struct means the client is working.
-	 * @param id_client
+	 * @param id_client the client's id to send request to.
 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
 	 */
-	ResponsePacket echoClient(int id_client);
+	ResponsePacket echoClient(int id_client, DWORD timeout = DEFAULT_REQUEST_TIMEOUT);
 
 	/**
 	 * diagClient - return details about the client and its underlying layers.
 	 * The details will be in the field "response" of the ResponsePacket structure.
-	 * The details will be formatted this way: TheReaderName|TheReaderStatus|TheReaderProtocolUsed
-	 * @param id_client
+	 * The details will be formatted as: TheReaderName|TheReaderStatus|TheReaderProtocolUsed
+	 * @param id_client the client's id to send request to.
+	 * @param timeout the waiting time of the execution of the request.
 	 * @return a ResponsePacket struct containing either the data or error codes and error descriptions.
 	 */
-	ResponsePacket diagClient(int id_client);
+	ResponsePacket diagClient(int id_client, DWORD timeout = DEFAULT_REQUEST_TIMEOUT);
 
 	/**
 	 * sendCommand - return a ResponsePacket struct containing the target's response in the "response" field.
-	 * @param id_client
+	 * @param id_client the client's id to send request to.
 	 * @param command the command that will be send to the given target.
+	 * @param timeout the waiting time of the execution of the request.
 	 * @return a ResponsePacket struct containing either the target's response or error codes (value under 0) and error descriptions in case of error.
 	 */
-	ResponsePacket sendCommand(int id_client, std::string command);
+	ResponsePacket sendCommand(int id_client, std::string command, DWORD timeout = DEFAULT_REQUEST_TIMEOUT);
 
 	/**
-	 * sendTypeA - send an APDU command over RF Type A
+	 * sendTypeA - send an APDU command over RF Type A.
+	 * @param id_client the client's id to send request to.
 	 * @param command the APDU command to be sent to the smartcard.
-	 * @param command_length the length of the given APDU command.
+	 * @param timeout the waiting time of the execution of the request.
 	 * @return a ResponsePacket struct containing either the smartcard's response or error codes and error descriptions in case of error.
 	 */
-	virtual ResponsePacket sendTypeA(int id_client, std::string command);
+	virtual ResponsePacket sendTypeA(int id_client, std::string command, DWORD timeout = DEFAULT_REQUEST_TIMEOUT);
 
 	/**
-	 * sendTypeB - send an APDU command over RF Type B
+	 * sendTypeB - send an APDU command over RF Type B.
+	 * @param id_client the client's id to send request to.
 	 * @param command the APDU command to be sent to the smartcard.
-	 * @param command_length the length of the given APDU command.
+	 * @param timeout the waiting time of the execution of the request.
 	 * @return a ResponsePacket struct containing either the smartcard's response or error codes and error descriptions in case of error.
 	 */
-	ResponsePacket sendTypeB(int id_client, std::string command);
+	ResponsePacket sendTypeB(int id_client, std::string command, DWORD timeout = DEFAULT_REQUEST_TIMEOUT);
 
 	/**
-	 * sendTypeF - send an APDU command over RF Type F
+	 * sendTypeF - send an APDU command over RF Type F.
+	 * @param id_client the client's id to send request to.
 	 * @param command the APDU command to be sent to the smartcard.
-	 * @param command_length the length of the given APDU command.
+	 * @param timeout the waiting time of the execution of the request.
 	 * @return a ResponsePacket struct containing either the smartcard's response or error codes and error descriptions in case of error.
 	 */
-	ResponsePacket sendTypeF(int id_client, std::string command);
+	ResponsePacket sendTypeF(int id_client, std::string command, DWORD timeout = DEFAULT_REQUEST_TIMEOUT);
 
 	/**
 	 * restartTarget - restart the given target.
-	 * @param id_client the target to be restarted.
+	 * @param id_client the client's id to send request to.
+	 * @param timeout the waiting time of the execution of the request.
 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
 	 */
-	ResponsePacket restartTarget(int id_client);
+	ResponsePacket restartTarget(int id_client, DWORD timeout = DEFAULT_REQUEST_TIMEOUT);
 
 	/**
 	 * stopClient - stop the given client and all its underlying layers.
-	 * @param id_client the client to stop.
+	 * @param id_client the client's id to send request to.
+	 * @param timeout the waiting time of the execution of the request.
 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
 	 */
-	ResponsePacket stopClient(int id_client);
+	ResponsePacket stopClient(int id_client, DWORD timeout = DEFAULT_REQUEST_TIMEOUT);
 
 	/**
 	 * coldReset - perform power off power on and return atr in the response structure.
+	 * @param id_client the client's id to send request to.
+	 * @param timeout the waiting time of the execution of the request.
 	 * @return a ResponsePacket struct containing either the atr or the error codes (under 0) and error descriptions
 	 */
-	ResponsePacket coldReset(int id_client);
+	ResponsePacket coldReset(int id_client, DWORD timeout = DEFAULT_REQUEST_TIMEOUT);
 
 	/**
 	 * coldReset - perform the reset without power switch and return atr in the response structure.
+	 * @param id_client the client's id to send request to.
+	 * @param timeout the waiting time of the execution of the request.
 	 * @return a ResponsePacket struct containing either the atr or the error codes (under 0) and error descriptions
 	 */
-	ResponsePacket warmReset(int id_client);
+	ResponsePacket warmReset(int id_client, DWORD timeout = DEFAULT_REQUEST_TIMEOUT);
 
 	/**
-	 * powerOFFField - set the field OFF
+	 * powerOFFField - set the field OFF.
+	 * @param id_client the client's id to send request to.
+	 * @param timeout the waiting time of the execution of the request.
  	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
 	 */
-	ResponsePacket powerOFFField(int id_client);
+	ResponsePacket powerOFFField(int id_client, DWORD timeout = DEFAULT_REQUEST_TIMEOUT);
+
 	/**
-	 * powerONField - set the field ON
+	 * powerONField - set the field ON.
+	 * @param id_client the client's id to send request to.
+	 * @param timeout the waiting time of the execution of the request.
  	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
 	 */
-	ResponsePacket powerONField(int id_client);
+	ResponsePacket powerONField(int id_client, DWORD timeout = DEFAULT_REQUEST_TIMEOUT);
 
 	/**
 	 * stopServer - stop the server and all its clients and their underlying layers.

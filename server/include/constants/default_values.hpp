@@ -20,15 +20,21 @@
 
 namespace server {
 
-#define DEFAULT_BUFLEN 1024 * 64
+/* connections TCP/IP */
 #define DEFAULT_IP "127.0.0.1"
 #define DEFAULT_PORT "62111"
-#define DEFAULT_TIMEOUT "5000" // milliseconds
+#define DEFAULT_BUFLEN 1024 * 64
+#define DEFAULT_SOCKET_TIMEOUT "5000" // timer for socket operations recv/send in milliseconds
+
+/* logs */
+#define DEFAULT_LOG_LEVEL "info" // debug level - info or debug (more verbose)
 #define DEFAULT_LOG_DIRECTORY "./logs"
 #define DEFAULT_LOG_FILENAME "basics.csv"
-#define DEFAULT_LOG_LEVEL "info"
-#define DEFAULT_LOG_MAX_SIZE "1000000" // bytes
-#define DEFAULT_LOG_MAX_FILES "10"
+#define DEFAULT_LOG_MAX_SIZE "1000000" // maximum bytes for each log file
+#define DEFAULT_LOG_MAX_FILES "10" // log files number for the rolling
+
+/* timeouts */
+#define DEFAULT_REQUEST_TIMEOUT 2000 // waiting time used client's side for the terminal response
 
 } /* namespace server */
 

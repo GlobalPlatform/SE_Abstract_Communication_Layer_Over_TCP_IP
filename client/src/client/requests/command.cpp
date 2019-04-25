@@ -18,9 +18,6 @@
 #include "client/requests/command.hpp"
 #include "plog/include/plog/Log.h"
 
-#include <winsock2.h>
-#include <windows.h>
-
 namespace client {
 
 ResponsePacket Command::run(ITerminalLayer* terminal, ClientEngine* client_engine, char unsigned command[], unsigned long int command_length) {

@@ -20,6 +20,7 @@
 
 #include "config/config_wrapper.hpp"
 #include "constants/callback.hpp"
+#include "constants/default_values.hpp"
 #include "constants/request_code.hpp"
 #include "constants/response_packet.hpp"
 #include "server/client_data.hpp"
@@ -67,38 +68,14 @@ public:
 	ResponsePacket startListening(const char* ip, const char* port);
 
 	/**
-	 * handleConnections - handle connections request and use helper function "connectionHandshake" at each connection request.
-	 * @param listen_socket the socket used to listen for connections.
-	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
-	 */
-	ResponsePacket handleConnections();
-
-	/**
-	 * connectionHandshake - helper function used to handle a connection asynchronously.
-	 * The handshake ensures that the client send its data (such as its name) after requesting for a connection.
-	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
-	 */
-	ResponsePacket connectionHandshake(SOCKET client_socket);
-
-	/**
 	 * handleRequest - create a json formatted string with the given parameters and send it the given client with the help of the function "asyncRequest".
 	 * @param id_client the client's id to send request to.
 	 * @param request the request to be performed, such as "diag", "echo",...
 	 * @param date the request's data, such as "04 04 00 00".
-	 * @param timeout the timeout used to elapse the request.
+	 * @param timeout the waiting time of the execution of the request.
 	 * @return a ResponsePacket struct containing the request's result.
 	 */
-	ResponsePacket handleRequest(int id_client, RequestCode request, std::string data = "", DWORD timeout = 2000);
-
-	/**
-	 * asyncRequest - helper function to send asynchronously the given data on the given socket.
-	 * The request elapses is no response is received after the given timeout.
-	 * @param client_socket the socket to send data on.
-	 * @param to_send the actual data to be sent.
-	 * @param timeout the timeout in ms used to unblock the request.
-	 * @return a ResponsePacket struct containing the request's result.
-	 */
-	ResponsePacket asyncRequest(SOCKET client_socket, std::string to_send, DWORD timeout);
+	ResponsePacket handleRequest(int id_client, RequestCode request, DWORD timeout = DEFAULT_REQUEST_TIMEOUT, std::string data = "");
 
 	/*
 	 * listClients - returns a ResponsePacket containing all clients' data in the "response" field.
@@ -120,6 +97,30 @@ public:
 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
 	 */
 	ResponsePacket stopAllClients();
+private:
+	/**
+	 * handleConnections - handle connections request and use helper function "connectionHandshake" at each connection request.
+	 * @param listen_socket the socket used to listen for connections.
+	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
+	 */
+	ResponsePacket handleConnections();
+
+	/**
+	 * connectionHandshake - helper function used to handle a connection asynchronously.
+	 * The handshake ensures that the client send its data (such as its name) after requesting for a connection.
+	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
+	 */
+	ResponsePacket connectionHandshake(SOCKET client_socket);
+
+	/**
+	 * asyncRequest - helper function to send asynchronously the given data on the given socket.
+	 * The request elapses is no response is received after the given timeout.
+	 * @param client_socket the socket to send data on.
+	 * @param to_send the actual data to be sent.
+	 * @param timeout the timeout in ms used to elapse the request.
+	 * @return a ResponsePacket struct containing the request's result.
+	 */
+	ResponsePacket asyncRequest(SOCKET client_socket, std::string to_send, DWORD timeout);
 };
 
 } /* namespace server */
