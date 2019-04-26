@@ -16,35 +16,53 @@
  *********************************************************************************/
 
 #include "client/client_api.hpp"
+#include "client/requests/cold_reset.hpp"
 #include "client/requests/command.hpp"
 #include "client/requests/diag.hpp"
 #include "client/requests/disconnect.hpp"
 #include "client/requests/echo.hpp"
-#include "client/requests/flyweight_requests.hpp"
+#include "client/requests/power_off_field.hpp"
+#include "client/requests/power_on_field.hpp"
 #include "client/requests/request.hpp"
+#include "client/requests/request.hpp"
+#include "client/requests/restart_target.hpp"
+#include "client/requests/send_typeA.hpp"
+#include "client/requests/send_typeB.hpp"
+#include "client/requests/send_typeF.hpp"
+#include "client/requests/warm_reset.hpp"
 #include "constants/request_code.hpp"
+#include "terminal/factories/example_factory_pcsc_contact.hpp"
+#include "terminal/factories/example_factory_pcsc_contactless.hpp"
 #include "terminal/flyweight_terminal_factory.hpp"
 #include "terminal/terminals/example_pcsc_contact.hpp"
-#include "plog/include/plog/Log.h"
+
 
 using namespace client;
 
 int __cdecl main(void) {
 	// config available terminal factories
-//	FlyweightTerminalFactory available_terminals;
-//	available_terminals.addFactory("PCSC", new PCSCFactory());
-//
-//	// config all requests the client can handle
-//	FlyweightRequests available_requests;
-//	available_requests.addRequest(REQ_COMMAND, new Command());
-//	available_requests.addRequest(REQ_DIAG, new Diag());
-//	available_requests.addRequest(REQ_DISCONNECT, new Disconnect());
-//	available_requests.addRequest(REQ_ECHO, new Echo());
+	FlyweightTerminalFactory available_terminals;
+	available_terminals.addFactory("EXAMPLE_PCSC_CONTACT", new ExamplePCSCContactFactory());
+	available_terminals.addFactory("EXAMPLE_PCSC_CONTACTLESS", new ExamplePCSCContactlessFactory());
 
-//	ClientAPI client;
-//	client.initClient("./config/init.json", available_terminals, available_requests);
-//	ResponsePacket response = client.loadAndListReaders();
-//	LOG_DEBUG << response.response;
-//	client.connectClient(0);
+	// config all requests the client can handle
+	FlyweightRequests available_requests;
+	available_requests.addRequest(REQ_COMMAND, new Command());
+	available_requests.addRequest(REQ_COMMAND_A, new SendTypeA());
+	available_requests.addRequest(REQ_COMMAND_B, new SendTypeB());
+	available_requests.addRequest(REQ_COMMAND_F, new SendTypeF());
+	available_requests.addRequest(REQ_DIAG, new Diag());
+	available_requests.addRequest(REQ_DISCONNECT, new Disconnect());
+	available_requests.addRequest(REQ_ECHO, new Echo());
+	available_requests.addRequest(REQ_RESTART, new RestartTarget());
+	available_requests.addRequest(REQ_COLD_RESET, new ColdReset());
+	available_requests.addRequest(REQ_WARM_RESET, new WarmReset());
+	available_requests.addRequest(REQ_POWER_OFF_FIELD, new PowerOffField());
+	available_requests.addRequest(REQ_POWER_ON_FIELD, new PowerOnField());
+
+	ClientAPI* client = new ClientAPI(0, 0, 0);
+	client->initClient("./config/init.json", available_terminals, available_requests);
+	client->connectClient("SCM Microsystems Inc. SCL010 Contactless Reader 0", "127.0.0.1", "62111");
+	Sleep(100000);
 	return 0;
 }

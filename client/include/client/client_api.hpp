@@ -34,7 +34,7 @@ public:
 		this->engine_ = new ClientEngine(notifyConnectionLost, notifyRequestReceived, notifyResponseSent);
 	}
 
-	virtual ~ClientAPI() {
+	~ClientAPI() {
 		delete engine_;
 	}
 

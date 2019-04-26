@@ -41,34 +41,34 @@
 
 using namespace client;
 
-ADDAPI void setCallbackConnectionLost(client::Callback handler) {
+void setCallbackConnectionLost(client::Callback handler) {
 	notifyConnectionLost = handler;
 }
 
-ADDAPI void setCallbackRequestsReceived(client::Callback handler) {
+void setCallbackRequestsReceived(client::Callback handler) {
 	notifyRequestReceived = handler;
 }
 
-ADDAPI void setCallbackResponseSent(client::Callback handler) {
+void setCallbackResponseSent(client::Callback handler) {
 	notifyResponseSent = handler;
 }
 
-ADDAPI client::ClientAPI* createClientAPI() {
+client::ClientAPI* createClientAPI() {
 	ClientAPI* client = new client::ClientAPI(notifyConnectionLost, notifyRequestReceived, notifyResponseSent);
 	return client;
 }
 
-ADDAPI void disposeClientAPI(client::ClientAPI* client) {
+void disposeClientAPI(client::ClientAPI* client) {
 	delete client;
 	client = NULL;
 }
 
-ADDAPI void disconnectClient(client::ClientAPI* client, ResponseDLL& response_packet_dll) {
+void disconnectClient(client::ClientAPI* client, ResponseDLL& response_packet_dll) {
 	ResponsePacket response_packet = client->disconnectClient();
 	responsePacketForDll(response_packet, response_packet_dll);
 }
 
-ADDAPI void initClient(client::ClientAPI* client, ResponseDLL& response_packet_dll) {
+void initClient(client::ClientAPI* client, ResponseDLL& response_packet_dll) {
 	// config available terminal factories
 	FlyweightTerminalFactory available_terminals;
 	available_terminals.addFactory("EXAMPLE_PCSC_CONTACT", new ExamplePCSCContactFactory());
@@ -93,12 +93,12 @@ ADDAPI void initClient(client::ClientAPI* client, ResponseDLL& response_packet_d
 	responsePacketForDll(response_packet, response_packet_dll);
 }
 
-ADDAPI void loadAndListReaders(ClientAPI* client, ResponseDLL& response_packet_dll) {
+void loadAndListReaders(ClientAPI* client, ResponseDLL& response_packet_dll) {
 	ResponsePacket response_packet = client->loadAndListReaders();
 	responsePacketForDll(response_packet, response_packet_dll);
 }
 
-ADDAPI void connectClient(client::ClientAPI* client, const char* reader, const char* ip, const char* port, ResponseDLL& response_packet_dll) {
+void connectClient(client::ClientAPI* client, const char* reader, const char* ip, const char* port, ResponseDLL& response_packet_dll) {
 	ResponsePacket response_packet = client->connectClient(reader, ip, port);
 	responsePacketForDll(response_packet, response_packet_dll);
 }

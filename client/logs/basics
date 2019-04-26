@@ -1,0 +1,43 @@
+﻿2019-04-26 14:20:52.441 INFO  [976] [client::ExampleTerminalPCSCContact::init@47] SCardEstablishContext called
+2019-04-26 14:20:52.445 INFO  [976] [client::ExampleTerminalPCSCContact::init@54] Terminal PCSC initialized
+2019-04-26 14:20:52.445 INFO  [976] [client::ClientEngine::initClient@67] Client initialized successfully
+2019-04-26 14:20:52.448 INFO  [976] [client::ClientEngine::connectClient@93] Client trying to connect on IP 127.0.0.1 port 61222
+2019-04-26 14:20:52.450 DEBUG [976] [client::ClientTCPSocket::connectClient@59] Socket = 384
+2019-04-26 14:20:53.451 DEBUG [976] [client::ClientTCPSocket::connectClient@78] Failed to connect: server unreachable[ip:(null)][port:(null)]
+2019-04-26 14:21:42.863 INFO  [11540] [client::ExampleTerminalPCSCContact::init@47] SCardEstablishContext called
+2019-04-26 14:21:42.874 INFO  [11540] [client::ExampleTerminalPCSCContact::init@54] Terminal PCSC initialized
+2019-04-26 14:21:42.874 INFO  [11540] [client::ClientEngine::initClient@67] Client initialized successfully
+2019-04-26 14:21:42.874 INFO  [11540] [client::ClientEngine::connectClient@93] Client trying to connect on IP 127.0.0.1 port 61222
+2019-04-26 14:21:42.884 DEBUG [11540] [client::ClientTCPSocket::connectClient@59] Socket = 388
+2019-04-26 14:21:44.094 DEBUG [11540] [client::ClientTCPSocket::connectClient@78] Failed to connect: server unreachable[ip:(null)][port:(null)]
+2019-04-26 14:22:21.187 INFO  [10600] [client::ExampleTerminalPCSCContact::init@47] SCardEstablishContext called
+2019-04-26 14:22:21.209 INFO  [10600] [client::ExampleTerminalPCSCContact::init@54] Terminal PCSC initialized
+2019-04-26 14:22:21.225 INFO  [10600] [client::ClientEngine::initClient@67] Client initialized successfully
+2019-04-26 14:22:21.289 INFO  [10600] [client::ClientEngine::connectClient@93] Client trying to connect on IP 127.0.0.1 port 62111
+2019-04-26 14:22:21.313 DEBUG [10600] [client::ClientTCPSocket::connectClient@59] Socket = 384
+2019-04-26 14:22:21.327 INFO  [10600] [client::ExampleTerminalPCSCContact::connect@104] Trying to connect: SCM Microsystems Inc. SCL010 Contactless Reader 0
+2019-04-26 14:22:21.341 INFO  [10600] [client::ExampleTerminalPCSCContact::connect@107] SCardConnect called
+2019-04-26 14:22:21.382 DEBUG [10600] [client::ExampleTerminalPCSCContact::connect@134] Reader connected: SCM Microsystems Inc. SCL010 Contactless Reader 0
+2019-04-26 14:22:21.385 INFO  [10600] [client::ClientEngine::connectClient@120] Client connected on IP 127.0.0.1 port 62111
+2019-04-26 14:23:08.516 INFO  [1848] [client::ExampleTerminalPCSCContact::init@47] SCardEstablishContext called
+2019-04-26 14:23:08.525 INFO  [1848] [client::ExampleTerminalPCSCContact::init@54] Terminal PCSC initialized
+2019-04-26 14:23:08.571 INFO  [1848] [client::ClientEngine::initClient@67] Client initialized successfully
+2019-04-26 14:23:08.593 INFO  [1848] [client::ClientEngine::connectClient@93] Client trying to connect on IP 127.0.0.1 port 62111
+2019-04-26 14:23:08.618 DEBUG [1848] [client::ClientTCPSocket::connectClient@59] Socket = 392
+2019-04-26 14:23:08.727 INFO  [1848] [client::ExampleTerminalPCSCContact::connect@104] Trying to connect: SCM Microsystems Inc. SCL010 Contactless Reader 0
+2019-04-26 14:23:08.739 INFO  [1848] [client::ExampleTerminalPCSCContact::connect@107] SCardConnect called
+2019-04-26 14:23:08.791 DEBUG [1848] [client::ExampleTerminalPCSCContact::connect@134] Reader connected: SCM Microsystems Inc. SCL010 Contactless Reader 0
+2019-04-26 14:23:08.803 INFO  [1848] [client::ClientEngine::connectClient@120] Client connected on IP 127.0.0.1 port 62111
+2019-04-26 14:23:08.824 INFO  [6624] [client::ClientEngine::waitingRequests@151] Client ready to process incoming requests
+2019-04-26 14:23:16.891 INFO  [6624] [client::ClientEngine::handleRequest@174] Request received from server: {"data":"","request":3,"timeout":2000}
+2019-04-26 14:23:16.893 INFO  [11340] [client::Echo::run@24] Request "echo" is being processed
+2019-04-26 14:23:16.902 INFO  [11340] [client::ExampleTerminalPCSCContact::sendCommand@144] SCardTransmit called
+2019-04-26 14:23:16.922 INFO  [6624] [client::ClientEngine::sendResult@222] Response sent to server: {"client_description":"OK","err_card_code":0,"err_card_description":"OK","err_client_code":0,"err_server_code":0,"err_server_description":"OK","err_terminal_code":0,"response":"6D 00","terminal_description":"OK"}
+2019-04-26 14:23:18.850 INFO  [6624] [client::ClientEngine::handleRequest@174] Request received from server: {"data":"","request":3,"timeout":2000}
+2019-04-26 14:23:18.851 INFO  [5828] [client::Echo::run@24] Request "echo" is being processed
+2019-04-26 14:23:18.863 INFO  [5828] [client::ExampleTerminalPCSCContact::sendCommand@144] SCardTransmit called
+2019-04-26 14:23:18.878 INFO  [6624] [client::ClientEngine::sendResult@222] Response sent to server: {"client_description":"OK","err_card_code":0,"err_card_description":"OK","err_client_code":0,"err_server_code":0,"err_server_description":"OK","err_terminal_code":0,"response":"6D 00","terminal_description":"OK"}
+2019-04-26 14:23:19.970 INFO  [6624] [client::ClientEngine::handleRequest@174] Request received from server: {"data":"","request":3,"timeout":2000}
+2019-04-26 14:23:19.971 INFO  [11552] [client::Echo::run@24] Request "echo" is being processed
+2019-04-26 14:23:19.979 INFO  [11552] [client::ExampleTerminalPCSCContact::sendCommand@144] SCardTransmit called
+2019-04-26 14:23:19.994 INFO  [6624] [client::ClientEngine::sendResult@222] Response sent to server: {"client_description":"OK","err_card_code":0,"err_card_description":"OK","err_client_code":0,"err_server_code":0,"err_server_description":"OK","err_terminal_code":0,"response":"6D 00","terminal_description":"OK"}
