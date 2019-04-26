@@ -148,13 +148,13 @@
         <Button Command="{Binding SendTypeF}" Content="Send RF type F" HorizontalAlignment="Left" Margin="605,53,0,0" Grid.Row="4" VerticalAlignment="Top"  Grid.Column="1"/>
 
         <Button Command="{Binding EchoClient}" Content="Is alive ?" HorizontalAlignment="Left" Margin="5,83,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
-        <Button Command="{Binding DiagnoseClient}" Content="Diagnose" HorizontalAlignment="Left" Margin="5,112,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
-        <Button Command="{Binding RestartTarget}" Content="Restart target" HorizontalAlignment="Left" Margin="5,142,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
-        <Button Command="{Binding StopClient}" Content="Disconnect" HorizontalAlignment="Left" Margin="5,172,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
-        <Button Command="{Binding ColdReset}" Content="Cold reset" HorizontalAlignment="Left" Margin="125,83,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
+        <Button Command="{Binding DiagnoseClient}" Content="Diagnose" HorizontalAlignment="Left" Margin="125,83,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
+        <Button Command="{Binding RestartTarget}" Content="Restart target" HorizontalAlignment="Left" Margin="5,172,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
+        <Button Command="{Binding StopClient}" Content="Disconnect" HorizontalAlignment="Left" Margin="125,172,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
+        <Button Command="{Binding ColdReset}" Content="Cold reset" HorizontalAlignment="Left" Margin="5,112,0,0"  Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
         <Button Command="{Binding WarmReset}" Content="Warn reset" HorizontalAlignment="Left" Margin="125,112,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
         <Button Command="{Binding PowerOFFField}" Content="Power OFF field" HorizontalAlignment="Left" Margin="125,142,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
-        <Button Command="{Binding PowerONField}" Content="Power ON field" HorizontalAlignment="Left" Margin="125,172,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
+        <Button Command="{Binding PowerONField}" Content="Power ON field" HorizontalAlignment="Left" Margin="5,142,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
 
         <!-- Responses/Requests -->
         <Label Margin="6,0,6,0" Content="Resquests - responses" Grid.Row="5" FontWeight="Bold"/>

@@ -5,10 +5,10 @@ namespace ServerWPF.ViewModels
 {
     public class DelegateCommand : ICommand
     {
-        private Action _executeAction;
+        private Func<bool> _executeAction;
         private Func<bool> _canExecuteAction;
 
-        public DelegateCommand(Action executeAction, Func<bool> canExecuteAction)
+        public DelegateCommand(Func<bool> executeAction, Func<bool> canExecuteAction)
         {
             _executeAction = executeAction;
             _canExecuteAction = canExecuteAction;

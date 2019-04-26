@@ -46,7 +46,7 @@ namespace ServerWPF.ViewModels
             _powerONField = new DelegateCommand(OnPowerONField, IsClientSelected);
             _clearLogs = new DelegateCommand(OnClearLogs, null);
             _browseFile = new DelegateCommand(OnBrowseFile, IsClientSelected);
-            _sendCommandsBatch = new DelegateCommand(async () => await OnSendCommandBatch(), CanSendCommandBatch);
+            _sendCommandsBatch = new AsyncDelegateCommand(async () => await OnSendCommandBatch(), CanSendCommandBatch);
 
             _actions.AddAction(ActionMethod.COMMAND.ToString(), OnSendCommandClient);
             _actions.AddAction(ActionMethod.SEND_TYPE_A.ToString(), OnSendTypeA);
@@ -210,35 +210,37 @@ namespace ServerWPF.ViewModels
         private readonly DelegateCommand _browseFile;
         public ICommand BrowseFile => _browseFile;
 
-        private readonly DelegateCommand _sendCommandsBatch;
+        private readonly AsyncDelegateCommand _sendCommandsBatch;
         public ICommand SendCommandsBatch => _sendCommandsBatch;
         #endregion
 
         #region delegates implementations
-        private void OnStartServer()
+        private bool OnStartServer()
         {
             APIServerModel old = _serverData.FirstOrDefault();
             ResponseDLL response = APIServerWrapper.StartServer(old.ServerIP, old.ServerPort);
-            if (CheckError(response)) return;
+            if (CheckError(response)) return false;
             _serverData.Clear();
             _serverData.Add(new APIServerModel(ServerState.STARTED, old.ServerIP, old.ServerPort));
             _startServer.InvokeCanExecuteChanged();
             _stopServer.InvokeCanExecuteChanged();
+            return true;
         }
 
-        private void OnStopServer()
+        private bool OnStopServer()
         {
             ResponseDLL response = APIServerWrapper.StopServer();
-            if (CheckError(response)) return;
+            if (CheckError(response)) return false;
             APIServerModel old = _serverData.FirstOrDefault();
             _serverData.Clear();
             _serverData.Add(new APIServerModel(ServerState.DISCONNECTED, old.ServerIP, old.ServerPort));
             _clientsList.Clear();
             _startServer.InvokeCanExecuteChanged();
             _stopServer.InvokeCanExecuteChanged();
+            return true;
         }
 
-        private void OnSendCommandClient()
+        private bool OnSendCommandClient()
         {
             ResponseDLL response = APIServerWrapper.SendCommand(_selectedClient.ClientID, _currentCommand);
             AppendLog(String.Format("{0} {1}", ActionMethod.COMMAND.ToString(), _currentCommand), response);
@@ -248,100 +250,120 @@ namespace ServerWPF.ViewModels
                 response = APIServerWrapper.SendCommand(_selectedClient.ClientID, String.Format("00 C0 00 00 {0}", sws[1]));
                 AppendLog(String.Format("{0} 00 C0 00 00 {1}", ActionMethod.COMMAND.ToString(), sws[1]), response);
             }
+            return APIServerWrapper.RetrieveErrorDescription(response).Equals(APIServerWrapper.NO_ERROR);
         }
 
-        private void OnSendTypeA()
+        private bool OnSendTypeA()
         {
             ResponseDLL response = APIServerWrapper.SendTypeA(_selectedClient.ClientID, _currentCommand);
             AppendLog(String.Format("{0} {1}", ActionMethod.SEND_TYPE_A.ToString(), _currentCommand), response);
+            return APIServerWrapper.RetrieveErrorDescription(response).Equals(APIServerWrapper.NO_ERROR);
         }
 
-        private void OnSendTypeB()
+        private bool OnSendTypeB()
         {
             ResponseDLL response = APIServerWrapper.SendTypeB(_selectedClient.ClientID, _currentCommand);
             AppendLog(String.Format("{0} {1}", ActionMethod.SEND_TYPE_B.ToString(), _currentCommand), response);
+            return APIServerWrapper.RetrieveErrorDescription(response).Equals(APIServerWrapper.NO_ERROR);
         }
 
-        private void OnSendTypeF()
+        private bool OnSendTypeF()
         {
             ResponseDLL response = APIServerWrapper.SendTypeF(_selectedClient.ClientID, _currentCommand);
             AppendLog(String.Format("{0} {1}", ActionMethod.SEND_TYPE_F.ToString(), _currentCommand), response);
+            return APIServerWrapper.RetrieveErrorDescription(response).Equals(APIServerWrapper.NO_ERROR);
         }
 
-        private void OnEchoClient()
+        private bool OnEchoClient()
         {
             ResponseDLL response = APIServerWrapper.EchoClient(_selectedClient.ClientID);
             AppendLog(ActionMethod.ECHO.ToString(), response);
+            return APIServerWrapper.RetrieveErrorDescription(response).Equals(APIServerWrapper.NO_ERROR);
         }
 
-        private void OnDiagnoseClient()
+        private bool OnDiagnoseClient()
         {
             ResponseDLL response = APIServerWrapper.DiagClient(_selectedClient.ClientID);
             AppendLog(ActionMethod.DIAG.ToString(), response);
+            return APIServerWrapper.RetrieveErrorDescription(response).Equals(APIServerWrapper.NO_ERROR);
         }
 
-        private void OnColdReset()
+        private bool OnColdReset()
         {
             ResponseDLL response = APIServerWrapper.ColdReset(_selectedClient.ClientID);
             AppendLog(ActionMethod.COLD_RESET.ToString(), response);
+            return APIServerWrapper.RetrieveErrorDescription(response).Equals(APIServerWrapper.NO_ERROR);
         }
 
-        private void OnWarmReset()
+        private bool OnWarmReset()
         {
             ResponseDLL response = APIServerWrapper.WarmReset(_selectedClient.ClientID);
             AppendLog(ActionMethod.WARM_RESET.ToString(), response);
+            return APIServerWrapper.RetrieveErrorDescription(response).Equals(APIServerWrapper.NO_ERROR);
         }
 
-        private void OnPowerOFFField()
+        private bool OnPowerOFFField()
         {
             ResponseDLL response = APIServerWrapper.PowerOFFField(_selectedClient.ClientID);
             AppendLog(ActionMethod.POWER_OFF_FIELD.ToString(), response);
+            return APIServerWrapper.RetrieveErrorDescription(response).Equals(APIServerWrapper.NO_ERROR);
         }
 
-        private void OnPowerONField()
+        private bool OnPowerONField()
         {
             ResponseDLL response = APIServerWrapper.PowerONField(_selectedClient.ClientID);
             AppendLog(ActionMethod.POWER_ON_FIELD.ToString(), response);
+            return APIServerWrapper.RetrieveErrorDescription(response).Equals(APIServerWrapper.NO_ERROR);
         }
 
-        private void OnRestartTarget()
+        private bool OnRestartTarget()
         {
             ResponseDLL response = APIServerWrapper.RestartTarget(_selectedClient.ClientID);
             AppendLog(ActionMethod.RESTART.ToString(), response);
+            return APIServerWrapper.RetrieveErrorDescription(response).Equals(APIServerWrapper.NO_ERROR);
         }
 
-        private void OnStopClient()
+        private bool OnStopClient()
         {
             ResponseDLL response = APIServerWrapper.StopClient(_selectedClient.ClientID);
             AppendLog(ActionMethod.STOP_CLIENT.ToString(), response);
             _clientsList.Remove(_selectedClient);
             _selectedClient = null;
+            return APIServerWrapper.RetrieveErrorDescription(response).Equals(APIServerWrapper.NO_ERROR);
         }
 
-        private void OnClearLogs()
+        private bool OnClearLogs()
         {
             _logsList.Clear();
+            return true;
         }
 
-        private void OnBrowseFile()
+        private bool OnBrowseFile()
         {
-            CurrentFilePath = _fileDialogService.OpenFileDialog(@"C:\Users\st\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\clientGUI\ClientWPF\bin\Debug") ?? String.Empty;
+            CurrentFilePath = _fileDialogService.OpenFileDialog(@".") ?? String.Empty;
+            return true;
         }
 
-        private async Task OnSendCommandBatch()
+        private async Task<bool> OnSendCommandBatch()
         {
             var lines = File.ReadLines(CurrentFilePath);
             foreach (string line in lines)
             {
-                if (SelectedClient == null) break;
+                if (SelectedClient == null)  return false;
                 string[] tokens = line.Split(' ');
                 if (tokens.Length == 2) CurrentCommand = tokens[1];
-                Action action = _actions.GetAction(tokens[0]);
+                Func<bool> action = _actions.GetAction(tokens[0]);
                 if (action != null)
                 {
-                    await Task.Run(action);
+                    bool ok = await Task.Run(action);
+                    if (!ok)
+                    {
+                        _messageDialogService.ShowError("An error occured with the last action.");
+                        return false;
+                    }
                 }
             }
+            return true;
         }
 
         private void AppendLog(string request, ResponseDLL response)
