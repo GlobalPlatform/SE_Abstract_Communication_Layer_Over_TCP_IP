@@ -26,8 +26,8 @@ namespace server {
 
 void ConfigWrapper::init(std::string path) {
 	std::ifstream i(path);
-	std::cout << i.good() << std::endl;
 	i >> config_;
+	i.close();
 }
 
 std::string ConfigWrapper::getValue(std::string key) {

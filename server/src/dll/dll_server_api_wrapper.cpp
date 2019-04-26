@@ -23,96 +23,96 @@
 
 using namespace server;
 
-ADDAPI server::ServerAPI* createServerAPI() {
+ server::ServerAPI* createServerAPI() {
 	ServerAPI* server = new ServerAPI(notifyConnectionAccepted);
 	return server;
 }
 
-ADDAPI void setCallbackConnectionAccepted(Callback handler) {
+ void setCallbackConnectionAccepted(Callback handler) {
 	notifyConnectionAccepted = handler;
 }
 
-ADDAPI void initServer(server::ServerAPI* server, ResponseDLL& response_packet) {
+ void initServer(server::ServerAPI* server, ResponseDLL& response_packet) {
 	ResponsePacket response = server->initServer("config/init.json");
 	responsePacketForDll(response, response_packet);
 }
 
-ADDAPI void startServer(server::ServerAPI* server, const char* ip, const char* port, ResponseDLL& response_packet) {
+ void startServer(server::ServerAPI* server, const char* ip, const char* port, ResponseDLL& response_packet) {
 	ResponsePacket response = server->startServer(ip, port);
 	responsePacketForDll(response, response_packet);
 }
 
-ADDAPI void listClients(server::ServerAPI* server, ResponseDLL& response_packet) {
+ void listClients(server::ServerAPI* server, ResponseDLL& response_packet) {
 	ResponsePacket response = server->listClients();
 	responsePacketForDll(response, response_packet);
 }
 
-ADDAPI void echoClient(server::ServerAPI* server, int id_client, ResponseDLL& response_packet) {
+ void echoClient(server::ServerAPI* server, int id_client, ResponseDLL& response_packet) {
 	ResponsePacket response = server->echoClient(id_client);
 	responsePacketForDll(response, response_packet);
 }
 
-ADDAPI void diagClient(server::ServerAPI* server, int id_client, ResponseDLL& response_packet) {
+ void diagClient(server::ServerAPI* server, int id_client, ResponseDLL& response_packet) {
 	ResponsePacket response = server->diagClient(id_client);
 	responsePacketForDll(response, response_packet);
 }
 
-ADDAPI void sendCommand(server::ServerAPI* server, int id_client, char* command, ResponseDLL& response_packet) {
+ void sendCommand(server::ServerAPI* server, int id_client, char* command, ResponseDLL& response_packet) {
 	ResponsePacket response = server->sendCommand(id_client, command);
 	responsePacketForDll(response, response_packet);
 }
 
-ADDAPI void sendTypeA(server::ServerAPI* server, int id_client, char* command, ResponseDLL& response_packet) {
+ void sendTypeA(server::ServerAPI* server, int id_client, char* command, ResponseDLL& response_packet) {
 	ResponsePacket response = server->sendTypeA(id_client, command);
 	responsePacketForDll(response, response_packet);
 }
 
-ADDAPI void sendTypeB(server::ServerAPI* server, int id_client, char* command, ResponseDLL& response_packet) {
+ void sendTypeB(server::ServerAPI* server, int id_client, char* command, ResponseDLL& response_packet) {
 	ResponsePacket response = server->sendTypeB(id_client, command);
 	responsePacketForDll(response, response_packet);
 }
 
-ADDAPI void sendTypeF(server::ServerAPI* server, int id_client, char* command, ResponseDLL& response_packet) {
+ void sendTypeF(server::ServerAPI* server, int id_client, char* command, ResponseDLL& response_packet) {
 	ResponsePacket response = server->sendTypeF(id_client, command);
 	responsePacketForDll(response, response_packet);
 }
 
-ADDAPI void restartTarget(server::ServerAPI* server, int id_client, ResponseDLL& response_packet) {
+ void restartTarget(server::ServerAPI* server, int id_client, ResponseDLL& response_packet) {
 	ResponsePacket response = server->restartTarget(id_client);
 	responsePacketForDll(response, response_packet);
 }
 
-ADDAPI void stopClient(server::ServerAPI* server, int id_client, ResponseDLL& response_packet) {
+ void stopClient(server::ServerAPI* server, int id_client, ResponseDLL& response_packet) {
 	ResponsePacket response = server->stopClient(id_client);
 	responsePacketForDll(response, response_packet);
 }
 
-ADDAPI void coldReset(server::ServerAPI* server, int id_client, ResponseDLL& response_packet) {
+ void coldReset(server::ServerAPI* server, int id_client, ResponseDLL& response_packet) {
 	ResponsePacket response = server->coldReset(id_client);
 	responsePacketForDll(response, response_packet);
 }
 
-ADDAPI void warmReset(server::ServerAPI* server, int id_client, ResponseDLL& response_packet) {
+ void warmReset(server::ServerAPI* server, int id_client, ResponseDLL& response_packet) {
 	ResponsePacket response = server->warmReset(id_client);
 	responsePacketForDll(response, response_packet);
 }
 
-ADDAPI void powerOFFField(server::ServerAPI* server, int id_client, ResponseDLL& response_packet) {
+ void powerOFFField(server::ServerAPI* server, int id_client, ResponseDLL& response_packet) {
 	ResponsePacket response = server->powerOFFField(id_client);
 	responsePacketForDll(response, response_packet);
 }
 
-ADDAPI void powerONField(server::ServerAPI* server, int id_client, ResponseDLL& response_packet) {
+ void powerONField(server::ServerAPI* server, int id_client, ResponseDLL& response_packet) {
 	ResponsePacket response = server->powerONField(id_client);
 	responsePacketForDll(response, response_packet);
 }
 
-ADDAPI void stopServer(server::ServerAPI* server, ResponseDLL& response_packet) {
+ void stopServer(server::ServerAPI* server, ResponseDLL& response_packet) {
 	ResponsePacket response = server->stopServer();
 	responsePacketForDll(response, response_packet);
 }
 
-ADDAPI void disposeServerAPI(server::ServerAPI* server) {
+ void disposeServerAPI(server::ServerAPI* server) {
 	delete server;
 }
 

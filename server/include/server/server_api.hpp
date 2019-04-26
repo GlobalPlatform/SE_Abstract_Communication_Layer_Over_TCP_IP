@@ -34,7 +34,9 @@ public:
 		this->engine_ = new ServerEngine(notifyConnectionAccepted);
 	}
 
-	~ServerAPI() = default;
+	~ServerAPI() {
+		delete engine_;
+	}
 
 	/**
 	 * initServer - initialize the server with the given configuration file.

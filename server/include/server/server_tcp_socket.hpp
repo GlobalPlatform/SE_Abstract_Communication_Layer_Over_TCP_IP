@@ -26,7 +26,7 @@ namespace server {
 
 class ServerTCPSocket {
 private:
-	SOCKET server_socket_;
+	SOCKET server_socket_ = INVALID_SOCKET;
 	WSADATA wsaData_;
 	const char* ip_;
 	const char* port_;

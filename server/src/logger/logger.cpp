@@ -25,13 +25,6 @@
 namespace logger {
 
 void setup(server::ConfigWrapper* config) {
-	std::cout << config->getValue("log_level", DEFAULT_LOG_LEVEL) << std::endl;
-	std::cout << config->getValue("log_max_size", DEFAULT_LOG_MAX_SIZE) << std::endl;
-	std::cout << config->getValue("log_max_files", DEFAULT_LOG_MAX_FILES) << std::endl;
-	std::cout << config->getValue("log_directory", DEFAULT_LOG_DIRECTORY) << std::endl;
-	std::cout << config->getValue("log_filename", DEFAULT_LOG_FILENAME) << std::endl;
-
-
 	std::string log_level = config->getValue("log_level", DEFAULT_LOG_LEVEL);
 	int log_max_size = std::stoi(config->getValue("log_max_size", DEFAULT_LOG_MAX_SIZE));
 	int log_max_files = std::stoi(config->getValue("log_max_files", DEFAULT_LOG_MAX_FILES));

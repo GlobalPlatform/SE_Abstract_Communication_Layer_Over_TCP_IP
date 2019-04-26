@@ -49,7 +49,9 @@ public:
 		this->notifyConnectionAccepted_ = notifyConnectionAccepted;
 	}
 
-	~ServerEngine() = default;
+	~ServerEngine() {
+		delete socket_;
+	}
 
 	/**
 	 * initServer - init the logger and the configuration values.
