@@ -27,6 +27,7 @@
 #include "terminal/terminals/terminal.hpp"
 
 #include <atomic>
+#include <future>
 #include <thread>
 
 namespace client {
@@ -37,6 +38,7 @@ private:
 	ClientTCPSocket* socket_;
 	ITerminalLayer* terminal_;
 	std::thread requests_thread_;
+	std::vector<std::future<ResponsePacket>> pending_futures_;
 	std::atomic<bool> connected_ { false };
 	std::atomic<bool> initialized_ { false };
 	FlyweightRequests requests_;

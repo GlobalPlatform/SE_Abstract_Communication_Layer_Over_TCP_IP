@@ -200,16 +200,21 @@ ResponsePacket ClientEngine::handleRequest(std::string request) {
 	}
 
 	// launch a thread to perform the request
-	std::future<ResponsePacket> future = std::async(std::launch::async, &IRequest::run, request_handler, terminal_, this, command, length);
+	auto future = std::async(std::launch::async, &IRequest::run, request_handler, terminal_, this, command, length);
 	// block until the timeout has elapsed or the result becomes available
 	if (future.wait_for(std::chrono::milliseconds(jrequest["timeout"])) == std::future_status::timeout) {
 		LOG_DEBUG << "Response time from terminal has elapsed [request:" << request << "]";
+		pending_futures_.push_back(std::move(future));
+		for (long long unsigned int i = 0; i < pending_futures_.size(); i++) {
+			if (pending_futures_[i].wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
+				pending_futures_.erase(pending_futures_.begin() + i);
+			}
+		}
 		ResponsePacket response_packet = { .response = "KO", .err_client_code = ERR_TIMEOUT, .err_client_description = "Response time from terminal has elapsed" };
 		jresponse = response_packet;
 	} else {
 		jresponse = future.get();
 	}
-
 	return sendResult(jresponse.dump());
 }
 

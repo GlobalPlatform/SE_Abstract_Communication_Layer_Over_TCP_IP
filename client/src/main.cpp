@@ -36,7 +36,6 @@
 #include "terminal/flyweight_terminal_factory.hpp"
 #include "terminal/terminals/example_pcsc_contact.hpp"
 
-
 using namespace client;
 
 int __cdecl main(void) {

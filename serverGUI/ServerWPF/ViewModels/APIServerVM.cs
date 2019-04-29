@@ -47,6 +47,7 @@ namespace ServerWPF.ViewModels
             _clearLogs = new DelegateCommand(OnClearLogs, null);
             _browseFile = new DelegateCommand(OnBrowseFile, IsClientSelected);
             _sendCommandsBatch = new AsyncDelegateCommand(async () => await OnSendCommandBatch(), CanSendCommandBatch);
+            _sendCommandsBatchRandom = new AsyncDelegateCommand(async () => await OnSendCommandBatchRandom(), CanSendCommandBatch);
 
             _actions.AddAction(ActionMethod.COMMAND.ToString(), OnSendCommandClient);
             _actions.AddAction(ActionMethod.SEND_TYPE_A.ToString(), OnSendTypeA);
@@ -80,6 +81,7 @@ namespace ServerWPF.ViewModels
             {
                 SetProperty(ref _currentFilePath, value);
                 _sendCommandsBatch.InvokeCanExecuteChanged();
+                _sendCommandsBatchRandom.InvokeCanExecuteChanged();
             }
         }
 
@@ -151,6 +153,7 @@ namespace ServerWPF.ViewModels
                 _powerONField.InvokeCanExecuteChanged();
                 _browseFile.InvokeCanExecuteChanged();
                 _sendCommandsBatch.InvokeCanExecuteChanged();
+                _sendCommandsBatchRandom.InvokeCanExecuteChanged();
             }
         }
 
@@ -212,6 +215,9 @@ namespace ServerWPF.ViewModels
 
         private readonly AsyncDelegateCommand _sendCommandsBatch;
         public ICommand SendCommandsBatch => _sendCommandsBatch;
+
+        private readonly AsyncDelegateCommand _sendCommandsBatchRandom;
+        public ICommand SendCommandsBatchRandom => _sendCommandsBatchRandom;
         #endregion
 
         #region delegates implementations
@@ -364,6 +370,28 @@ namespace ServerWPF.ViewModels
                 }
             }
             return true;
+        }
+
+        private async Task<bool> OnSendCommandBatchRandom()
+        {
+            Random rand = new Random();
+            var lines = File.ReadLines(CurrentFilePath);
+            while (true)
+            {
+                int index = rand.Next(lines.Count());
+                string[] tokens = lines.ElementAt(index).Split(' ');
+                if (tokens.Length == 2) CurrentCommand = tokens[1];
+                Func<bool> action = _actions.GetAction(tokens[0]);
+                if (action != null)
+                {
+                    bool ok = await Task.Run(action);
+                    if (!ok)
+                    {
+                        _messageDialogService.ShowError("An error occured with the last action.");
+                        return false;
+                    }
+                }
+            }
         }
 
         private void AppendLog(string request, ResponseDLL response)

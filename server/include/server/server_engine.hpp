@@ -27,6 +27,7 @@
 #include "server/server_tcp_socket.hpp"
 
 #include <atomic>
+#include <future>
 #include <map>
 #include <thread>
 
@@ -40,6 +41,7 @@ private:
 	ServerTCPSocket* socket_;
 	std::map<int, ClientData*> clients_;
 	std::thread connection_thread_;
+	std::vector<std::future<ResponsePacket>> pending_futures_;
 	int next_client_id_ = 0;
 	std::atomic<bool> stop_ { false };
 	Callback notifyConnectionAccepted_;

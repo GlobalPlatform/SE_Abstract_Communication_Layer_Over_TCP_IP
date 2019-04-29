@@ -140,6 +140,7 @@
         <TextBox Text="{Binding CurrentFilePath}" Grid.Column="1" HorizontalAlignment="Left" Height="22" Margin="5,22,0,0" Grid.Row="4" TextWrapping="Wrap" VerticalContentAlignment="Center" VerticalAlignment="Top" Width="230" />
         <Button Command="{Binding BrowseFile}" Content="Browse" HorizontalAlignment="Left" Margin="245,22,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
         <Button Command="{Binding SendCommandsBatch}" Content="Send batch" HorizontalAlignment="Left" Margin="365,22,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
+        <Button Command="{Binding SendCommandsBatchRandom}" Content="Send batch random" HorizontalAlignment="Left" Margin="485,22,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
 
         <TextBox Text="{Binding CurrentCommand}" Grid.Column="1" HorizontalAlignment="Left" Height="22" Margin="5,53,0,0" Grid.Row="4" TextWrapping="Wrap" VerticalContentAlignment="Center" VerticalAlignment="Top" Width="230" />
         <Button Command="{Binding SendCommandClient}" Content="Send command" HorizontalAlignment="Left" Margin="245,53,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
