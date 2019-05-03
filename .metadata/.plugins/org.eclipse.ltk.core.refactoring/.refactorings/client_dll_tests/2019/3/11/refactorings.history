@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">&#x0A;<refactoring comment="Rename resource &apos;ddl_tests/Debug/libclient.dll&apos; to &apos;libtests.dll&apos;" description="Rename resource &apos;libclient.dll&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Debug/libclient.dll" name="libtests.dll" stamp="1552290439811" updateReferences="true"/>&#x0A;<refactoring comment="Rename resource &apos;ddl_tests/Debug/libclient.dll&apos; to &apos;libtests.dll&apos;" description="Rename resource &apos;libclient.dll&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Debug/libclient.dll" name="libtests.dll" stamp="1552290748823" updateReferences="true"/>
+</session>

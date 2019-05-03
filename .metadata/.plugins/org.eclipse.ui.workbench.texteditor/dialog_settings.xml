@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="org.eclipse.ui.texteditor.GotoLineAction$GotoLineDialog_dialogBounds">
+		<item value="729" key="DIALOG_X_ORIGIN"/>
+		<item value="463" key="DIALOG_Y_ORIGIN"/>
+	</section>
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
+		<item value="true" key="isRegEx"/>
+		<item value="Sleep" key="selection"/>
+		<item value="false" key="casesensitive"/>
+		<item value="false" key="incremental"/>
+		<item value="false" key="wrap"/>
+		<item value="false" key="wholeword"/>
+		<list key="findhistory">
+			<item value="Sleep"/>
+			<item value="sleep"/>
+			<item value="skeeo"/>
+			<item value="future"/>
+			<item value="hardw"/>
+			<item value="json"/>
+			<item value="TM"/>
+			<item value="TL"/>
+			<item value="timeout"/>
+			<item value="recc"/>
+			<item value="rece"/>
+			<item value="recv"/>
+			<item value="reset"/>
+			<item value="rese"/>
+			<item value="recon"/>
+		</list>
+		<list key="replacehistory">
+			<item value=""/>
+			<item value=" "/>
+			<item value="case $1:\r\nreturn \&quot;$2\&quot;;"/>
+			<item value="$1:\r\nreturn \&quot;$2\&quot;;"/>
+			<item value="return \&quot;$1\&quot;;"/>
+			<item value="return $1"/>
+			<item value="return &quot;$1&quot;;"/>
+			<item value="$1"/>
+			<item value="case SCARD"/>
+			<item value="server."/>
+			<item value="engine."/>
+			<item value="engine-&gt;"/>
+			<item value="future"/>
+			<item value="n }"/>
+			<item value="e }"/>
+		</list>
+	</section>
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
+		<item value="375" key="DIALOG_WIDTH"/>
+		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
+		<item value="409" key="DIALOG_HEIGHT"/>
+		<item value="1425" key="DIALOG_X_ORIGIN"/>
+		<item value="309" key="DIALOG_Y_ORIGIN"/>
+	</section>
+</section>

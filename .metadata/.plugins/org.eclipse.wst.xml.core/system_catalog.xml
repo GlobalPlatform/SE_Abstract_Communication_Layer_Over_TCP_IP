@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+  <system systemId="http://www.w3.org/2001/xml.xsd" uri="jar:file:/C:/Users/st/eclipse/cpp-2018-12/eclipse/../../../.p2/pool/plugins/org.eclipse.xsd_2.16.0.v20181127-0852.jar!/cache/www.w3.org/2001/xml.xsd"/>
+  <uri name="http://www.w3.org/2001/XMLSchema" uri="jar:file:/C:/Users/st/eclipse/cpp-2018-12/eclipse/../../../.p2/pool/plugins/org.eclipse.xsd_2.16.0.v20181127-0852.jar!/cache/www.w3.org/2001/XMLSchema.xsd"/>
+</catalog>

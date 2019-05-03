@@ -1,0 +1,7 @@
+08:57:38 **** Incremental Build of configuration Debug for project client_dll_tests ****
+Info: Internal Builder is used for build
+g++ "-IC:\\Users\\st\\eclipse-workspace-cpp\\client_dll_tests\\src" "-IC:\\Users\\st\\eclipse-workspace-cpp\\client_dll_tests\\include" -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\main.o" "..\\src\\main.cpp" 
+g++ libclient.dll -o client_dll_tests.exe "src\\main.o" 
+
+08:57:41 Build Finished. 0 errors, 0 warnings. (took 2s.422ms)
+

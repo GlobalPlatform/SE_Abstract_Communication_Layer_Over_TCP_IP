@@ -1,0 +1,9 @@
+12:34:51 **** Incremental Build of configuration Debug for project test2 ****
+Info: Internal Builder is used for build
+g++ -c -DBUILDING_EXAMPLE_DLL example_dll.cpp 
+g++: error: example_dll.cpp: No such file or directory
+g++: fatal error: no input files
+compilation terminated.
+
+12:34:52 Build Finished. 0 errors, 0 warnings. (took 390ms)
+

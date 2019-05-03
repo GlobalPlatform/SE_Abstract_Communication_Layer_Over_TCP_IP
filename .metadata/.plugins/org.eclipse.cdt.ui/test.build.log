@@ -1,0 +1,10 @@
+11:12:06 **** Incremental Build of configuration Debug for project test ****
+Info: Internal Builder is used for build
+g++ "-IC:\\Users\\st\\eclipse-workspace-cpp\\test" -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.cpp" 
+..\main.cpp:12:10: fatal error: example_dll.h: No such file or directory
+ #include "example_dll.h"
+          ^~~~~~~~~~~~~~~
+compilation terminated.
+
+11:12:06 Build Failed. 1 errors, 0 warnings. (took 157ms)
+

@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">&#x0A;<refactoring comment="Rename resource &apos;server/libraries/plog-master&apos; to &apos;plog&apos;" description="Rename resource &apos;plog-master&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="libraries/plog-master" name="plog" stamp="1551089691470" updateReferences="true"/>&#x0A;<refactoring comment="Rename resource &apos;server/src/error_packet.h&apos; to &apos;response_packet.h&apos;" description="Rename resource &apos;error_packet.h&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/error_packet.h" name="response_packet.h" stamp="1551172744677" updateReferences="true"/>
+</session>

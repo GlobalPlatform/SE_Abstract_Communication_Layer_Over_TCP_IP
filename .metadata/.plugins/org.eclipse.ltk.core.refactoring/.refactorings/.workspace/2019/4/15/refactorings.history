@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Delete resource &apos;client/include/client/dll_client_api_wrapper.h&apos;" deleteContents="false" description="Delete resource &apos;client/include/client/dll_client_api_wrapper.h&apos;" element1="/client/include/client/dll_client_api_wrapper.h" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1554993728944"/>
+</session>

@@ -1,0 +1,9 @@
+15:38:34 **** Incremental Build of configuration Debug for project server_t ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\server.o" "..\\src\\server.cpp" 
+g++ -o server_t.exe "src\\client_data.o" "src\\server.o" "C:\\MinGW\\x86_64-w64-mingw32\\lib\\libwsock32.a" -lWs2_32 -lwsock32 
+C:/MinGW/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: cannot open output file server_t.exe: Permission denied
+collect2.exe: error: ld returned 1 exit status
+
+15:38:39 Build Failed. 1 errors, 0 warnings. (took 5s.267ms)
+

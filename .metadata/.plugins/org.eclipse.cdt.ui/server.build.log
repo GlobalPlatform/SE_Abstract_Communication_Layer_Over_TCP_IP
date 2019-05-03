@@ -1,0 +1,12 @@
+15:08:03 **** Incremental Build of configuration Debug for project server ****
+Info: Internal Builder is used for build
+g++ -std=c++1y -DADD_EXPORTS "-IC:\\Users\\st\\eclipse-workspace-cpp\\server\\libraries" "-IC:\\Users\\st\\eclipse-workspace-cpp\\server\\include" -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\main.o" "..\\src\\main.cpp" 
+g++ -std=c++1y -DADD_EXPORTS "-IC:\\Users\\st\\eclipse-workspace-cpp\\server\\libraries" "-IC:\\Users\\st\\eclipse-workspace-cpp\\server\\include" -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\config\\config_wrapper.o" "..\\src\\config\\config_wrapper.cpp" 
+g++ -std=c++1y -DADD_EXPORTS "-IC:\\Users\\st\\eclipse-workspace-cpp\\server\\libraries" "-IC:\\Users\\st\\eclipse-workspace-cpp\\server\\include" -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\server\\client_data.o" "..\\src\\server\\client_data.cpp" 
+g++ -std=c++1y -DADD_EXPORTS "-IC:\\Users\\st\\eclipse-workspace-cpp\\server\\libraries" "-IC:\\Users\\st\\eclipse-workspace-cpp\\server\\include" -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\server\\dll_server_api_wrapper.o" "..\\src\\server\\dll_server_api_wrapper.cpp" 
+g++ -std=c++1y -DADD_EXPORTS "-IC:\\Users\\st\\eclipse-workspace-cpp\\server\\libraries" "-IC:\\Users\\st\\eclipse-workspace-cpp\\server\\include" -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\server\\server_engine.o" "..\\src\\server\\server_engine.cpp" 
+g++ -std=c++1y -DADD_EXPORTS "-IC:\\Users\\st\\eclipse-workspace-cpp\\server\\libraries" "-IC:\\Users\\st\\eclipse-workspace-cpp\\server\\include" -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\server\\server_api.o" "..\\src\\server\\server_api.cpp" 
+g++ -o libserver.dll "src\\config\\config_wrapper.o" "src\\main.o" "src\\server\\client_data.o" "src\\server\\dll_server_api_wrapper.o" "src\\server\\server_api.o" "src\\server\\server_engine.o" "C:\\MinGW\\x86_64-w64-mingw32\\lib\\libwsock32.a" -lWs2_32 -static -shared 
+
+15:08:36 Build Finished. 0 errors, 0 warnings. (took 32s.619ms)
+
