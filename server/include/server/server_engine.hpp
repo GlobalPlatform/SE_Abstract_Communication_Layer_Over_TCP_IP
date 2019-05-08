@@ -29,6 +29,7 @@
 #include <atomic>
 #include <future>
 #include <map>
+#include <mutex>
 #include <thread>
 
 namespace server {
@@ -41,6 +42,7 @@ private:
 	ServerTCPSocket* socket_;
 	std::map<int, ClientData*> clients_;
 	std::thread connection_thread_;
+	std::mutex insert_client_mutex_;
 	std::vector<std::future<ResponsePacket>> pending_futures_;
 	int next_client_id_ = 0;
 	std::atomic<bool> stop_ { false };

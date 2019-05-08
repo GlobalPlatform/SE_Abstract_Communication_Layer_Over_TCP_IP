@@ -98,6 +98,7 @@ ResponsePacket ServerEngine::handleConnections() {
 }
 
 ResponsePacket ServerEngine::connectionHandshake(SOCKET client_socket) {
+	ResponsePacket response_packet;
 	char client_name[DEFAULT_BUFLEN];
 
 	if (!socket_->receivePacket(client_socket, client_name)) {
@@ -107,14 +108,14 @@ ResponsePacket ServerEngine::connectionHandshake(SOCKET client_socket) {
 	}
 
 	ClientData* client = new ClientData(client_socket, ++next_client_id_, client_name);
-	clients_.insert(std::make_pair(client->getId(), client));
-
 	LOG_INFO << "Client connected [id:" << client->getId() << "][name:" << client->getName() << "]";
 	if (notifyConnectionAccepted_ != 0)  {
 		notifyConnectionAccepted_(client->getId(), client->getName().c_str());
 	}
 
-	ResponsePacket response_packet;
+    std::lock_guard<std::mutex> guard(insert_client_mutex_);
+	clients_.insert(std::make_pair(client->getId(), client));
+
 	return response_packet;
 }
 
