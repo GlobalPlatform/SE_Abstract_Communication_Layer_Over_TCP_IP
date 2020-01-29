@@ -32,8 +32,8 @@ using namespace server;
 	notifyConnectionAccepted = handler;
 }
 
- void initServer(server::ServerAPI* server, ResponseDLL& response_packet) {
-	ResponsePacket response = server->initServer("config/init.json");
+ void initServer(server::ServerAPI* server, const char* path, ResponseDLL& response_packet) {
+	ResponsePacket response = server->initServer(path);
 	responsePacketForDll(response, response_packet);
 }
 
