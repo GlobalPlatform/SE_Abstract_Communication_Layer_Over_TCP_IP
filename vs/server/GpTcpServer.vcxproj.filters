@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Fichiers sources">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Fichiers de ressources">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Fichiers sources\dll">
+      <UniqueIdentifier>{b228a80a-6fdb-4ad3-af60-36b0e55c8960}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\dll">
+      <UniqueIdentifier>{24dc0364-0ba6-425a-8e39-85494c86cc21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\logger">
+      <UniqueIdentifier>{d1bccaa7-c8d0-48ea-910e-1aeae03ada0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\server">
+      <UniqueIdentifier>{bc7b16ef-7281-43cb-9629-7e5ea21ea276}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\constants">
+      <UniqueIdentifier>{219f8332-860d-40be-981e-39a75228a45e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\logger">
+      <UniqueIdentifier>{13a63bc9-1b7f-47d4-9672-c75d19afe42d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\server">
+      <UniqueIdentifier>{48495c93-b1a0-4f81-91bd-b699fc98a840}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\config">
+      <UniqueIdentifier>{e8f7db1b-9e63-4db5-8235-699d7e14ffee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\config">
+      <UniqueIdentifier>{a00b89a0-8653-4154-a4f0-279b846f3602}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="framework.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\server\include\dll\dll_server_api_wrapper.h">
+      <Filter>Fichiers d%27en-tête\dll</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\server\include\constants\callback.hpp">
+      <Filter>Fichiers d%27en-tête\constants</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\server\include\constants\default_values.hpp">
+      <Filter>Fichiers d%27en-tête\constants</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\server\include\constants\request_code.hpp">
+      <Filter>Fichiers d%27en-tête\constants</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\server\include\constants\response_packet.hpp">
+      <Filter>Fichiers d%27en-tête\constants</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\server\include\logger\logger.hpp">
+      <Filter>Fichiers d%27en-tête\logger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\server\include\server\client_data.hpp">
+      <Filter>Fichiers d%27en-tête\server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\server\include\server\server_api.hpp">
+      <Filter>Fichiers d%27en-tête\server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\server\include\server\server_engine.hpp">
+      <Filter>Fichiers d%27en-tête\server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\server\include\server\server_tcp_socket.hpp">
+      <Filter>Fichiers d%27en-tête\server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\server\include\config\config_wrapper.hpp">
+      <Filter>Fichiers d%27en-tête\config</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\server\src\dll\dll_server_api_wrapper.cpp">
+      <Filter>Fichiers sources\dll</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\server\src\logger\logger.cpp">
+      <Filter>Fichiers sources\logger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\server\src\server\client_data.cpp">
+      <Filter>Fichiers sources\server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\server\src\server\server_api.cpp">
+      <Filter>Fichiers sources\server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\server\src\server\server_engine.cpp">
+      <Filter>Fichiers sources\server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\server\src\server\server_tcp_socket.cpp">
+      <Filter>Fichiers sources\server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\server\src\config\config_wrapper.cpp">
+      <Filter>Fichiers sources\config</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
