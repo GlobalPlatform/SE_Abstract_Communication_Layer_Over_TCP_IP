@@ -147,11 +147,11 @@ ResponsePacket ServerEngine::handleRequest(int id_client, RequestCode request, b
 		socket_timeout = request_timeout + DEFAULT_ADDED_TIME;
 	}
 	// sends async request to client
-	auto future = std::async(std::launch::async, &asyncRequest, this, client_socket, j.dump(), socket_timeout, isExpectedRes);
+	auto future = std::async(std::launch::async, &ServerEngine::asyncRequest, this, client_socket, j.dump(), socket_timeout, isExpectedRes);
 	// blocks until the timeout has elapsed or the result became available
 	if (future.wait_for(std::chrono::milliseconds(socket_timeout)) == std::future_status::timeout) {
 		// thread has timed out
-		LOG_DEBUG << "Response time from client has elapsed [client_socket:" << client_socket << "][request:" << j.dump << "[timeout:" << request_timeout << "]";
+		LOG_DEBUG << "Response time from client has elapsed [client_socket:" << client_socket << "][request:" << j.dump() << "[timeout:" << request_timeout << "]";
 		pending_futures_.push_back(std::move(future));
 		for (long long unsigned int i = 0; i < pending_futures_.size(); i++) {
 			if (pending_futures_[i].wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
