@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ProjectGuid>{EC075B2A-94D0-425D-979C-C922440CC822}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>libclient</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;ADD_EXPORTS;_CRT_SECURE_NO_WARNINGS;_DEBUG;LIBCLIENT_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <AdditionalOptions>/Zc:externC- %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>..\..\client\include;..\..\client\libraries</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+      <AdditionalDependencies>Winscard.lib;Ws2_32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;LIBCLIENT_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;ADD_EXPORTS;_CRT_SECURE_NO_WARNINGS;NDEBUG;LIBCLIENT_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <AdditionalOptions>/Zc:externC- %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>..\..\client\include;..\..\client\libraries</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+      <AdditionalDependencies>Winscard.lib;Ws2_32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;LIBCLIENT_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\client\include\client\client_api.hpp" />
+    <ClInclude Include="..\..\client\include\client\client_engine.hpp" />
+    <ClInclude Include="..\..\client\include\client\client_tcp_socket.hpp" />
+    <ClInclude Include="..\..\client\include\client\requests\cold_reset.hpp" />
+    <ClInclude Include="..\..\client\include\client\requests\command.hpp" />
+    <ClInclude Include="..\..\client\include\client\requests\diag.hpp" />
+    <ClInclude Include="..\..\client\include\client\requests\disconnect.hpp" />
+    <ClInclude Include="..\..\client\include\client\requests\echo.hpp" />
+    <ClInclude Include="..\..\client\include\client\requests\flyweight_requests.hpp" />
+    <ClInclude Include="..\..\client\include\client\requests\power_off_field.hpp" />
+    <ClInclude Include="..\..\client\include\client\requests\power_on_field.hpp" />
+    <ClInclude Include="..\..\client\include\client\requests\request.hpp" />
+    <ClInclude Include="..\..\client\include\client\requests\restart_target.hpp" />
+    <ClInclude Include="..\..\client\include\client\requests\send_typeA.hpp" />
+    <ClInclude Include="..\..\client\include\client\requests\send_typeB.hpp" />
+    <ClInclude Include="..\..\client\include\client\requests\send_typeF.hpp" />
+    <ClInclude Include="..\..\client\include\client\requests\warm_reset.hpp" />
+    <ClInclude Include="..\..\client\include\config\config_wrapper.hpp" />
+    <ClInclude Include="..\..\client\include\constants\callback.hpp" />
+    <ClInclude Include="..\..\client\include\constants\default_values.hpp" />
+    <ClInclude Include="..\..\client\include\constants\request_code.hpp" />
+    <ClInclude Include="..\..\client\include\constants\response_packet.hpp" />
+    <ClInclude Include="..\..\client\include\dll\dll_client_api_wrapper.h" />
+    <ClInclude Include="..\..\client\include\logger\logger.hpp" />
+    <ClInclude Include="..\..\client\include\terminal\factories\example_factory_pcsc_contact.hpp" />
+    <ClInclude Include="..\..\client\include\terminal\factories\example_factory_pcsc_contactless.hpp" />
+    <ClInclude Include="..\..\client\include\terminal\factories\factory.hpp" />
+    <ClInclude Include="..\..\client\include\terminal\flyweight_terminal_factory.hpp" />
+    <ClInclude Include="..\..\client\include\terminal\terminals\example_pcsc_contact.hpp" />
+    <ClInclude Include="..\..\client\include\terminal\terminals\example_pcsc_contactless.hpp" />
+    <ClInclude Include="..\..\client\include\terminal\terminals\terminal.hpp" />
+    <ClInclude Include="..\..\client\include\terminal\terminals\utils\type_converter.hpp" />
+    <ClInclude Include="framework.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\client\src\client\client_api.cpp" />
+    <ClCompile Include="..\..\client\src\client\client_engine.cpp" />
+    <ClCompile Include="..\..\client\src\client\client_tcp_socket.cpp" />
+    <ClCompile Include="..\..\client\src\client\requests\cold_reset.cpp" />
+    <ClCompile Include="..\..\client\src\client\requests\command.cpp" />
+    <ClCompile Include="..\..\client\src\client\requests\diag.cpp" />
+    <ClCompile Include="..\..\client\src\client\requests\disconnect.cpp" />
+    <ClCompile Include="..\..\client\src\client\requests\echo.cpp" />
+    <ClCompile Include="..\..\client\src\client\requests\flyweight_requests.cpp" />
+    <ClCompile Include="..\..\client\src\client\requests\power_off_field.cpp" />
+    <ClCompile Include="..\..\client\src\client\requests\power_on_field.cpp" />
+    <ClCompile Include="..\..\client\src\client\requests\restart_target.cpp" />
+    <ClCompile Include="..\..\client\src\client\requests\send_typeA.cpp" />
+    <ClCompile Include="..\..\client\src\client\requests\send_typeB.cpp" />
+    <ClCompile Include="..\..\client\src\client\requests\send_typeF.cpp" />
+    <ClCompile Include="..\..\client\src\client\requests\warm_reset.cpp" />
+    <ClCompile Include="..\..\client\src\config\config_wrapper.cpp" />
+    <ClCompile Include="..\..\client\src\dll\dll_client_api_wrapper.cpp" />
+    <ClCompile Include="..\..\client\src\logger\logger.cpp" />
+    <ClCompile Include="..\..\client\src\terminal\factories\example_factory_pcsc_contact.cpp" />
+    <ClCompile Include="..\..\client\src\terminal\factories\example_factory_pcsc_contactless.cpp" />
+    <ClCompile Include="..\..\client\src\terminal\flyweight_terminal_factory.cpp" />
+    <ClCompile Include="..\..\client\src\terminal\terminals\example_pcsc_contact.cpp" />
+    <ClCompile Include="..\..\client\src\terminal\terminals\example_pcsc_contactless.cpp" />
+    <ClCompile Include="dllmain.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

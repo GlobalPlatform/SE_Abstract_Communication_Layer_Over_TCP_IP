@@ -1,0 +1,249 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Fichiers sources">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Fichiers de ressources">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\client">
+      <UniqueIdentifier>{44bdc8fd-9be7-4a21-8e50-54e486fd4922}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\client\requests">
+      <UniqueIdentifier>{87043898-2f11-41a3-ac15-8f2958d60b56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\config">
+      <UniqueIdentifier>{0c49bacb-d288-482c-b4f9-e481d3956bd0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\constants">
+      <UniqueIdentifier>{c70dedd1-13ac-4198-a241-066d415a3942}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\dll">
+      <UniqueIdentifier>{494ad785-d065-4a47-b87d-e9e12d6fdeac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\terminal">
+      <UniqueIdentifier>{8420677f-da77-48f7-8409-eee49e893acc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\logger">
+      <UniqueIdentifier>{94d8830e-f5cc-4ab5-8abd-4fa7d787fab2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\terminal\factories">
+      <UniqueIdentifier>{3f371349-0bfe-4c7d-ae34-be4bc5c91b90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\terminal\terminals">
+      <UniqueIdentifier>{4e4a3611-3a0a-4fd9-83d6-1f7bcafb2579}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\terminal\terminals\utils">
+      <UniqueIdentifier>{4f6391e7-8da8-475e-bff0-53ff0e456cf1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\client">
+      <UniqueIdentifier>{63a3d502-6817-4488-a8eb-3e0370f2fac2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\client\requests">
+      <UniqueIdentifier>{4924b1ae-9eed-4749-b002-4fd0dc0ee99c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\config">
+      <UniqueIdentifier>{f358908c-85da-48dd-9b79-416ea87e471b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\dll">
+      <UniqueIdentifier>{724acc7a-3abb-47c6-9b4c-9d66d28f1a2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\logger">
+      <UniqueIdentifier>{fb03a2ed-64e3-4375-a59f-3a505af461db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\terminal">
+      <UniqueIdentifier>{9db95573-a729-4298-971d-910940e0ce0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\terminal\factories">
+      <UniqueIdentifier>{e7fe541b-24fb-4aeb-add1-a91ff2ed124e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\terminal\terminals">
+      <UniqueIdentifier>{bd0b1182-bffb-4d42-94fd-50a2559cc5e6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="framework.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\include\client\client_api.hpp">
+      <Filter>Fichiers d%27en-tête\client</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\include\client\client_engine.hpp">
+      <Filter>Fichiers d%27en-tête\client</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\include\client\client_tcp_socket.hpp">
+      <Filter>Fichiers d%27en-tête\client</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\include\client\requests\cold_reset.hpp">
+      <Filter>Fichiers d%27en-tête\client\requests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\include\client\requests\command.hpp">
+      <Filter>Fichiers d%27en-tête\client\requests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\include\client\requests\diag.hpp">
+      <Filter>Fichiers d%27en-tête\client\requests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\include\client\requests\disconnect.hpp">
+      <Filter>Fichiers d%27en-tête\client\requests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\include\client\requests\echo.hpp">
+      <Filter>Fichiers d%27en-tête\client\requests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\include\client\requests\flyweight_requests.hpp">
+      <Filter>Fichiers d%27en-tête\client\requests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\include\client\requests\power_off_field.hpp">
+      <Filter>Fichiers d%27en-tête\client\requests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\include\client\requests\power_on_field.hpp">
+      <Filter>Fichiers d%27en-tête\client\requests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\include\client\requests\request.hpp">
+      <Filter>Fichiers d%27en-tête\client\requests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\include\client\requests\restart_target.hpp">
+      <Filter>Fichiers d%27en-tête\client\requests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\include\client\requests\send_typeA.hpp">
+      <Filter>Fichiers d%27en-tête\client\requests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\include\client\requests\send_typeB.hpp">
+      <Filter>Fichiers d%27en-tête\client\requests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\include\client\requests\send_typeF.hpp">
+      <Filter>Fichiers d%27en-tête\client\requests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\include\client\requests\warm_reset.hpp">
+      <Filter>Fichiers d%27en-tête\client\requests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\include\config\config_wrapper.hpp">
+      <Filter>Fichiers d%27en-tête\config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\include\constants\callback.hpp">
+      <Filter>Fichiers d%27en-tête\constants</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\include\constants\default_values.hpp">
+      <Filter>Fichiers d%27en-tête\constants</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\include\constants\request_code.hpp">
+      <Filter>Fichiers d%27en-tête\constants</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\include\constants\response_packet.hpp">
+      <Filter>Fichiers d%27en-tête\constants</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\include\dll\dll_client_api_wrapper.h">
+      <Filter>Fichiers d%27en-tête\dll</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\include\logger\logger.hpp">
+      <Filter>Fichiers d%27en-tête\logger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\include\terminal\flyweight_terminal_factory.hpp">
+      <Filter>Fichiers d%27en-tête\terminal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\include\terminal\factories\example_factory_pcsc_contact.hpp">
+      <Filter>Fichiers d%27en-tête\terminal\factories</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\include\terminal\factories\example_factory_pcsc_contactless.hpp">
+      <Filter>Fichiers d%27en-tête\terminal\factories</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\include\terminal\factories\factory.hpp">
+      <Filter>Fichiers d%27en-tête\terminal\factories</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\include\terminal\terminals\example_pcsc_contact.hpp">
+      <Filter>Fichiers d%27en-tête\terminal\terminals</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\include\terminal\terminals\example_pcsc_contactless.hpp">
+      <Filter>Fichiers d%27en-tête\terminal\terminals</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\include\terminal\terminals\terminal.hpp">
+      <Filter>Fichiers d%27en-tête\terminal\terminals</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\include\terminal\terminals\utils\type_converter.hpp">
+      <Filter>Fichiers d%27en-tête\terminal\terminals\utils</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\src\client\client_api.cpp">
+      <Filter>Fichiers sources\client</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\src\client\client_engine.cpp">
+      <Filter>Fichiers sources\client</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\src\client\client_tcp_socket.cpp">
+      <Filter>Fichiers sources\client</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\src\client\requests\cold_reset.cpp">
+      <Filter>Fichiers sources\client\requests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\src\client\requests\command.cpp">
+      <Filter>Fichiers sources\client\requests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\src\client\requests\diag.cpp">
+      <Filter>Fichiers sources\client\requests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\src\client\requests\disconnect.cpp">
+      <Filter>Fichiers sources\client\requests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\src\client\requests\echo.cpp">
+      <Filter>Fichiers sources\client\requests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\src\client\requests\flyweight_requests.cpp">
+      <Filter>Fichiers sources\client\requests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\src\client\requests\power_off_field.cpp">
+      <Filter>Fichiers sources\client\requests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\src\client\requests\power_on_field.cpp">
+      <Filter>Fichiers sources\client\requests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\src\client\requests\restart_target.cpp">
+      <Filter>Fichiers sources\client\requests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\src\client\requests\send_typeA.cpp">
+      <Filter>Fichiers sources\client\requests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\src\client\requests\send_typeB.cpp">
+      <Filter>Fichiers sources\client\requests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\src\client\requests\send_typeF.cpp">
+      <Filter>Fichiers sources\client\requests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\src\client\requests\warm_reset.cpp">
+      <Filter>Fichiers sources\client\requests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\src\config\config_wrapper.cpp">
+      <Filter>Fichiers sources\config</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\src\dll\dll_client_api_wrapper.cpp">
+      <Filter>Fichiers sources\dll</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\src\logger\logger.cpp">
+      <Filter>Fichiers sources\logger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\src\terminal\flyweight_terminal_factory.cpp">
+      <Filter>Fichiers sources\terminal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\src\terminal\factories\example_factory_pcsc_contact.cpp">
+      <Filter>Fichiers sources\terminal\factories</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\src\terminal\factories\example_factory_pcsc_contactless.cpp">
+      <Filter>Fichiers sources\terminal\factories</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\src\terminal\terminals\example_pcsc_contact.cpp">
+      <Filter>Fichiers sources\terminal\terminals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\src\terminal\terminals\example_pcsc_contactless.cpp">
+      <Filter>Fichiers sources\terminal\terminals</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
