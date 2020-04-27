@@ -51,7 +51,7 @@ ADDAPI server::ServerAPI* createServerAPI();
 ADDAPI void disposeServerAPI(server::ServerAPI* server);
 void responsePacketForDll(server::ResponsePacket response_packet, ResponseDLL& response_packet_dll);
 
-ADDAPI void initServer(server::ServerAPI* server, ResponseDLL& response_packet);
+ADDAPI void initServer(server::ServerAPI* server, const char* jsonConfig, ResponseDLL& response_packet);
 ADDAPI void getVersion(server::ServerAPI* server, ResponseDLL& response_packet);
 ADDAPI void startServer(server::ServerAPI* server, const char* ip, const char* port, ResponseDLL& response_packet);
 ADDAPI void stopServer(server::ServerAPI* server, ResponseDLL& response_packet);

@@ -59,7 +59,7 @@ public:
 
 	/**
 	 * initServer - init the logger and the configuration values.
-	 * @param path the configuration file to read.
+	 * @param path the configuration file to read, can also be a string containing the json configuration.
  	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
 	 */
 	ResponsePacket initServer(std::string path);

@@ -39,6 +39,12 @@ public:
 	void init(std::string path);
 
 	/**
+	 * initFromJson - retrieve the json from the parameter.
+	 * @param json string containing the json configuration.
+	 */
+	void initFromJson(std::string jsonConfig);
+
+	/**
 	 * getValue - retrieve the value at the given key.
 	 * @param key the key where the data is meant to be.
 	 * @return the retrieved value.

@@ -42,7 +42,14 @@
 namespace client {
 
 ResponsePacket ClientEngine::initClient(std::string path, FlyweightTerminalFactory available_terminals, FlyweightRequests available_requests) {
-	config_.init(path);
+	if ((path.size() > 1) && (path.at(0) == '{'))
+	{
+		config_.initFromJson(path);
+	}
+	else
+	{
+		config_.init(path);
+	}
 
 	ITerminalFactory* terminal_factory =  available_terminals.getFactory(config_.getValue("terminal"));
 	if (terminal_factory == NULL) {

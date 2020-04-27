@@ -30,6 +30,10 @@ void ConfigWrapper::init(std::string path) {
 	i.close();
 }
 
+void ConfigWrapper::initFromJson(std::string jsonConfig) {
+    config_ = nlohmann::json::parse(jsonConfig);
+}
+
 std::string ConfigWrapper::getValue(std::string key) {
 	return config_[key];
 }

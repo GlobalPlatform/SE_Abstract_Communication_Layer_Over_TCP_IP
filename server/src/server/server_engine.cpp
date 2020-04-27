@@ -44,7 +44,14 @@ ResponsePacket ServerEngine::initServer(std::string path) {
 	}
 
 	socket_ = new ServerTCPSocket();
-	config_.init(path);
+	if ((path.size() > 1) && (path.at(0) == '{'))
+	{
+		config_.initFromJson(path);
+	}
+	else
+	{
+		config_.init(path);
+	}
 	logger::setup(&config_);
 
 	// launch engine

@@ -57,7 +57,7 @@ public:
 
 	/**
 	 * initClient - initialize the client with the given configuration file.
-	 * @param config_path configuration file used to initialize the client.
+	 * @param config_path configuration file used to initialize the client, can also be a string containing the json configuration
 	 * @param available_terminals the set of available terminal implementations.
 	 * @param available_requests the set of available requests.
 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.

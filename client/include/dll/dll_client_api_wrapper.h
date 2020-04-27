@@ -61,7 +61,7 @@ ADDAPI void disconnectClient(client::ClientAPI* client, ResponseDLL& response_pa
 void responsePacketForDll(client::ResponsePacket response_packet, ResponseDLL& response_packet_dll);
 
 ADDAPI void disposeClientAPI(client::ClientAPI* client);
-ADDAPI void initClient(client::ClientAPI* client, ResponseDLL& response_packet);
+ADDAPI void initClient(client::ClientAPI* client, const char* jsonConfig, ResponseDLL& response_packet);
 ADDAPI void loadAndListReaders(client::ClientAPI*, ResponseDLL& response_packet);
 
 #ifdef __cplusplus

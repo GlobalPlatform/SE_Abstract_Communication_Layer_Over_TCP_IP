@@ -68,7 +68,7 @@ void disconnectClient(client::ClientAPI* client, ResponseDLL& response_packet_dl
 	responsePacketForDll(response_packet, response_packet_dll);
 }
 
-void initClient(client::ClientAPI* client, ResponseDLL& response_packet_dll) {
+void initClient(client::ClientAPI* client, const char* jsonConfig, ResponseDLL& response_packet_dll) {
 	// config available terminal factories
 	FlyweightTerminalFactory available_terminals;
 	available_terminals.addFactory("EXAMPLE_PCSC_CONTACT", new ExamplePCSCContactFactory());
@@ -89,7 +89,7 @@ void initClient(client::ClientAPI* client, ResponseDLL& response_packet_dll) {
 	available_requests.addRequest(REQ_POWER_OFF_FIELD, new PowerOffField());
 	available_requests.addRequest(REQ_POWER_ON_FIELD, new PowerOnField());
 
-	ResponsePacket response_packet = client->initClient("config/init.json", available_terminals, available_requests);
+	ResponsePacket response_packet = client->initClient((jsonConfig != NULL) ? jsonConfig : "config/init.json", available_terminals, available_requests);
 	responsePacketForDll(response_packet, response_packet_dll);
 }
 
