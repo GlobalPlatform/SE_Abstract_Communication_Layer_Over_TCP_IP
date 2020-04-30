@@ -45,6 +45,14 @@ public:
 	 */
 	ResponsePacket initServer(std::string path);
 
+	/*
+	 * getVersion - returns a ResponsePacket containing the DLL Version in the "response" field.
+	 * The "response" field contains the DLL Version.
+	 * The "response" field will be formatted as a simple string
+	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
+	 */
+	ResponsePacket getVersion();
+
 	/**
 	 * startServer - start the server. The server is now able to listen to accept connections and to process incoming requests.
 	 * @param ip the ip to listen to.
@@ -68,7 +76,7 @@ public:
 	 * @param id_client the client's id to send request to.
 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
 	 */
-	ResponsePacket echoClient(int id_client, DWORD timeout = DEFAULT_REQUEST_TIMEOUT);
+	ResponsePacket echoClient(int id_client, DWORD timeout);
 
 	/**
 	 * diagClient - return details about the client and its underlying layers.
@@ -78,7 +86,7 @@ public:
 	 * @param timeout the waiting time of the execution of the request.
 	 * @return a ResponsePacket struct containing either the data or error codes and error descriptions.
 	 */
-	ResponsePacket diagClient(int id_client, DWORD timeout = DEFAULT_REQUEST_TIMEOUT);
+	ResponsePacket diagClient(int id_client, DWORD timeout);
 
 	/**
 	 * sendCommand - return a ResponsePacket struct containing the target's response in the "response" field.
@@ -87,7 +95,7 @@ public:
 	 * @param timeout the waiting time of the execution of the request.
 	 * @return a ResponsePacket struct containing either the target's response or error codes (value under 0) and error descriptions in case of error.
 	 */
-	ResponsePacket sendCommand(int id_client, std::string command, DWORD timeout = DEFAULT_REQUEST_TIMEOUT);
+	ResponsePacket sendCommand(int id_client, std::string command, DWORD timeout);
 
 	/**
 	 * sendTypeA - send an APDU command over RF Type A.
@@ -96,7 +104,7 @@ public:
 	 * @param timeout the waiting time of the execution of the request.
 	 * @return a ResponsePacket struct containing either the smartcard's response or error codes and error descriptions in case of error.
 	 */
-	ResponsePacket sendTypeA(int id_client, std::string command, DWORD timeout = DEFAULT_REQUEST_TIMEOUT);
+	ResponsePacket sendTypeA(int id_client, std::string command, DWORD timeout);
 
 	/**
 	 * sendTypeB - send an APDU command over RF Type B.
@@ -105,7 +113,7 @@ public:
 	 * @param timeout the waiting time of the execution of the request.
 	 * @return a ResponsePacket struct containing either the smartcard's response or error codes and error descriptions in case of error.
 	 */
-	ResponsePacket sendTypeB(int id_client, std::string command, DWORD timeout = DEFAULT_REQUEST_TIMEOUT);
+	ResponsePacket sendTypeB(int id_client, std::string command, DWORD timeout);
 
 	/**
 	 * sendTypeF - send an APDU command over RF Type F.
@@ -114,7 +122,7 @@ public:
 	 * @param timeout the waiting time of the execution of the request.
 	 * @return a ResponsePacket struct containing either the smartcard's response or error codes and error descriptions in case of error.
 	 */
-	ResponsePacket sendTypeF(int id_client, std::string command, DWORD timeout = DEFAULT_REQUEST_TIMEOUT);
+	ResponsePacket sendTypeF(int id_client, std::string command, DWORD timeout);
 
 	/**
 	 * restartTarget - restart the given target.
@@ -122,7 +130,7 @@ public:
 	 * @param timeout the waiting time of the execution of the request.
 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
 	 */
-	ResponsePacket restartTarget(int id_client, DWORD timeout = DEFAULT_REQUEST_TIMEOUT);
+	ResponsePacket restartTarget(int id_client, DWORD timeout);
 
 	/**
 	 * stopClient - stop the given client and all its underlying layers.
@@ -130,7 +138,7 @@ public:
 	 * @param timeout the waiting time of the execution of the request.
 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
 	 */
-	ResponsePacket stopClient(int id_client, DWORD timeout = DEFAULT_REQUEST_TIMEOUT);
+	ResponsePacket stopClient(int id_client, DWORD timeout);
 
 	/**
 	 * coldReset - perform power off power on and return atr in the response structure.
@@ -138,7 +146,7 @@ public:
 	 * @param timeout the waiting time of the execution of the request.
 	 * @return a ResponsePacket struct containing either the atr or the error codes (under 0) and error descriptions
 	 */
-	ResponsePacket coldReset(int id_client, DWORD timeout = DEFAULT_REQUEST_TIMEOUT);
+	ResponsePacket coldReset(int id_client, DWORD timeout);
 
 	/**
 	 * coldReset - perform the reset without power switch and return atr in the response structure.
@@ -146,7 +154,7 @@ public:
 	 * @param timeout the waiting time of the execution of the request.
 	 * @return a ResponsePacket struct containing either the atr or the error codes (under 0) and error descriptions
 	 */
-	ResponsePacket warmReset(int id_client, DWORD timeout = DEFAULT_REQUEST_TIMEOUT);
+	ResponsePacket warmReset(int id_client, DWORD timeout);
 
 	/**
 	 * powerOFFField - set the field OFF.
@@ -154,7 +162,7 @@ public:
 	 * @param timeout the waiting time of the execution of the request.
  	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
 	 */
-	ResponsePacket powerOFFField(int id_client, DWORD timeout = DEFAULT_REQUEST_TIMEOUT);
+	ResponsePacket powerOFFField(int id_client, DWORD timeout);
 
 	/**
 	 * powerONField - set the field ON.
@@ -162,7 +170,7 @@ public:
 	 * @param timeout the waiting time of the execution of the request.
  	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
 	 */
-	ResponsePacket powerONField(int id_client, DWORD timeout = DEFAULT_REQUEST_TIMEOUT);
+	ResponsePacket powerONField(int id_client, DWORD timeout);
 
 	/**
 	 * stopServer - stop the server and all its clients and their underlying layers.
