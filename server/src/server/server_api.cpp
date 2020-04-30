@@ -34,6 +34,12 @@ ResponsePacket ServerAPI::initServer(std::string path) {
 	return engine_->initServer(path);
 }
 
+ResponsePacket ServerAPI::getVersion() {
+	ResponsePacket response_packet = { .response = DLL_VERSION, .err_server_code = ERR_INVALID_STATE, .err_server_description = "Server invalid state" };
+
+	return response_packet;
+}
+
 ResponsePacket ServerAPI::startServer(const char* ip, const char* port) {
 	return engine_->startListening(ip, port);
 }

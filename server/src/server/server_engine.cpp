@@ -54,6 +54,7 @@ ResponsePacket ServerEngine::initServer(std::string path) {
 	return response_packet;
 }
 
+
 ResponsePacket ServerEngine::startListening(const char* ip, const char* port) {
 	if (state_ != State::INITIALIZED && state_ != State::DISCONNECTED) {
 		ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_INVALID_STATE, .err_server_description = "Server invalid state" };
