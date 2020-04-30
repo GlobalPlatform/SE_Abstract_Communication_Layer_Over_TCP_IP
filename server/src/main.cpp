@@ -16,26 +16,30 @@
  *********************************************************************************/
 
 #include "server/server_api.hpp"
+#include "constants/default_values.hpp"
+
 using namespace server;
 
 #include <iostream>
 #include <stdlib.h>
 
 int __cdecl main(void) {
+	DWORD timeout = DEFAULT_REQUEST_TIMEOUT;
+
 	ServerAPI* server = new ServerAPI(0);
 	server->initServer("./config/init.json");
 	server->startServer("127.0.0.1", "62111");
 	Sleep(10000);
-	server->diagClient(1);
-	server->sendCommand(1, "00 A4 04 00 00");
-	server->echoClient(1);
-	server->coldReset(1);
-	server->warmReset(1);
-	server->powerOFFField(1);
-	server->powerONField(1);
+	server->diagClient(1, timeout);
+	server->sendCommand(1, "00 A4 04 00 00", timeout);
+	server->echoClient(1, timeout);
+	server->coldReset(1, timeout);
+	server->warmReset(1, timeout);
+	server->powerOFFField(1, timeout);
+	server->powerONField(1, timeout);
 	server->listClients();
-	server->restartTarget(1);
-	server->sendCommand(1, "00 A4 04 00 00");
+	server->restartTarget(1, timeout);
+	server->sendCommand(1, "00 A4 04 00 00", timeout);
 	server->stopServer();
 	delete server;
 	return 0;
