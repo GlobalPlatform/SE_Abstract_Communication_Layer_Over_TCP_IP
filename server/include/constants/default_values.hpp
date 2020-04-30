@@ -34,7 +34,9 @@ namespace server {
 #define DEFAULT_LOG_MAX_FILES "10" // log files number for the rolling
 
 /* timeouts */
-#define DEFAULT_REQUEST_TIMEOUT 2000 // waiting time used client's side for the terminal response
+#define DEFAULT_REQUEST_TIMEOUT 5000 // waiting time used client's side for the terminal response
+
+#define DLL_VERSION "0.1.0" //Define the DLL Server Version
 
 } /* namespace server */
 
