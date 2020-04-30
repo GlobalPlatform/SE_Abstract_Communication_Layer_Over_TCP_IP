@@ -37,6 +37,11 @@ using namespace server;
 	responsePacketForDll(response, response_packet);
 }
 
+ void getVersion(server::ServerAPI* server, ResponseDLL& response_packet) {
+	ResponsePacket response = server->getVersion();
+	responsePacketForDll(response, response_packet);
+}
+
  void startServer(server::ServerAPI* server, const char* ip, const char* port, ResponseDLL& response_packet) {
 	ResponsePacket response = server->startServer(ip, port);
 	responsePacketForDll(response, response_packet);
@@ -47,63 +52,63 @@ using namespace server;
 	responsePacketForDll(response, response_packet);
 }
 
- void echoClient(server::ServerAPI* server, int id_client, ResponseDLL& response_packet) {
-	ResponsePacket response = server->echoClient(id_client);
+ void echoClient(server::ServerAPI* server, int id_client, DWORD timeout, ResponseDLL& response_packet) {
+	ResponsePacket response = server->echoClient(id_client, timeout);
 	responsePacketForDll(response, response_packet);
 }
 
- void diagClient(server::ServerAPI* server, int id_client, ResponseDLL& response_packet) {
-	ResponsePacket response = server->diagClient(id_client);
+ void diagClient(server::ServerAPI* server, int id_client, DWORD timeout, ResponseDLL& response_packet) {
+	ResponsePacket response = server->diagClient(id_client ,timeout);
 	responsePacketForDll(response, response_packet);
 }
 
- void sendCommand(server::ServerAPI* server, int id_client, char* command, ResponseDLL& response_packet) {
-	ResponsePacket response = server->sendCommand(id_client, command);
+ void sendCommand(server::ServerAPI* server, int id_client, DWORD timeout, char* command, ResponseDLL& response_packet) {
+	ResponsePacket response = server->sendCommand(id_client, command, timeout);
 	responsePacketForDll(response, response_packet);
 }
 
- void sendTypeA(server::ServerAPI* server, int id_client, char* command, ResponseDLL& response_packet) {
-	ResponsePacket response = server->sendTypeA(id_client, command);
+ void sendTypeA(server::ServerAPI* server, int id_client, DWORD timeout, char* command, ResponseDLL& response_packet) {
+	ResponsePacket response = server->sendTypeA(id_client, command, timeout);
 	responsePacketForDll(response, response_packet);
 }
 
- void sendTypeB(server::ServerAPI* server, int id_client, char* command, ResponseDLL& response_packet) {
-	ResponsePacket response = server->sendTypeB(id_client, command);
+ void sendTypeB(server::ServerAPI* server, int id_client, DWORD timeout, char* command, ResponseDLL& response_packet) {
+	ResponsePacket response = server->sendTypeB(id_client, command, timeout);
 	responsePacketForDll(response, response_packet);
 }
 
- void sendTypeF(server::ServerAPI* server, int id_client, char* command, ResponseDLL& response_packet) {
-	ResponsePacket response = server->sendTypeF(id_client, command);
+ void sendTypeF(server::ServerAPI* server, int id_client, DWORD timeout, char* command, ResponseDLL& response_packet) {
+	ResponsePacket response = server->sendTypeF(id_client, command, timeout);
 	responsePacketForDll(response, response_packet);
 }
 
- void restartTarget(server::ServerAPI* server, int id_client, ResponseDLL& response_packet) {
-	ResponsePacket response = server->restartTarget(id_client);
+ void restartTarget(server::ServerAPI* server, int id_client, DWORD timeout, ResponseDLL& response_packet) {
+	ResponsePacket response = server->restartTarget(id_client, timeout);
 	responsePacketForDll(response, response_packet);
 }
 
- void stopClient(server::ServerAPI* server, int id_client, ResponseDLL& response_packet) {
-	ResponsePacket response = server->stopClient(id_client);
+ void stopClient(server::ServerAPI* server, int id_client, DWORD timeout, ResponseDLL& response_packet) {
+	ResponsePacket response = server->stopClient(id_client, timeout);
 	responsePacketForDll(response, response_packet);
 }
 
- void coldReset(server::ServerAPI* server, int id_client, ResponseDLL& response_packet) {
-	ResponsePacket response = server->coldReset(id_client);
+ void coldReset(server::ServerAPI* server, int id_client, DWORD timeout, ResponseDLL& response_packet) {
+	ResponsePacket response = server->coldReset(id_client, timeout);
 	responsePacketForDll(response, response_packet);
 }
 
- void warmReset(server::ServerAPI* server, int id_client, ResponseDLL& response_packet) {
-	ResponsePacket response = server->warmReset(id_client);
+ void warmReset(server::ServerAPI* server, int id_client, DWORD timeout, ResponseDLL& response_packet) {
+	ResponsePacket response = server->warmReset(id_client, timeout);
 	responsePacketForDll(response, response_packet);
 }
 
- void powerOFFField(server::ServerAPI* server, int id_client, ResponseDLL& response_packet) {
-	ResponsePacket response = server->powerOFFField(id_client);
+ void powerOFFField(server::ServerAPI* server, int id_client, DWORD timeout, ResponseDLL& response_packet) {
+	ResponsePacket response = server->powerOFFField(id_client, timeout);
 	responsePacketForDll(response, response_packet);
 }
 
- void powerONField(server::ServerAPI* server, int id_client, ResponseDLL& response_packet) {
-	ResponsePacket response = server->powerONField(id_client);
+ void powerONField(server::ServerAPI* server, int id_client, DWORD timeout, ResponseDLL& response_packet) {
+	ResponsePacket response = server->powerONField(id_client, timeout);
 	responsePacketForDll(response, response_packet);
 }
 
