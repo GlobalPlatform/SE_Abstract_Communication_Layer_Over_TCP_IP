@@ -670,7 +670,7 @@
       </children>
       <children xsi:type="menu:ToolBar" xmi:id="_RJCsbFFsEemC-ca1lJg8bQ" elementId="org.eclipse.ui.workbench.file">
         <tags>Draggable</tags>
-        <children xsi:type="menu:HandledToolItem" xmi:id="_jscSUHGuEemMF4j5L2XgqA" elementId="print" visible="false" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/print_edit.png" tooltip="Print" command="_RJL78FFsEemC-ca1lJg8bQ"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_4CmhkJ9WEeqWztIuxuycLg" elementId="print" visible="false" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/print_edit.png" tooltip="Print" command="_RJL78FFsEemC-ca1lJg8bQ"/>
       </children>
       <children xsi:type="menu:ToolBar" xmi:id="_RJCselFsEemC-ca1lJg8bQ" elementId="group.edit" toBeRendered="false">
         <tags>toolbarSeparator</tags>
@@ -713,7 +713,7 @@
       </children>
       <children xsi:type="menu:ToolBar" xmi:id="_RJCs3FFsEemC-ca1lJg8bQ" elementId="org.eclipse.ui.workbench.navigate">
         <tags>Draggable</tags>
-        <children xsi:type="menu:HandledToolItem" xmi:id="_jskOIHGuEemMF4j5L2XgqA" elementId="org.eclipse.ui.window.pinEditor" visible="false" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/pin_editor.png" tooltip="Pin Editor" type="Check" command="_RJL7n1FsEemC-ca1lJg8bQ"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_4CsBIJ9WEeqWztIuxuycLg" elementId="org.eclipse.ui.window.pinEditor" visible="false" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/pin_editor.png" tooltip="Pin Editor" type="Check" command="_RJL7n1FsEemC-ca1lJg8bQ"/>
       </children>
       <children xsi:type="menu:ToolBar" xmi:id="_RJCs51FsEemC-ca1lJg8bQ" elementId="group.editor" toBeRendered="false">
         <tags>toolbarSeparator</tags>
@@ -2982,6 +2982,7 @@
   <commands xmi:id="_RJL9CFFsEemC-ca1lJg8bQ" elementId="AUTOGEN:::org.eclipse.mylyn.tasks.ui.actions.view/org.eclipse.mylyn.tasks.ui.open.repositories.view" commandName="Show Task Repositories View" description="Show Task Repositories View" category="_RJL9L1FsEemC-ca1lJg8bQ"/>
   <commands xmi:id="_RJL9CVFsEemC-ca1lJg8bQ" elementId="AUTOGEN:::org.eclipse.mylyn.tasks.ui.actions.view/org.eclipse.mylyn.doc.legend.show.action" commandName="Show UI Legend" description="Show Tasks UI Legend" category="_RJL9L1FsEemC-ca1lJg8bQ"/>
   <commands xmi:id="_RJL9ClFsEemC-ca1lJg8bQ" elementId="AUTOGEN:::org.eclipse.mylyn.tasks.ui.actions.view/org.eclipse.mylyn.context.ui.actions.tasklist.focus" commandName="Focus on Workweek" description="Focus on Workweek" category="_RJL9L1FsEemC-ca1lJg8bQ"/>
+  <commands xmi:id="_3a0v4Z9WEeqWztIuxuycLg" elementId="org.eclipse.egit.ui.RepositoriesViewShowInSystemExplorer" commandName="Show In System Explorer" category="_RJL9RFFsEemC-ca1lJg8bQ"/>
   <addons xmi:id="_RJL9C1FsEemC-ca1lJg8bQ" elementId="org.eclipse.e4.core.commands.service" contributorURI="platform:/plugin/org.eclipse.platform" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>
   <addons xmi:id="_RJL9DFFsEemC-ca1lJg8bQ" elementId="org.eclipse.e4.ui.contexts.service" contributorURI="platform:/plugin/org.eclipse.platform" contributionURI="bundleclass://org.eclipse.e4.ui.services/org.eclipse.e4.ui.services.ContextServiceAddon"/>
   <addons xmi:id="_RJL9DVFsEemC-ca1lJg8bQ" elementId="org.eclipse.e4.ui.bindings.service" contributorURI="platform:/plugin/org.eclipse.platform" contributionURI="bundleclass://org.eclipse.e4.ui.bindings/org.eclipse.e4.ui.bindings.BindingServiceAddon"/>
