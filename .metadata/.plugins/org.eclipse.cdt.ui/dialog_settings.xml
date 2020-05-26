@@ -1,48 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
-	<item value="402" key="org.eclipse.cdt.uiformatter_pagemodify_dialog.preferred_x"/>
-	<item value="5" key="org.eclipse.cdt.uiformatter_pagemodify_dialog.last_focus"/>
-	<item value="0" key="org.eclipse.cdt.uiformatter_pagemodify_dialog.preferred_y"/>
-	<item value="0" key="org.eclipse.cdt.uiformatter_page.white_space_tab_page.node"/>
-	<item value="Default C++ source template" key="LastUsedSourceTemplate"/>
-	<item value="Default C++ header template" key="LastUsedHeaderTemplate"/>
-	<item value="0" key="org.eclipse.cdt.uiformatter_page.white_space.c_view.inner"/>
-	<item value="5" key="formatter_page.modify_dialog_tab_page.last_focus_index"/>
-	<item value="1" key="org.eclipse.cdt.uiformatter_page.line_wrapping_tab_page.last_category_index"/>
-	<item value="ADD_EXPORTS" key="org.eclipse.cdt.utils.ui.controls.FileListControl"/>
-	<item value="1117" key="org.eclipse.cdt.uiformatter_pagemodify_dialog.preferred_width"/>
-	<item value="876" key="org.eclipse.cdt.uiformatter_pagemodify_dialog.preferred_height"/>
-	<item value="70" key="org.eclipse.cdt.ui.codeformatter.line_wrapping_tab_page.preview_line_width"/>
-	<item value="C:\Users\st\Documents" key="org.eclipse.cdt.ui.codeformatter.savepath.loadpath"/>
+	<item key="org.eclipse.cdt.uiformatter_pagemodify_dialog.preferred_x" value="402"/>
+	<item key="org.eclipse.cdt.uiformatter_pagemodify_dialog.last_focus" value="5"/>
+	<item key="org.eclipse.cdt.uiformatter_pagemodify_dialog.preferred_y" value="0"/>
+	<item key="org.eclipse.cdt.uiformatter_page.white_space_tab_page.node" value="0"/>
+	<item key="LastUsedSourceTemplate" value="Default C++ source template"/>
+	<item key="LastUsedHeaderTemplate" value="Default C++ header template"/>
+	<item key="org.eclipse.cdt.uiformatter_page.white_space.c_view.inner" value="0"/>
+	<item key="formatter_page.modify_dialog_tab_page.last_focus_index" value="5"/>
+	<item key="org.eclipse.cdt.uiformatter_page.line_wrapping_tab_page.last_category_index" value="1"/>
+	<item key="org.eclipse.cdt.utils.ui.controls.FileListControl" value="ADD_EXPORTS"/>
+	<item key="org.eclipse.cdt.uiformatter_pagemodify_dialog.preferred_width" value="1117"/>
+	<item key="org.eclipse.cdt.uiformatter_pagemodify_dialog.preferred_height" value="876"/>
+	<item key="org.eclipse.cdt.ui.codeformatter.line_wrapping_tab_page.preview_line_width" value="70"/>
+	<item key="org.eclipse.cdt.ui.codeformatter.savepath.loadpath" value="C:\Users\st\Documents"/>
 	<section name="org.eclipse.cdt.ui.OPEN_ACTION_SELECTION_DIALOG_SECTION">
-		<item value="500" key="DIALOG_WIDTH"/>
-		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
-		<item value="438" key="DIALOG_HEIGHT"/>
-		<item value="769" key="DIALOG_X_ORIGIN"/>
-		<item value="296" key="DIALOG_Y_ORIGIN"/>
+		<item key="DIALOG_WIDTH" value="500"/>
+		<item key="DIALOG_FONT_NAME" value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI"/>
+		<item key="DIALOG_HEIGHT" value="438"/>
+		<item key="DIALOG_X_ORIGIN" value="769"/>
+		<item key="DIALOG_Y_ORIGIN" value="296"/>
 	</section>
 	<section name="CResourceRenameRefactoringInputPage">
-		<item value="true" key="updateReferences"/>
+		<item key="updateReferences" value="true"/>
 	</section>
 	<section name="org.eclipse.cdt.ui.text.hover.CMacroExpansionExploration.internal">
-		<item value="180" key="size.height"/>
-		<item value="714" key="size.width"/>
+		<item key="size.height" value="180"/>
+		<item key="size.width" value="714"/>
 	</section>
 	<section name="org.eclipse.cdt.ui.text.hover.CMacroExpansionExploration">
 	</section>
 	<section name="NewClassWizardPage">
-		<item value="true" key="stubSelected1"/>
-		<item value="true" key="stubVirtual1"/>
-		<item value="true" key="namespaceSelected"/>
-		<item value="false" key="stubInline0"/>
-		<item value="false" key="stubInline1"/>
-		<item value="client" key="namespace"/>
-		<item value="false" key="testFileSelected"/>
-		<item value="true" key="stubSelected0"/>
+		<item key="stubSelected1" value="true"/>
+		<item key="stubVirtual1" value="true"/>
+		<item key="namespaceSelected" value="true"/>
+		<item key="stubInline0" value="false"/>
+		<item key="stubInline1" value="false"/>
+		<item key="namespace" value="client"/>
+		<item key="testFileSelected" value="false"/>
+		<item key="stubSelected0" value="true"/>
 	</section>
 	<section name="PDOMSearchPage">
-		<item value="true" key="caseSensitive"/>
-		<item value="227191" key="searchFlags"/>
+		<item key="caseSensitive" value="true"/>
+		<item key="searchFlags" value="227191"/>
 		<list key="previousPatterns">
 			<item value="\n\n\n"/>
 			<item value="\n\n"/>
@@ -53,20 +53,20 @@
 	<section name="RenameInformationPopup">
 	</section>
 	<section name="org.eclipse.cdt.internal.ui.preferences.EditTemplateDialog_dialogBounds">
-		<item value="598" key="DIALOG_WIDTH"/>
-		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
-		<item value="308" key="DIALOG_HEIGHT"/>
-		<item value="27" key="DIALOG_X_ORIGIN"/>
-		<item value="73" key="DIALOG_Y_ORIGIN"/>
+		<item key="DIALOG_WIDTH" value="598"/>
+		<item key="DIALOG_FONT_NAME" value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI"/>
+		<item key="DIALOG_HEIGHT" value="308"/>
+		<item key="DIALOG_X_ORIGIN" value="27"/>
+		<item key="DIALOG_Y_ORIGIN" value="73"/>
 	</section>
 	<section name="OptionalMessageDialog.hide.">
-		<item value="0" key="askReindex.detail"/>
-		<item value="true" key="askReindex"/>
+		<item key="askReindex.detail" value="0"/>
+		<item key="askReindex" value="true"/>
 	</section>
 	<section name="CRenameRefactoringInputPage">
 	</section>
 	<section name="completion_proposal_size">
-		<item value="221" key="contextSelector.size.y"/>
-		<item value="331" key="contextSelector.size.x"/>
+		<item key="contextSelector.size.y" value="221"/>
+		<item key="contextSelector.size.x" value="331"/>
 	</section>
 </section>
