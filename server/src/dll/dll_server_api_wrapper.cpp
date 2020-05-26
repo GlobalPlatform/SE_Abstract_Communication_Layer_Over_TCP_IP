@@ -62,22 +62,22 @@ using namespace server;
 	responsePacketForDll(response, response_packet);
 }
 
- void sendCommand(server::ServerAPI* server, int id_client, DWORD timeout, char* command, ResponseDLL& response_packet) {
+ void sendCommand(server::ServerAPI* server, int id_client, char* command, DWORD timeout, ResponseDLL& response_packet) {
 	ResponsePacket response = server->sendCommand(id_client, command, timeout);
 	responsePacketForDll(response, response_packet);
 }
 
- void sendTypeA(server::ServerAPI* server, int id_client, DWORD timeout, char* command, ResponseDLL& response_packet) {
+ void sendTypeA(server::ServerAPI* server, int id_client, char* command, DWORD timeout, ResponseDLL& response_packet) {
 	ResponsePacket response = server->sendTypeA(id_client, command, timeout);
 	responsePacketForDll(response, response_packet);
 }
 
- void sendTypeB(server::ServerAPI* server, int id_client, DWORD timeout, char* command, ResponseDLL& response_packet) {
+ void sendTypeB(server::ServerAPI* server, int id_client, char* command, DWORD timeout, ResponseDLL& response_packet) {
 	ResponsePacket response = server->sendTypeB(id_client, command, timeout);
 	responsePacketForDll(response, response_packet);
 }
 
- void sendTypeF(server::ServerAPI* server, int id_client, DWORD timeout, char* command, ResponseDLL& response_packet) {
+ void sendTypeF(server::ServerAPI* server, int id_client, char* command, DWORD timeout, ResponseDLL& response_packet) {
 	ResponsePacket response = server->sendTypeF(id_client, command, timeout);
 	responsePacketForDll(response, response_packet);
 }

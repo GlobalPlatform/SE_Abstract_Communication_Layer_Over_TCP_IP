@@ -36,7 +36,7 @@ namespace server {
 /* timeouts */
 #define DEFAULT_REQUEST_TIMEOUT 5000 // waiting time used client's side for the terminal response
 
-#define DLL_VERSION "0.1.0" //Define the DLL Server Version
+#define DLL_VERSION "0.1.1" //Define the DLL Server Version
 
 } /* namespace server */
 
