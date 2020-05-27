@@ -141,6 +141,11 @@ ResponsePacket ServerEngine::handleRequest(int id_client, RequestCode request, D
 
 	DWORD socket_timeout = std::atoi(config_.getValue("timeout", DEFAULT_SOCKET_TIMEOUT).c_str());
 
+	if (socket_timeout < (request_timeout + DEFAULT_ADDED_TIME))
+	{
+		LOG_DEBUG << "Socket timeout adapted. Previous value of socket_timeout:" << socket_timeout << ". Changed to " << (request_timeout + DEFAULT_ADDED_TIME) << ".]";
+		socket_timeout = request_timeout + DEFAULT_ADDED_TIME;
+	}
 	// sends async request to client
 	auto future = std::async(std::launch::async, &asyncRequest, this, client_socket, j.dump(), socket_timeout);
 	// blocks until the timeout has elapsed or the result became available

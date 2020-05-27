@@ -1,5 +1,5 @@
 /*********************************************************************************
- Copyright 2017 GlobalPlatform, Inc.
+ Copyright 2020 GlobalPlatform, Inc.
 
  Licensed under the GlobalPlatform/Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
