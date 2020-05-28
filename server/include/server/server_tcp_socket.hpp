@@ -24,6 +24,10 @@
 
 namespace server {
 
+#define RES_SOCKET_OK 0
+#define RES_SOCKET_ERROR -1
+#define RES_SOCKET_WARNING -2
+
 class ServerTCPSocket {
 private:
 	SOCKET server_socket_ = INVALID_SOCKET;
@@ -63,8 +67,9 @@ public:
 	 * receivePacket - receivePacket packet on the socket.
 	 * @param packet the packet to be received.
 	 * @return a boolean indicating whether an error occurred.
+	 * @return int OK : RES_SOCKET_OK, RES_SOCKET_ERROR (-1), RES_SOCKET_WARNING (-2) (may continue)
 	 */
-	bool receivePacket(SOCKET socket, char* packet);
+	int receivePacket(SOCKET socket, char* packet);
 
 	/**
 	 * closeServer - cleanup and close the server.

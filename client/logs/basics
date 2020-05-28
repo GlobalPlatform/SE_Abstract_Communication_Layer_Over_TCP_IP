@@ -41,3 +41,35 @@
 2019-04-26 14:23:19.971 INFO  [11552] [client::Echo::run@24] Request "echo" is being processed
 2019-04-26 14:23:19.979 INFO  [11552] [client::ExampleTerminalPCSCContact::sendCommand@144] SCardTransmit called
 2019-04-26 14:23:19.994 INFO  [6624] [client::ClientEngine::sendResult@222] Response sent to server: {"client_description":"OK","err_card_code":0,"err_card_description":"OK","err_client_code":0,"err_server_code":0,"err_server_description":"OK","err_terminal_code":0,"response":"6D 00","terminal_description":"OK"}
+2020-05-28 15:13:17.303 INFO  [18912] [client::ExampleTerminalPCSCContact::init@47] SCardEstablishContext called
+2020-05-28 15:13:17.351 INFO  [18912] [client::ExampleTerminalPCSCContact::init@54] Terminal PCSC initialized
+2020-05-28 15:13:17.385 INFO  [18912] [client::ClientEngine::initClient@67] Client initialized successfully
+2020-05-28 15:13:17.395 INFO  [18912] [client::ClientEngine::connectClient@93] Client trying to connect on IP 127.0.0.1 port 62111
+2020-05-28 15:13:17.665 DEBUG [18912] [client::ClientTCPSocket::connectClient@59] Socket = 744
+2020-05-28 15:13:18.927 DEBUG [18912] [client::ClientTCPSocket::connectClient@78] Failed to connect: server unreachable[ip:(null)][port:(null)]
+2020-05-28 15:18:21.430 INFO  [10936] [client::ExampleTerminalPCSCContact::init@47] SCardEstablishContext called
+2020-05-28 15:18:21.461 INFO  [10936] [client::ExampleTerminalPCSCContact::init@54] Terminal PCSC initialized
+2020-05-28 15:18:21.494 INFO  [10936] [client::ClientEngine::initClient@67] Client initialized successfully
+2020-05-28 15:18:21.502 INFO  [10936] [client::ClientEngine::connectClient@93] Client trying to connect on IP 127.0.0.1 port 62111
+2020-05-28 15:18:21.727 DEBUG [10936] [client::ClientTCPSocket::connectClient@59] Socket = 712
+2020-05-28 15:18:21.849 INFO  [10936] [client::ExampleTerminalPCSCContact::connect@104] Trying to connect: SCM Microsystems Inc. SCL010 Contactless Reader 0
+2020-05-28 15:18:21.867 INFO  [10936] [client::ExampleTerminalPCSCContact::connect@107] SCardConnect called
+2020-05-28 15:18:21.884 INFO  [10936] [client::ExampleTerminalPCSCContact::connect@111] [Retry] SCardConnect called
+2020-05-28 15:18:21.900 INFO  [10936] [client::ExampleTerminalPCSCContact::connect@111] [Retry] SCardConnect called
+2020-05-28 15:18:21.916 DEBUG [10936] [client::ExampleTerminalPCSCContact::connect@116] Failed to call SCardConnect() [error:The specified reader name is not recognized][hContext:14771806782070194178][szReader:SCM Microsystems Inc. SCL010 Contactless Reader 0][dwShareMode:2][dwPreferredProtocols:0][hCard:0][dwActiveProtocol:0]
+2020-05-28 15:20:57.614 INFO  [13892] [client::ExampleTerminalPCSCContact::init@47] SCardEstablishContext called
+2020-05-28 15:20:57.643 INFO  [13892] [client::ExampleTerminalPCSCContact::init@54] Terminal PCSC initialized
+2020-05-28 15:20:57.671 INFO  [13892] [client::ClientEngine::initClient@67] Client initialized successfully
+2020-05-28 15:20:57.678 INFO  [13892] [client::ClientEngine::connectClient@93] Client trying to connect on IP 127.0.0.1 port 62111
+2020-05-28 15:20:57.882 DEBUG [13892] [client::ClientTCPSocket::connectClient@59] Socket = 712
+2020-05-28 15:20:59.139 DEBUG [13892] [client::ClientTCPSocket::connectClient@78] Failed to connect: server unreachable[ip:(null)][port:(null)]
+2020-05-28 15:22:24.043 INFO  [20072] [client::ExampleTerminalPCSCContact::init@47] SCardEstablishContext called
+2020-05-28 15:22:24.072 INFO  [20072] [client::ExampleTerminalPCSCContact::init@54] Terminal PCSC initialized
+2020-05-28 15:22:24.105 INFO  [20072] [client::ClientEngine::initClient@67] Client initialized successfully
+2020-05-28 15:22:24.114 INFO  [20072] [client::ClientEngine::connectClient@93] Client trying to connect on IP 127.0.0.1 port 62111
+2020-05-28 15:22:24.329 DEBUG [20072] [client::ClientTCPSocket::connectClient@59] Socket = 716
+2020-05-28 15:22:24.446 INFO  [20072] [client::ExampleTerminalPCSCContact::connect@104] Trying to connect: SCM Microsystems Inc. SCL010 Contactless Reader 0
+2020-05-28 15:22:24.462 INFO  [20072] [client::ExampleTerminalPCSCContact::connect@107] SCardConnect called
+2020-05-28 15:22:24.481 INFO  [20072] [client::ExampleTerminalPCSCContact::connect@111] [Retry] SCardConnect called
+2020-05-28 15:22:24.496 INFO  [20072] [client::ExampleTerminalPCSCContact::connect@111] [Retry] SCardConnect called
+2020-05-28 15:22:24.509 DEBUG [20072] [client::ExampleTerminalPCSCContact::connect@116] Failed to call SCardConnect() [error:The specified reader name is not recognized][hContext:14771806782070194178][szReader:SCM Microsystems Inc. SCL010 Contactless Reader 0][dwShareMode:2][dwPreferredProtocols:0][hCard:0][dwActiveProtocol:0]

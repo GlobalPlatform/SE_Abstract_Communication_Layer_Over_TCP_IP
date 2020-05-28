@@ -127,7 +127,7 @@ bool ServerTCPSocket::sendPacket(SOCKET client_socket, const char* packet) {
 	return true;
 }
 
-bool ServerTCPSocket::receivePacket(SOCKET client_socket, char* packet) {
+int ServerTCPSocket::receivePacket(SOCKET client_socket, char* packet) {
 	int received_size = 0;
 	int net_received_size = 0;
 
@@ -135,7 +135,7 @@ bool ServerTCPSocket::receivePacket(SOCKET client_socket, char* packet) {
 	int retval = recv(client_socket, (char*) &net_received_size, sizeof(int), MSG_WAITALL);
 	if (retval == SOCKET_ERROR || retval == 0) {
 		LOG_DEBUG << "Failed to receive data size from client -  " << "[socket:" << client_socket << "][buffer:" << received_size << "][size:" << sizeof(int) << "][flags:" << NULL << "]";
-		return false;
+		return RES_SOCKET_WARNING;
 	}
 	received_size = ntohl(net_received_size); // deal with endianness
 
@@ -143,11 +143,11 @@ bool ServerTCPSocket::receivePacket(SOCKET client_socket, char* packet) {
 	retval = recv(client_socket, packet, received_size, MSG_WAITALL); // keep receiving until received_size bytes are received
 	if (retval == SOCKET_ERROR || retval == 0) {
 		LOG_DEBUG << "Failed to receive data size from client -  " << "[socket:" << client_socket << "][buffer:" << received_size << "][size:" << sizeof(int) << "][flags:" << NULL << "]";
-		return false;
+		return RES_SOCKET_ERROR;
 	}
 	packet[retval] = '\0';
 
-	return true;
+	return RES_SOCKET_OK;
 }
 
 void ServerTCPSocket::closeServer() {

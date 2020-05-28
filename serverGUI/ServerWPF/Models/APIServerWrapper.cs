@@ -136,7 +136,10 @@ namespace ServerWPF.Models
         static public ResponseDLL SendCommand(int id_client, string command)
         {
             ResponseDLL response = new ResponseDLL();
-            sendCommand(_server, id_client, command, _timeout_Request, ref response);
+            if (command == "00") {
+                sendCommand(_server, id_client, command, 54999, ref response);
+
+            } else sendCommand(_server, id_client, command, _timeout_Request, ref response);
             return response;
         }
 

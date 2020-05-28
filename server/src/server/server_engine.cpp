@@ -102,7 +102,7 @@ ResponsePacket ServerEngine::connectionHandshake(SOCKET client_socket) {
 	ResponsePacket response_packet;
 	char client_name[DEFAULT_BUFLEN];
 
-	if (!socket_->receivePacket(client_socket, client_name)) {
+	if (!(socket_->receivePacket(client_socket, client_name)==RES_SOCKET_OK)) {
 		LOG_INFO << "Handshake with client failed";
 		ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_NETWORK, .err_server_description = "Network error on receive" };
 		return response_packet;
@@ -120,7 +120,7 @@ ResponsePacket ServerEngine::connectionHandshake(SOCKET client_socket) {
 	return response_packet;
 }
 
-ResponsePacket ServerEngine::handleRequest(int id_client, RequestCode request, DWORD request_timeout, std::string data) {
+ResponsePacket ServerEngine::handleRequest(int id_client, RequestCode request, bool isExpectedRes, DWORD request_timeout, std::string data) {
 	if (state_ != State::STARTED) {
 		ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_INVALID_STATE, .err_server_description = "Server must be started" };
 		return response_packet;
@@ -147,7 +147,7 @@ ResponsePacket ServerEngine::handleRequest(int id_client, RequestCode request, D
 		socket_timeout = request_timeout + DEFAULT_ADDED_TIME;
 	}
 	// sends async request to client
-	auto future = std::async(std::launch::async, &asyncRequest, this, client_socket, j.dump(), socket_timeout);
+	auto future = std::async(std::launch::async, &asyncRequest, this, client_socket, j.dump(), socket_timeout, isExpectedRes);
 	// blocks until the timeout has elapsed or the result became available
 	if (future.wait_for(std::chrono::milliseconds(socket_timeout)) == std::future_status::timeout) {
 		// thread has timed out
@@ -164,20 +164,30 @@ ResponsePacket ServerEngine::handleRequest(int id_client, RequestCode request, D
 	return future.get();
 }
 
-ResponsePacket ServerEngine::asyncRequest(SOCKET client_socket, std::string to_send, DWORD socket_timeout) {
+ResponsePacket ServerEngine::asyncRequest(SOCKET client_socket, std::string to_send, DWORD socket_timeout, bool isExpectedRes) {
 	char recvbuf[DEFAULT_BUFLEN];
 	nlohmann::json jresponse;
+	int ret = 0;
 
 	if (!socket_->sendPacket(client_socket, to_send.c_str())) {
 		ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_NETWORK, .err_server_description = "Network error on send request" };
 	}
 	LOG_INFO << "Data sent to client: " << to_send.c_str();
 
-	if (!socket_->receivePacket(client_socket, recvbuf)) {
-		ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_NETWORK, .err_server_description = "Network error on receive" };
-		return response_packet;
-	}
-	LOG_INFO << "Data received: " << recvbuf;
+	do {
+		ret = socket_->receivePacket(client_socket, recvbuf);
+		if (ret == RES_SOCKET_ERROR) {
+			ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_NETWORK, .err_server_description = "Network error on receive" };
+			return response_packet;
+		} else if (ret == RES_SOCKET_WARNING){
+			LOG_INFO << "SOCKET Warning Ignored, relaunch waiting socket reception";
+			if (!isExpectedRes){
+				ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_NETWORK, .err_server_description = "Network error on receive" };
+				return response_packet;
+			}
+		}
+
+	} while ((ret != RES_SOCKET_OK) && isExpectedRes);
 
 	try {
 		jresponse = nlohmann::json::parse(recvbuf); // parses response to json object
@@ -238,7 +248,7 @@ ResponsePacket ServerEngine::stopClient(int id_client) {
 	}
 
 	SOCKET client_socket = clients_.at(id_client)->getSocket();
-	ResponsePacket response_packet = handleRequest(id_client, REQ_DISCONNECT);
+	ResponsePacket response_packet = handleRequest(id_client, REQ_DISCONNECT, false);
 	if (response_packet.err_server_code  < 0) {
 		return response_packet;
 	}
