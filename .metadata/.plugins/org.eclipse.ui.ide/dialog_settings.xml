@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="NewWizardAction">
-		<item value="org.eclipse.cdt.ui.wizard.project" key="NewWizardSelectionPage.STORE_SELECTED_ID"/>
+		<item key="NewWizardSelectionPage.STORE_SELECTED_ID" value="org.eclipse.cdt.ui.wizard.project"/>
 		<list key="NewWizardSelectionPage.STORE_EXPANDED_CATEGORIES_ID">
 			<item value="org.eclipse.ui.Basic"/>
 			<item value="org.eclipse.cdt.ui.newCWizards"/>
@@ -12,17 +12,24 @@
 	<section name="BasicNewProjectResourceWizard">
 	</section>
 	<section name="org.eclipse.ui.dialogs.FilteredResourcesSelectionDialog">
-		<item value="false" key="FilterByLocation"/>
-		<item value="true" key="ShowStatusLine"/>
-		<item value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#x0D;&#x0A;&lt;History&gt;&#x0D;&#x0A;&lt;historyRootNode/&gt;&#x0D;&#x0A;&lt;/History&gt;" key="History"/>
-		<item value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#x0D;&#x0A;&lt;workingSet workingSetName=&quot;&quot;/&gt;" key="WorkingSet"/>
-		<item value="false" key="ShowDerived"/>
+		<item key="FilterByLocation" value="false"/>
+		<item key="ShowStatusLine" value="true"/>
+		<item key="History" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#x0D;&#x0A;&lt;History&gt;&#x0D;&#x0A;&lt;historyRootNode/&gt;&#x0D;&#x0A;&lt;/History&gt;"/>
+		<item key="WorkingSet" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#x0D;&#x0A;&lt;workingSet workingSetName=&quot;&quot;/&gt;"/>
+		<item key="ShowDerived" value="false"/>
 		<section name="DialogBoundsSettings">
-			<item value="600" key="DIALOG_WIDTH"/>
-			<item value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
-			<item value="500" key="DIALOG_HEIGHT"/>
-			<item value="668" key="DIALOG_X_ORIGIN"/>
-			<item value="255" key="DIALOG_Y_ORIGIN"/>
+			<item key="DIALOG_WIDTH" value="600"/>
+			<item key="DIALOG_FONT_NAME" value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI"/>
+			<item key="DIALOG_HEIGHT" value="500"/>
+			<item key="DIALOG_X_ORIGIN" value="668"/>
+			<item key="DIALOG_Y_ORIGIN" value="255"/>
 		</section>
+	</section>
+	<section name="SaveAsDialogSettings">
+		<item key="DIALOG_X_ORIGIN" value="619"/>
+		<item key="DIALOG_Y_ORIGIN" value="94"/>
+		<item key="DIALOG_WIDTH" value="700"/>
+		<item key="DIALOG_HEIGHT" value="645"/>
+		<item key="DIALOG_FONT_NAME" value="1|Segoe UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI"/>
 	</section>
 </section>
