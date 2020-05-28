@@ -22,6 +22,19 @@ namespace client {
 
 ResponsePacket Command::run(ITerminalLayer* terminal, ClientEngine* client_engine, char unsigned command[], unsigned long int command_length) {
 	LOG_INFO << "Request \"command\" is being processed";
+	//Add for debug
+	/*
+	if (command_length == 1){
+	LOG_DEBUG << "Command : " << command[0];
+	Sleep(10000);
+	LOG_DEBUG << "End Sleep : " << command[1];
+	ResponsePacket response = { .response = "119000" };
+	return response;
+
+	return terminal->sendCommand(command, command_length);
+	}
+	*/
+	//End add for debug
 	return terminal->sendCommand(command, command_length);
 }
 
