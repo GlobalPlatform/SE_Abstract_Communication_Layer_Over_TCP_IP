@@ -220,6 +220,7 @@ ResponsePacket ClientEngine::handleRequest(std::string request) {
 
 ResponsePacket ClientEngine::sendResult(std::string result) {
 	if (!socket_->sendPacket(result.c_str())) {
+		LOG_DEBUG << "Error during sendResult";
 		ResponsePacket response_packet = { .response = "KO", .err_client_code = ERR_NETWORK, .err_client_description = "Network error on send response" };
 		return response_packet;
 	}
