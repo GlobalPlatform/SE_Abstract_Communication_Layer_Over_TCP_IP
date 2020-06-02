@@ -77,10 +77,11 @@ public:
 	 * @param id_client the client's id to send request to.
 	 * @param request the request to be performed, such as "diag", "echo",...
 	 * @param date the request's data, such as "04 04 00 00".
+	 * @param isExpectedRes bool to express if response is expected
 	 * @param timeout the waiting time of the execution of the request.
 	 * @return a ResponsePacket struct containing the request's result.
 	 */
-	ResponsePacket handleRequest(int id_client, RequestCode request, DWORD timeout = DEFAULT_REQUEST_TIMEOUT, std::string data = "");
+	ResponsePacket handleRequest(int id_client, RequestCode request, bool isExpectedRes, DWORD timeout = DEFAULT_REQUEST_TIMEOUT, std::string data = "");
 
 	/*
 	 * listClients - returns a ResponsePacket containing all clients' data in the "response" field.
@@ -123,9 +124,10 @@ private:
 	 * @param client_socket the socket to send data on.
 	 * @param to_send the actual data to be sent.
 	 * @param timeout the timeout in ms used to elapse the request.
+	 * @param isExpectedRes bool to mention if resp is expected
 	 * @return a ResponsePacket struct containing the request's result.
 	 */
-	ResponsePacket asyncRequest(SOCKET client_socket, std::string to_send, DWORD timeout);
+	ResponsePacket asyncRequest(SOCKET client_socket, std::string to_send, DWORD timeout, bool isExpectedRes);
 };
 
 } /* namespace server */

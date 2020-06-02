@@ -41,40 +41,40 @@ namespace ServerWPF.Models
         static private extern void listClients(IntPtr server, ref ResponseDLL response_packet);
 
         [DllImport(@"libs/libserver.dll")]
-        static private extern void echoClient(IntPtr server, int id_client, ref ResponseDLL response_packet);
+        static private extern void echoClient(IntPtr server, int id_client, Int32 timeout, ref ResponseDLL response_packet);
 
         [DllImport(@"libs/libserver.dll")]
-        static private extern void diagClient(IntPtr server, int id_client, ref ResponseDLL response_packet);
+        static private extern void diagClient(IntPtr server, int id_client, Int32 timeout, ref ResponseDLL response_packet);
 
         [DllImport(@"libs/libserver.dll")]
-        static private extern void sendCommand(IntPtr server, int id_client, string command, ref ResponseDLL response_packet);
+        static private extern void sendCommand(IntPtr server, int id_client, string command, Int32 timeout, ref ResponseDLL response_packet);
 
         [DllImport(@"libs/libserver.dll")]
-        static private extern void sendTypeA(IntPtr server, int id_client, string command, ref ResponseDLL response_packet);
+        static private extern void sendTypeA(IntPtr server, int id_client, string command, Int32 timeout, ref ResponseDLL response_packet);
 
         [DllImport(@"libs/libserver.dll")]
-        static private extern void sendTypeB(IntPtr server, int id_client, string command, ref ResponseDLL response_packet);
+        static private extern void sendTypeB(IntPtr server, int id_client, string command, Int32 timeout, ref ResponseDLL response_packet);
 
         [DllImport(@"libs/libserver.dll")]
-        static private extern void sendTypeF(IntPtr server, int id_client, string command, ref ResponseDLL response_packet);
+        static private extern void sendTypeF(IntPtr server, int id_client, string command, Int32 timeout, ref ResponseDLL response_packet);
 
         [DllImport(@"libs/libserver.dll")]
-        static private extern void restartTarget(IntPtr server, int id_client, ref ResponseDLL response_packet);
+        static private extern void restartTarget(IntPtr server, int id_client, Int32 timeout, ref ResponseDLL response_packet);
 
         [DllImport(@"libs/libserver.dll")]
-        static private extern void coldReset(IntPtr server, int id_client, ref ResponseDLL response_packet);
+        static private extern void coldReset(IntPtr server, int id_client, Int32 timeout, ref ResponseDLL response_packet);
 
         [DllImport(@"libs/libserver.dll")]
-        static private extern void warmReset(IntPtr server, int id_client, ref ResponseDLL response_packet);
+        static private extern void warmReset(IntPtr server, int id_client, Int32 timeout, ref ResponseDLL response_packet);
 
         [DllImport(@"libs/libserver.dll")]
-        static private extern void powerOFFField(IntPtr server, int id_client, ref ResponseDLL response_packet);
+        static private extern void powerOFFField(IntPtr server, int id_client, Int32 timeout, ref ResponseDLL response_packet);
 
         [DllImport(@"libs/libserver.dll")]
-        static private extern void powerONField(IntPtr server, int id_client, ref ResponseDLL response_packet);
+        static private extern void powerONField(IntPtr server, int id_client, Int32 timeout, ref ResponseDLL response_packet);
 
         [DllImport(@"libs/libserver.dll")]
-        static private extern void stopClient(IntPtr server, int id_client, ref ResponseDLL response_packet);
+        static private extern void stopClient(IntPtr server, int id_client, Int32 timeout, ref ResponseDLL response_packet);
 
         [DllImport(@"libs/libserver.dll")]
         static private extern void stopServer(IntPtr server, ref ResponseDLL response_packet);
@@ -85,7 +85,12 @@ namespace ServerWPF.Models
         [DllImport(@"libs/libserver.dll")]
         static private extern void setCallbackConnectionAccepted(ViewModels.APIServerVM.Callback callback);
 
+        [DllImport(@"libs/libserver.dll")]
+        static private extern void getVersion(IntPtr server, ref ResponseDLL response_packet);
+
+
         static private IntPtr _server;
+        static private Int32 _timeout_Request = 4999;
 
         public APIServerWrapper(ViewModels.APIServerVM.Callback connectionAccepted)
         {
@@ -117,84 +122,87 @@ namespace ServerWPF.Models
         static public ResponseDLL EchoClient(int id_client)
         {
             ResponseDLL response = new ResponseDLL();
-            echoClient(_server, id_client, ref response);
+            echoClient(_server, id_client, _timeout_Request, ref response);
             return response;
         }
 
         static public ResponseDLL DiagClient(int id_client)
         {
             ResponseDLL response = new ResponseDLL();
-            diagClient(_server, id_client, ref response);
+            diagClient(_server, id_client, _timeout_Request, ref response);
             return response;
         }
 
         static public ResponseDLL SendCommand(int id_client, string command)
         {
             ResponseDLL response = new ResponseDLL();
-            sendCommand(_server, id_client, command, ref response);
+            if (command == "00") {
+                sendCommand(_server, id_client, command, 54999, ref response);
+
+            } else sendCommand(_server, id_client, command, _timeout_Request, ref response);
             return response;
         }
 
         static public ResponseDLL SendTypeA(int id_client, string command)
         {
             ResponseDLL response = new ResponseDLL();
-            sendTypeA(_server, id_client, command, ref response);
+            sendTypeA(_server, id_client, command, _timeout_Request, ref response);
             return response;
         }
 
         static public ResponseDLL SendTypeB(int id_client, string command)
         {
             ResponseDLL response = new ResponseDLL();
-            sendTypeB(_server, id_client, command, ref response);
+            sendTypeB(_server, id_client, command, _timeout_Request, ref response);
             return response;
         }
 
         static public ResponseDLL SendTypeF(int id_client, string command)
         {
             ResponseDLL response = new ResponseDLL();
-            sendTypeF(_server, id_client, command, ref response);
+            sendTypeF(_server, id_client, command, _timeout_Request, ref response);
             return response;
         }
 
         static public ResponseDLL RestartTarget(int id_client)
         {
             ResponseDLL response = new ResponseDLL();
-            restartTarget(_server, id_client, ref response);
+            restartTarget(_server, id_client, _timeout_Request, ref response);
             return response;
         }
 
         static public ResponseDLL ColdReset(int id_client)
         {
             ResponseDLL response = new ResponseDLL();
-            coldReset(_server, id_client, ref response);
+            coldReset(_server, id_client, _timeout_Request, ref response);
             return response;
         }
 
         static public ResponseDLL WarmReset( int id_client)
         {
             ResponseDLL response = new ResponseDLL();
-            warmReset(_server, id_client, ref response);
+            warmReset(_server, id_client, _timeout_Request, ref response);
             return response;
         }
 
         static public ResponseDLL PowerOFFField(int id_client)
         {
             ResponseDLL response = new ResponseDLL();
-            powerOFFField(_server, id_client, ref response);
+            powerOFFField(_server, id_client, _timeout_Request, ref response);
             return response;
         }
 
         static public ResponseDLL PowerONField(int id_client)
         {
             ResponseDLL response = new ResponseDLL();
-            powerONField(_server, id_client, ref response);
+            powerONField(_server, id_client, _timeout_Request, ref response);
             return response;
         }
 
         static public ResponseDLL StopClient(int id_client)
         {
             ResponseDLL response = new ResponseDLL();
-            stopClient(_server, id_client, ref response);
+            stopClient(_server, id_client, _timeout_Request, ref response);
             return response;
         }
 
@@ -208,6 +216,13 @@ namespace ServerWPF.Models
         static public void DisposeServerAPI()
         {
             disposeServerAPI(_server);
+        }
+
+        static public ResponseDLL GetVersion()
+        {
+            ResponseDLL response = new ResponseDLL();
+            getVersion(_server, ref response);
+            return response;
         }
 
         public static string NO_ERROR = "NONE";

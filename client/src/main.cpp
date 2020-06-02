@@ -61,7 +61,9 @@ int __cdecl main(void) {
 
 	ClientAPI* client = new ClientAPI(0, 0, 0);
 	client->initClient("./config/init.json", available_terminals, available_requests);
-	client->connectClient("SCM Microsystems Inc. SCL010 Contactless Reader 0", "127.0.0.1", "62111");
+//	client->connectClient("SCM Microsystems Inc. SCL010 Contactless Reader 0", "127.0.0.1", "62111");
+//	client->connectClient("NXP NXP's Proximity based PCSC Reader 0", "127.0.0.1", "62111");
+	client->connectClient("Alcor Micro USB Smart Card Reader 0", "127.0.0.1", "62111");
 	Sleep(100000);
 	return 0;
 }

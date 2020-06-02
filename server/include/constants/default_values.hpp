@@ -1,5 +1,5 @@
 /*********************************************************************************
- Copyright 2017 GlobalPlatform, Inc.
+ Copyright 2020 GlobalPlatform, Inc.
 
  Licensed under the GlobalPlatform/Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -24,7 +24,8 @@ namespace server {
 #define DEFAULT_IP "127.0.0.1"
 #define DEFAULT_PORT "62111"
 #define DEFAULT_BUFLEN 1024 * 64
-#define DEFAULT_SOCKET_TIMEOUT "5000" // timer for socket operations recv/send in milliseconds
+#define DEFAULT_SOCKET_TIMEOUT "5500" // timer for socket operations recv/send in milliseconds
+#define DEFAULT_ADDED_TIME 500
 
 /* logs */
 #define DEFAULT_LOG_LEVEL "info" // debug level - info or debug (more verbose)
@@ -34,7 +35,9 @@ namespace server {
 #define DEFAULT_LOG_MAX_FILES "10" // log files number for the rolling
 
 /* timeouts */
-#define DEFAULT_REQUEST_TIMEOUT 2000 // waiting time used client's side for the terminal response
+#define DEFAULT_REQUEST_TIMEOUT 5500 // waiting time used client's side for the terminal response
+
+#define DLL_VERSION "0.2.1" //Define the DLL Server Version
 
 } /* namespace server */
 

@@ -34,6 +34,12 @@ ResponsePacket ServerAPI::initServer(std::string path) {
 	return engine_->initServer(path);
 }
 
+ResponsePacket ServerAPI::getVersion() {
+	ResponsePacket response_packet = { .response = DLL_VERSION, .err_server_code = ERR_INVALID_STATE, .err_server_description = "Server invalid state" };
+
+	return response_packet;
+}
+
 ResponsePacket ServerAPI::startServer(const char* ip, const char* port) {
 	return engine_->startListening(ip, port);
 }
@@ -43,19 +49,19 @@ ResponsePacket ServerAPI::listClients() {
 }
 
 ResponsePacket ServerAPI::sendCommand(int id_client, std::string command, DWORD timeout) {
-	return engine_->handleRequest(id_client, REQ_COMMAND, timeout, command);
+	return engine_->handleRequest(id_client, REQ_COMMAND, true, timeout, command);
 }
 
 ResponsePacket ServerAPI::sendTypeA(int id_client, std::string command, DWORD timeout) {
-	return engine_->handleRequest(id_client, REQ_COMMAND_A, timeout, command);
+	return engine_->handleRequest(id_client, REQ_COMMAND_A, true, timeout, command);
 }
 
 ResponsePacket ServerAPI::sendTypeB(int id_client, std::string command, DWORD timeout) {
-	return engine_->handleRequest(id_client, REQ_COMMAND_B, timeout, command);
+	return engine_->handleRequest(id_client, REQ_COMMAND_B, true, timeout, command);
 }
 
 ResponsePacket ServerAPI::sendTypeF(int id_client, std::string command, DWORD timeout) {
-	return engine_->handleRequest(id_client, REQ_COMMAND_F, timeout, command);
+	return engine_->handleRequest(id_client, REQ_COMMAND_F, true, timeout, command);
 }
 
 ResponsePacket ServerAPI::restartTarget(int id_client, DWORD timeout) {
@@ -71,7 +77,7 @@ ResponsePacket ServerAPI::diagClient(int id_client, DWORD timeout) {
 }
 
 ResponsePacket ServerAPI::stopClient(int id_client, DWORD timeout) {
-	ResponsePacket response = engine_->handleRequest(id_client, REQ_DISCONNECT, timeout);
+	ResponsePacket response = engine_->handleRequest(id_client, REQ_DISCONNECT, false, timeout);
 	if (response.err_server_code == ERR_NETWORK) {
 		ResponsePacket okResponse;
 		return okResponse;
@@ -80,19 +86,19 @@ ResponsePacket ServerAPI::stopClient(int id_client, DWORD timeout) {
 }
 
 ResponsePacket ServerAPI::coldReset(int id_client, DWORD timeout) {
-	return engine_->handleRequest(id_client, REQ_COLD_RESET);
+	return engine_->handleRequest(id_client, REQ_COLD_RESET, true, timeout);
 }
 
 ResponsePacket ServerAPI::warmReset(int id_client, DWORD timeout) {
-	return engine_->handleRequest(id_client, REQ_WARM_RESET);
+	return engine_->handleRequest(id_client, REQ_WARM_RESET, true, timeout);
 }
 
 ResponsePacket ServerAPI::powerOFFField(int id_client, DWORD timeout) {
-	return engine_->handleRequest(id_client, REQ_POWER_OFF_FIELD);
+	return engine_->handleRequest(id_client, REQ_POWER_OFF_FIELD, true, timeout);
 }
 
 ResponsePacket ServerAPI::powerONField(int id_client, DWORD timeout) {
-	return engine_->handleRequest(id_client, REQ_POWER_ON_FIELD);
+	return engine_->handleRequest(id_client, REQ_POWER_ON_FIELD, true, timeout);
 }
 
 ResponsePacket ServerAPI::stopServer() {

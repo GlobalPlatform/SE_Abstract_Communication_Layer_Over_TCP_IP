@@ -48,6 +48,7 @@ namespace ServerWPF.ViewModels
             _browseFile = new DelegateCommand(OnBrowseFile, IsClientSelected);
             _sendCommandsBatch = new AsyncDelegateCommand(async () => await OnSendCommandBatch(), CanSendCommandBatch);
             _sendCommandsBatchRandom = new AsyncDelegateCommand(async () => await OnSendCommandBatchRandom(), CanSendCommandBatch);
+            //_getVersion = new DelegateCommand();
 
             _actions.AddAction(ActionMethod.COMMAND.ToString(), OnSendCommandClient);
             _actions.AddAction(ActionMethod.SEND_TYPE_A.ToString(), OnSendTypeA);
@@ -83,6 +84,11 @@ namespace ServerWPF.ViewModels
                 _sendCommandsBatch.InvokeCanExecuteChanged();
                 _sendCommandsBatchRandom.InvokeCanExecuteChanged();
             }
+        }
+        public string DLL_GetVersion()
+        {
+            ResponseDLL response = APIServerWrapper.GetVersion();
+            return response.response;
         }
 
         #region callbacks
@@ -218,6 +224,9 @@ namespace ServerWPF.ViewModels
 
         private readonly AsyncDelegateCommand _sendCommandsBatchRandom;
         public ICommand SendCommandsBatchRandom => _sendCommandsBatchRandom;
+
+        private readonly DelegateCommand _getVersion;
+        public ICommand GetVersion => _getVersion;
         #endregion
 
         #region delegates implementations
@@ -335,6 +344,13 @@ namespace ServerWPF.ViewModels
             AppendLog(ActionMethod.STOP_CLIENT.ToString(), response);
             _clientsList.Remove(_selectedClient);
             _selectedClient = null;
+            return APIServerWrapper.RetrieveErrorDescription(response).Equals(APIServerWrapper.NO_ERROR);
+        }
+
+        private bool OnGetVersion()
+        {
+            ResponseDLL response = APIServerWrapper.GetVersion();
+            AppendLog(ActionMethod.GET_VERSION.ToString(), response);
             return APIServerWrapper.RetrieveErrorDescription(response).Equals(APIServerWrapper.NO_ERROR);
         }
 

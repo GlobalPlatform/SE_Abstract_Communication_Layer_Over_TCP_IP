@@ -15,5 +15,15 @@ namespace ServerWPF
             InitializeComponent();
             Style = (Style)FindResource(typeof(Window));
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Btn_GetVersion_Click(object sender, RoutedEventArgs e)
+        {
+            txt_Version.Text = apiServer.DLL_GetVersion();
+        }
     }
 }

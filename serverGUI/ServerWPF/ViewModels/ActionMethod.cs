@@ -19,6 +19,7 @@ namespace ServerWPF.ViewModels
         public static readonly ActionMethod POWER_ON_FIELD = new ActionMethod(9, nameof(POWER_ON_FIELD));
         public static readonly ActionMethod RESTART = new ActionMethod(10, nameof(RESTART));
         public static readonly ActionMethod STOP_CLIENT = new ActionMethod(11, nameof(STOP_CLIENT));
+        public static readonly ActionMethod GET_VERSION = new ActionMethod(12, nameof(GET_VERSION));
 
         private ActionMethod(int value, String name)
         {

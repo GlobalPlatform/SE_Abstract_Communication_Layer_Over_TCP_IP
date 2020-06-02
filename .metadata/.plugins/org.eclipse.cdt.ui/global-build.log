@@ -1,11 +1,247 @@
-18:22:40 **** Rebuild of configuration Debug for project server ****
+19:37:58 **** Incremental Build of configuration Debug for project server ****
 Info: Internal Builder is used for build
-g++ -std=c++1y -DADD_EXPORTS "-IC:\\Users\\st\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\libraries" "-IC:\\Users\\st\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\include" -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\server\\server_engine.o" "..\\src\\server\\server_engine.cpp" 
-g++ -std=c++1y -DADD_EXPORTS "-IC:\\Users\\st\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\libraries" "-IC:\\Users\\st\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\include" -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\server\\server_tcp_socket.o" "..\\src\\server\\server_tcp_socket.cpp" 
-g++ -std=c++1y -DADD_EXPORTS "-IC:\\Users\\st\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\libraries" "-IC:\\Users\\st\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\include" -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\config\\config_wrapper.o" "..\\src\\config\\config_wrapper.cpp" 
-g++ -std=c++1y -DADD_EXPORTS "-IC:\\Users\\st\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\libraries" "-IC:\\Users\\st\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\include" -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\server\\server_api.o" "..\\src\\server\\server_api.cpp" 
-g++ -std=c++1y -DADD_EXPORTS "-IC:\\Users\\st\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\libraries" "-IC:\\Users\\st\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\include" -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\dll\\dll_server_api_wrapper.o" "..\\src\\dll\\dll_server_api_wrapper.cpp" 
-g++ -std=c++1y -DADD_EXPORTS "-IC:\\Users\\st\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\libraries" "-IC:\\Users\\st\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\include" -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\logger\\logger.o" "..\\src\\logger\\logger.cpp" 
-g++ -std=c++1y -DADD_EXPORTS "-IC:\\Users\\st\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\libraries" "-IC:\\Users\\st\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\include" -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\main.o" "..\\src\\main.cpp" 
-g++ -std=c++1y -DADD_EXPORTS "-IC:\\Users\\st\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\libraries" "-IC:\\Users\\st\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\include" -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\server\\client_data.o" "..\\src\\server\\client_data.cpp" 
+g++ -std=c++1y -DADD_EXPORTS "-IC:\\Users\\olivier vannieuwenhu\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\libraries" "-IC:\\Users\\olivier vannieuwenhu\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\include" -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\server\\server_engine.o" "..\\src\\server\\server_engine.cpp" 
 g++ -o libserver.dll "src\\config\\config_wrapper.o" "src\\dll\\dll_server_api_wrapper.o" "src\\logger\\logger.o" "src\\main.o" "src\\server\\client_data.o" "src\\server\\server_api.o" "src\\server\\server_engine.o" "src\\server\\server_tcp_socket.o" "C:\\MinGW\\x86_64-w64-mingw32\\lib\\libwsock32.a" -lWs2_32 -static -shared 
+Info: Nothing to build for client
+20:58:53 **** Incremental Build of configuration Debug for project server ****
+Info: Internal Builder is used for build
+g++ -std=c++1y -DADD_EXPORTS "-IC:\\Users\\olivier vannieuwenhu\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\libraries" "-IC:\\Users\\olivier vannieuwenhu\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\include" -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\dll\\dll_server_api_wrapper.o" "..\\src\\dll\\dll_server_api_wrapper.cpp" 
+g++ -std=c++1y -DADD_EXPORTS "-IC:\\Users\\olivier vannieuwenhu\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\libraries" "-IC:\\Users\\olivier vannieuwenhu\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\include" -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\main.o" "..\\src\\main.cpp" 
+g++ -std=c++1y -DADD_EXPORTS "-IC:\\Users\\olivier vannieuwenhu\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\libraries" "-IC:\\Users\\olivier vannieuwenhu\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\include" -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\server\\server_api.o" "..\\src\\server\\server_api.cpp" 
+g++ -std=c++1y -DADD_EXPORTS "-IC:\\Users\\olivier vannieuwenhu\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\libraries" "-IC:\\Users\\olivier vannieuwenhu\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\include" -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\server\\server_engine.o" "..\\src\\server\\server_engine.cpp" 
+..\src\server\server_engine.cpp: In member function 'server::ResponsePacket server::ServerEngine::handleRequest(int, server::RequestCode, DWORD, std::__cxx11::string)':
+..\src\server\server_engine.cpp:150:107: error: no matching function for call to 'async(std::launch, server::ResponsePacket (server::ServerEngine::*)(SOCKET, std::__cxx11::string, DWORD, bool), server::ServerEngine*, SOCKET&, nlohmann::basic_json<>::string_t, DWORD&)'
+  auto future = std::async(std::launch::async, &asyncRequest, this, client_socket, j.dump(), socket_timeout);
+                                                                                                           ^
+In file included from C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\server\include/server/server_engine.hpp:30,
+                 from ..\src\server\server_engine.cpp:19:
+C:/MinGW/lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++/future:1712:5: note: candidate: 'template<class _Fn, class ... _Args> std::future<typename std::result_of<typename std::decay<_Tp>::type(typename std::decay<_Args>::type ...)>::type> std::async(std::launch, _Fn&&, _Args&& ...)'
+     async(launch __policy, _Fn&& __fn, _Args&&... __args)
+     ^~~~~
+C:/MinGW/lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++/future:1712:5: note:   template argument deduction/substitution failed:
+C:/MinGW/lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++/future: In substitution of 'template<class _Fn, class ... _Args> std::future<typename std::result_of<typename std::decay<_Tp>::type(typename std::decay<_Args>::type ...)>::type> std::async(std::launch, _Fn&&, _Args&& ...) [with _Fn = server::ResponsePacket (server::ServerEngine::*)(long long unsigned int, std::__cxx11::basic_string<char>, long unsigned int, bool); _Args = {server::ServerEngine*, long long unsigned int&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, long unsigned int&}]':
+..\src\server\server_engine.cpp:150:107:   required from here
+C:/MinGW/lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++/future:1712:5: error: no type named 'type' in 'class std::result_of<server::ResponsePacket (server::ServerEngine::*(server::ServerEngine*, long long unsigned int, std::__cxx11::basic_string<char>, long unsigned int))(long long unsigned int, std::__cxx11::basic_string<char>, long unsigned int, bool)>'
+C:/MinGW/lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++/future:1745:5: note: candidate: 'template<class _Fn, class ... _Args> std::future<typename std::result_of<typename std::decay<_Tp>::type(typename std::decay<_Args>::type ...)>::type> std::async(_Fn&&, _Args&& ...)'
+     async(_Fn&& __fn, _Args&&... __args)
+     ^~~~~
+C:/MinGW/lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++/future:1745:5: note:   template argument deduction/substitution failed:
+C:/MinGW/lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++/future: In substitution of 'template<class _Fn, class ... _Args> std::future<typename std::result_of<typename std::decay<_Tp>::type(typename std::decay<_Args>::type ...)>::type> std::async(_Fn&&, _Args&& ...) [with _Fn = std::launch; _Args = {server::ResponsePacket (server::ServerEngine::*)(long long unsigned int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, long unsigned int, bool), server::ServerEngine*, long long unsigned int&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, long unsigned int&}]':
+..\src\server\server_engine.cpp:150:107:   required from here
+C:/MinGW/lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++/future:1745:5: error: no type named 'type' in 'class std::result_of<std::launch(server::ResponsePacket (server::ServerEngine::*)(long long unsigned int, std::__cxx11::basic_string<char>, long unsigned int, bool), server::ServerEngine*, long long unsigned int, std::__cxx11::basic_string<char>, long unsigned int)>'
+..\src\server\server_engine.cpp: At global scope:
+..\src\server\server_engine.cpp:167:16: error: no declaration matches 'server::ResponsePacket server::ServerEngine::asyncRequest(SOCKET, std::__cxx11::string, DWORD)'
+ ResponsePacket ServerEngine::asyncRequest(SOCKET client_socket, std::string to_send, DWORD socket_timeout) {
+                ^~~~~~~~~~~~
+In file included from ..\src\server\server_engine.cpp:19:
+C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\server\include/server/server_engine.hpp:129:17: note: candidate is: 'server::ResponsePacket server::ServerEngine::asyncRequest(SOCKET, std::__cxx11::string, DWORD, bool)'
+  ResponsePacket asyncRequest(SOCKET client_socket, std::string to_send, DWORD timeout, bool isExpectRes);
+                 ^~~~~~~~~~~~
+In file included from ..\src\server\server_engine.cpp:19:
+C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\server\include/server/server_engine.hpp:37:7: note: 'class server::ServerEngine' defined here
+ class ServerEngine {
+       ^~~~~~~~~~~~
+Info: Nothing to build for client
+21:11:21 **** Incremental Build of configuration Debug for project server ****
+Info: Internal Builder is used for build
+g++ -std=c++1y -DADD_EXPORTS "-IC:\\Users\\olivier vannieuwenhu\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\libraries" "-IC:\\Users\\olivier vannieuwenhu\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\include" -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\dll\\dll_server_api_wrapper.o" "..\\src\\dll\\dll_server_api_wrapper.cpp" 
+g++ -std=c++1y -DADD_EXPORTS "-IC:\\Users\\olivier vannieuwenhu\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\libraries" "-IC:\\Users\\olivier vannieuwenhu\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\include" -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\server\\server_api.o" "..\\src\\server\\server_api.cpp" 
+..\src\server\server_api.cpp: In member function 'server::ResponsePacket server::ServerAPI::sendCommand(int, std::__cxx11::string, DWORD)':
+..\src\server\server_api.cpp:52:72: error: no matching function for call to 'server::ServerEngine::handleRequest(int&, server::RequestCode, DWORD&, std::__cxx11::string&)'
+  return engine_->handleRequest(id_client, REQ_COMMAND, timeout, command);
+                                                                        ^
+In file included from C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\server\include/server/server_api.hpp:25,
+                 from ..\src\server\server_api.cpp:20:
+C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\server\include/server/server_engine.hpp:84:17: note: candidate: 'server::ResponsePacket server::ServerEngine::handleRequest(int, server::RequestCode, bool, DWORD, std::__cxx11::string)'
+  ResponsePacket handleRequest(int id_client, RequestCode request, bool isExpectedRes, DWORD timeout = DEFAULT_REQUEST_TIMEOUT, std::string data = "");
+                 ^~~~~~~~~~~~~
+C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\server\include/server/server_engine.hpp:84:17: note:   no known conversion for argument 4 from 'std::__cxx11::string' {aka 'std::__cxx11::basic_string<char>'} to 'DWORD' {aka 'long unsigned int'}
+..\src\server\server_api.cpp: In member function 'server::ResponsePacket server::ServerAPI::sendTypeA(int, std::__cxx11::string, DWORD)':
+..\src\server\server_api.cpp:56:74: error: no matching function for call to 'server::ServerEngine::handleRequest(int&, server::RequestCode, DWORD&, std::__cxx11::string&)'
+  return engine_->handleRequest(id_client, REQ_COMMAND_A, timeout, command);
+                                                                          ^
+In file included from C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\server\include/server/server_api.hpp:25,
+                 from ..\src\server\server_api.cpp:20:
+C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\server\include/server/server_engine.hpp:84:17: note: candidate: 'server::ResponsePacket server::ServerEngine::handleRequest(int, server::RequestCode, bool, DWORD, std::__cxx11::string)'
+  ResponsePacket handleRequest(int id_client, RequestCode request, bool isExpectedRes, DWORD timeout = DEFAULT_REQUEST_TIMEOUT, std::string data = "");
+                 ^~~~~~~~~~~~~
+C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\server\include/server/server_engine.hpp:84:17: note:   no known conversion for argument 4 from 'std::__cxx11::string' {aka 'std::__cxx11::basic_string<char>'} to 'DWORD' {aka 'long unsigned int'}
+..\src\server\server_api.cpp: In member function 'server::ResponsePacket server::ServerAPI::sendTypeB(int, std::__cxx11::string, DWORD)':
+..\src\server\server_api.cpp:60:74: error: no matching function for call to 'server::ServerEngine::handleRequest(int&, server::RequestCode, DWORD&, std::__cxx11::string&)'
+  return engine_->handleRequest(id_client, REQ_COMMAND_B, timeout, command);
+                                                                          ^
+In file included from C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\server\include/server/server_api.hpp:25,
+                 from ..\src\server\server_api.cpp:20:
+C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\server\include/server/server_engine.hpp:84:17: note: candidate: 'server::ResponsePacket server::ServerEngine::handleRequest(int, server::RequestCode, bool, DWORD, std::__cxx11::string)'
+  ResponsePacket handleRequest(int id_client, RequestCode request, bool isExpectedRes, DWORD timeout = DEFAULT_REQUEST_TIMEOUT, std::string data = "");
+                 ^~~~~~~~~~~~~
+C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\server\include/server/server_engine.hpp:84:17: note:   no known conversion for argument 4 from 'std::__cxx11::string' {aka 'std::__cxx11::basic_string<char>'} to 'DWORD' {aka 'long unsigned int'}
+..\src\server\server_api.cpp: In member function 'server::ResponsePacket server::ServerAPI::sendTypeF(int, std::__cxx11::string, DWORD)':
+..\src\server\server_api.cpp:64:74: error: no matching function for call to 'server::ServerEngine::handleRequest(int&, server::RequestCode, DWORD&, std::__cxx11::string&)'
+  return engine_->handleRequest(id_client, REQ_COMMAND_F, timeout, command);
+                                                                          ^
+In file included from C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\server\include/server/server_api.hpp:25,
+                 from ..\src\server\server_api.cpp:20:
+C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\server\include/server/server_engine.hpp:84:17: note: candidate: 'server::ResponsePacket server::ServerEngine::handleRequest(int, server::RequestCode, bool, DWORD, std::__cxx11::string)'
+  ResponsePacket handleRequest(int id_client, RequestCode request, bool isExpectedRes, DWORD timeout = DEFAULT_REQUEST_TIMEOUT, std::string data = "");
+                 ^~~~~~~~~~~~~
+C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\server\include/server/server_engine.hpp:84:17: note:   no known conversion for argument 4 from 'std::__cxx11::string' {aka 'std::__cxx11::basic_string<char>'} to 'DWORD' {aka 'long unsigned int'}
+..\src\server\server_api.cpp: In member function 'server::ResponsePacket server::ServerAPI::coldReset(int, DWORD)':
+..\src\server\server_api.cpp:89:57: error: no matching function for call to 'server::ServerEngine::handleRequest(int&, server::RequestCode)'
+  return engine_->handleRequest(id_client, REQ_COLD_RESET);
+                                                         ^
+In file included from C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\server\include/server/server_api.hpp:25,
+                 from ..\src\server\server_api.cpp:20:
+C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\server\include/server/server_engine.hpp:84:17: note: candidate: 'server::ResponsePacket server::ServerEngine::handleRequest(int, server::RequestCode, bool, DWORD, std::__cxx11::string)'
+  ResponsePacket handleRequest(int id_client, RequestCode request, bool isExpectedRes, DWORD timeout = DEFAULT_REQUEST_TIMEOUT, std::string data = "");
+                 ^~~~~~~~~~~~~
+C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\server\include/server/server_engine.hpp:84:17: note:   candidate expects 5 arguments, 2 provided
+..\src\server\server_api.cpp: In member function 'server::ResponsePacket server::ServerAPI::warmReset(int, DWORD)':
+..\src\server\server_api.cpp:93:57: error: no matching function for call to 'server::ServerEngine::handleRequest(int&, server::RequestCode)'
+  return engine_->handleRequest(id_client, REQ_WARM_RESET);
+                                                         ^
+In file included from C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\server\include/server/server_api.hpp:25,
+                 from ..\src\server\server_api.cpp:20:
+C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\server\include/server/server_engine.hpp:84:17: note: candidate: 'server::ResponsePacket server::ServerEngine::handleRequest(int, server::RequestCode, bool, DWORD, std::__cxx11::string)'
+  ResponsePacket handleRequest(int id_client, RequestCode request, bool isExpectedRes, DWORD timeout = DEFAULT_REQUEST_TIMEOUT, std::string data = "");
+                 ^~~~~~~~~~~~~
+C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\server\include/server/server_engine.hpp:84:17: note:   candidate expects 5 arguments, 2 provided
+..\src\server\server_api.cpp: In member function 'server::ResponsePacket server::ServerAPI::powerOFFField(int, DWORD)':
+..\src\server\server_api.cpp:97:62: error: no matching function for call to 'server::ServerEngine::handleRequest(int&, server::RequestCode)'
+  return engine_->handleRequest(id_client, REQ_POWER_OFF_FIELD);
+                                                              ^
+In file included from C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\server\include/server/server_api.hpp:25,
+                 from ..\src\server\server_api.cpp:20:
+C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\server\include/server/server_engine.hpp:84:17: note: candidate: 'server::ResponsePacket server::ServerEngine::handleRequest(int, server::RequestCode, bool, DWORD, std::__cxx11::string)'
+  ResponsePacket handleRequest(int id_client, RequestCode request, bool isExpectedRes, DWORD timeout = DEFAULT_REQUEST_TIMEOUT, std::string data = "");
+                 ^~~~~~~~~~~~~
+C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\server\include/server/server_engine.hpp:84:17: note:   candidate expects 5 arguments, 2 provided
+..\src\server\server_api.cpp: In member function 'server::ResponsePacket server::ServerAPI::powerONField(int, DWORD)':
+..\src\server\server_api.cpp:101:61: error: no matching function for call to 'server::ServerEngine::handleRequest(int&, server::RequestCode)'
+  return engine_->handleRequest(id_client, REQ_POWER_ON_FIELD);
+                                                             ^
+In file included from C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\server\include/server/server_api.hpp:25,
+                 from ..\src\server\server_api.cpp:20:
+C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\server\include/server/server_engine.hpp:84:17: note: candidate: 'server::ResponsePacket server::ServerEngine::handleRequest(int, server::RequestCode, bool, DWORD, std::__cxx11::string)'
+  ResponsePacket handleRequest(int id_client, RequestCode request, bool isExpectedRes, DWORD timeout = DEFAULT_REQUEST_TIMEOUT, std::string data = "");
+                 ^~~~~~~~~~~~~
+C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\server\include/server/server_engine.hpp:84:17: note:   candidate expects 5 arguments, 2 provided
+Info: Nothing to build for client
+21:12:31 **** Incremental Build of configuration Debug for project server ****
+Info: Internal Builder is used for build
+g++ -std=c++1y -DADD_EXPORTS "-IC:\\Users\\olivier vannieuwenhu\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\libraries" "-IC:\\Users\\olivier vannieuwenhu\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\include" -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\server\\server_api.o" "..\\src\\server\\server_api.cpp" 
+..\src\server\server_api.cpp: In member function 'server::ResponsePacket server::ServerAPI::coldReset(int, DWORD)':
+..\src\server\server_api.cpp:89:57: error: no matching function for call to 'server::ServerEngine::handleRequest(int&, server::RequestCode)'
+  return engine_->handleRequest(id_client, REQ_COLD_RESET);
+                                                         ^
+In file included from C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\server\include/server/server_api.hpp:25,
+                 from ..\src\server\server_api.cpp:20:
+C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\server\include/server/server_engine.hpp:84:17: note: candidate: 'server::ResponsePacket server::ServerEngine::handleRequest(int, server::RequestCode, bool, DWORD, std::__cxx11::string)'
+  ResponsePacket handleRequest(int id_client, RequestCode request, bool isExpectedRes, DWORD timeout = DEFAULT_REQUEST_TIMEOUT, std::string data = "");
+                 ^~~~~~~~~~~~~
+C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\server\include/server/server_engine.hpp:84:17: note:   candidate expects 5 arguments, 2 provided
+..\src\server\server_api.cpp: In member function 'server::ResponsePacket server::ServerAPI::warmReset(int, DWORD)':
+..\src\server\server_api.cpp:93:57: error: no matching function for call to 'server::ServerEngine::handleRequest(int&, server::RequestCode)'
+  return engine_->handleRequest(id_client, REQ_WARM_RESET);
+                                                         ^
+In file included from C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\server\include/server/server_api.hpp:25,
+                 from ..\src\server\server_api.cpp:20:
+C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\server\include/server/server_engine.hpp:84:17: note: candidate: 'server::ResponsePacket server::ServerEngine::handleRequest(int, server::RequestCode, bool, DWORD, std::__cxx11::string)'
+  ResponsePacket handleRequest(int id_client, RequestCode request, bool isExpectedRes, DWORD timeout = DEFAULT_REQUEST_TIMEOUT, std::string data = "");
+                 ^~~~~~~~~~~~~
+C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\server\include/server/server_engine.hpp:84:17: note:   candidate expects 5 arguments, 2 provided
+..\src\server\server_api.cpp: In member function 'server::ResponsePacket server::ServerAPI::powerOFFField(int, DWORD)':
+..\src\server\server_api.cpp:97:62: error: no matching function for call to 'server::ServerEngine::handleRequest(int&, server::RequestCode)'
+  return engine_->handleRequest(id_client, REQ_POWER_OFF_FIELD);
+                                                              ^
+In file included from C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\server\include/server/server_api.hpp:25,
+                 from ..\src\server\server_api.cpp:20:
+C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\server\include/server/server_engine.hpp:84:17: note: candidate: 'server::ResponsePacket server::ServerEngine::handleRequest(int, server::RequestCode, bool, DWORD, std::__cxx11::string)'
+  ResponsePacket handleRequest(int id_client, RequestCode request, bool isExpectedRes, DWORD timeout = DEFAULT_REQUEST_TIMEOUT, std::string data = "");
+                 ^~~~~~~~~~~~~
+C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\server\include/server/server_engine.hpp:84:17: note:   candidate expects 5 arguments, 2 provided
+..\src\server\server_api.cpp: In member function 'server::ResponsePacket server::ServerAPI::powerONField(int, DWORD)':
+..\src\server\server_api.cpp:101:61: error: no matching function for call to 'server::ServerEngine::handleRequest(int&, server::RequestCode)'
+  return engine_->handleRequest(id_client, REQ_POWER_ON_FIELD);
+                                                             ^
+In file included from C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\server\include/server/server_api.hpp:25,
+                 from ..\src\server\server_api.cpp:20:
+C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\server\include/server/server_engine.hpp:84:17: note: candidate: 'server::ResponsePacket server::ServerEngine::handleRequest(int, server::RequestCode, bool, DWORD, std::__cxx11::string)'
+  ResponsePacket handleRequest(int id_client, RequestCode request, bool isExpectedRes, DWORD timeout = DEFAULT_REQUEST_TIMEOUT, std::string data = "");
+                 ^~~~~~~~~~~~~
+C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\server\include/server/server_engine.hpp:84:17: note:   candidate expects 5 arguments, 2 provided
+Info: Nothing to build for client
+21:13:49 **** Incremental Build of configuration Debug for project server ****
+Info: Internal Builder is used for build
+g++ -std=c++1y -DADD_EXPORTS "-IC:\\Users\\olivier vannieuwenhu\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\libraries" "-IC:\\Users\\olivier vannieuwenhu\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\include" -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\server\\server_api.o" "..\\src\\server\\server_api.cpp" 
+g++ -std=c++1y -DADD_EXPORTS "-IC:\\Users\\olivier vannieuwenhu\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\libraries" "-IC:\\Users\\olivier vannieuwenhu\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\include" -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\server\\server_engine.o" "..\\src\\server\\server_engine.cpp" 
+..\src\server\server_engine.cpp: In member function 'server::ResponsePacket server::ServerEngine::handleRequest(int, server::RequestCode, bool, DWORD, std::__cxx11::string)':
+..\src\server\server_engine.cpp:150:109: error: 'isExpectedR' was not declared in this scope
+  auto future = std::async(std::launch::async, &asyncRequest, this, client_socket, j.dump(), socket_timeout, isExpectedR);
+                                                                                                             ^~~~~~~~~~~
+..\src\server\server_engine.cpp:150:109: note: suggested alternative: 'isExpectedRes'
+  auto future = std::async(std::launch::async, &asyncRequest, this, client_socket, j.dump(), socket_timeout, isExpectedR);
+                                                                                                             ^~~~~~~~~~~
+                                                                                                             isExpectedRes
+..\src\server\server_engine.cpp: In member function 'server::ResponsePacket server::ServerEngine::stopClient(int)':
+..\src\server\server_engine.cpp:247:74: error: no matching function for call to 'server::ServerEngine::handleRequest(int&, server::RequestCode)'
+  ResponsePacket response_packet = handleRequest(id_client, REQ_DISCONNECT);
+                                                                          ^
+..\src\server\server_engine.cpp:123:16: note: candidate: 'server::ResponsePacket server::ServerEngine::handleRequest(int, server::RequestCode, bool, DWORD, std::__cxx11::string)'
+ ResponsePacket ServerEngine::handleRequest(int id_client, RequestCode request, bool isExpectedRes, DWORD request_timeout, std::string data) {
+                ^~~~~~~~~~~~
+..\src\server\server_engine.cpp:123:16: note:   candidate expects 5 arguments, 2 provided
+Info: Nothing to build for client
+21:15:21 **** Incremental Build of configuration Debug for project server ****
+Info: Internal Builder is used for build
+g++ -std=c++1y -DADD_EXPORTS "-IC:\\Users\\olivier vannieuwenhu\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\libraries" "-IC:\\Users\\olivier vannieuwenhu\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\include" -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\server\\server_engine.o" "..\\src\\server\\server_engine.cpp" 
+..\src\server\server_engine.cpp: In member function 'server::ResponsePacket server::ServerEngine::handleRequest(int, server::RequestCode, bool, DWORD, std::__cxx11::string)':
+..\src\server\server_engine.cpp:150:109: error: 'isExpectedR' was not declared in this scope
+  auto future = std::async(std::launch::async, &asyncRequest, this, client_socket, j.dump(), socket_timeout, isExpectedR);
+                                                                                                             ^~~~~~~~~~~
+..\src\server\server_engine.cpp:150:109: note: suggested alternative: 'isExpectedRes'
+  auto future = std::async(std::launch::async, &asyncRequest, this, client_socket, j.dump(), socket_timeout, isExpectedR);
+                                                                                                             ^~~~~~~~~~~
+                                                                                                             isExpectedRes
+Info: Nothing to build for client
+21:16:24 **** Incremental Build of configuration Debug for project server ****
+Info: Internal Builder is used for build
+g++ -std=c++1y -DADD_EXPORTS "-IC:\\Users\\olivier vannieuwenhu\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\libraries" "-IC:\\Users\\olivier vannieuwenhu\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\include" -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\main.o" "..\\src\\main.cpp" 
+g++ -std=c++1y -DADD_EXPORTS "-IC:\\Users\\olivier vannieuwenhu\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\libraries" "-IC:\\Users\\olivier vannieuwenhu\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\include" -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\server\\server_engine.o" "..\\src\\server\\server_engine.cpp" 
+g++ -o libserver.dll "src\\config\\config_wrapper.o" "src\\dll\\dll_server_api_wrapper.o" "src\\logger\\logger.o" "src\\main.o" "src\\server\\client_data.o" "src\\server\\server_api.o" "src\\server\\server_engine.o" "src\\server\\server_tcp_socket.o" "C:\\MinGW\\x86_64-w64-mingw32\\lib\\libwsock32.a" -lWs2_32 -static -shared 
+Info: Nothing to build for client
+21:18:01 **** Incremental Build of configuration Debug for project server ****
+Info: Internal Builder is used for build
+g++ -std=c++1y -DADD_EXPORTS "-IC:\\Users\\olivier vannieuwenhu\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\libraries" "-IC:\\Users\\olivier vannieuwenhu\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\include" -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\server\\server_engine.o" "..\\src\\server\\server_engine.cpp" 
+..\src\server\server_engine.cpp: In member function 'server::ResponsePacket server::ServerEngine::asyncRequest(SOCKET, std::__cxx11::string, DWORD, bool)':
+..\src\server\server_engine.cpp:186:37: error: 'isExpectedRes' was not declared in this scope
+  } while ((ret != RES_SOCKET_OK) && isExpectedRes);
+                                     ^~~~~~~~~~~~~
+..\src\server\server_engine.cpp:186:37: note: suggested alternative: 'isExpectRes'
+  } while ((ret != RES_SOCKET_OK) && isExpectedRes);
+                                     ^~~~~~~~~~~~~
+                                     isExpectRes
+Info: Nothing to build for client
+21:19:07 **** Incremental Build of configuration Debug for project server ****
+Info: Internal Builder is used for build
+g++ -std=c++1y -DADD_EXPORTS "-IC:\\Users\\olivier vannieuwenhu\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\libraries" "-IC:\\Users\\olivier vannieuwenhu\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\include" -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\dll\\dll_server_api_wrapper.o" "..\\src\\dll\\dll_server_api_wrapper.cpp" 
+g++ -std=c++1y -DADD_EXPORTS "-IC:\\Users\\olivier vannieuwenhu\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\libraries" "-IC:\\Users\\olivier vannieuwenhu\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\include" -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\server\\server_engine.o" "..\\src\\server\\server_engine.cpp" 
+g++ -std=c++1y -DADD_EXPORTS "-IC:\\Users\\olivier vannieuwenhu\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\libraries" "-IC:\\Users\\olivier vannieuwenhu\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\include" -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\server\\server_api.o" "..\\src\\server\\server_api.cpp" 
+g++ -std=c++1y -DADD_EXPORTS "-IC:\\Users\\olivier vannieuwenhu\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\libraries" "-IC:\\Users\\olivier vannieuwenhu\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\include" -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\main.o" "..\\src\\main.cpp" 
+g++ -o libserver.dll "src\\config\\config_wrapper.o" "src\\dll\\dll_server_api_wrapper.o" "src\\logger\\logger.o" "src\\main.o" "src\\server\\client_data.o" "src\\server\\server_api.o" "src\\server\\server_engine.o" "src\\server\\server_tcp_socket.o" "C:\\MinGW\\x86_64-w64-mingw32\\lib\\libwsock32.a" -lWs2_32 -static -shared 
+21:28:58 **** Incremental Build of configuration Debug for project server ****
+Info: Internal Builder is used for build
+g++ -std=c++1y -DADD_EXPORTS "-IC:\\Users\\olivier vannieuwenhu\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\libraries" "-IC:\\Users\\olivier vannieuwenhu\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\include" -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\server\\server_api.o" "..\\src\\server\\server_api.cpp" 
+g++ -o libserver.dll "src\\config\\config_wrapper.o" "src\\dll\\dll_server_api_wrapper.o" "src\\logger\\logger.o" "src\\main.o" "src\\server\\client_data.o" "src\\server\\server_api.o" "src\\server\\server_engine.o" "src\\server\\server_tcp_socket.o" "C:\\MinGW\\x86_64-w64-mingw32\\lib\\libwsock32.a" -lWs2_32 -static -shared 
+Info: Nothing to build for client
+Info: Nothing to build for server
+Info: Nothing to build for client
+21:38:53 **** Incremental Build of configuration Debug for project server ****
+Info: Internal Builder is used for build
+g++ -std=c++1y -DADD_EXPORTS "-IC:\\Users\\olivier vannieuwenhu\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\libraries" "-IC:\\Users\\olivier vannieuwenhu\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\server\\include" -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\server\\server_engine.o" "..\\src\\server\\server_engine.cpp" 
+g++ -o libserver.dll "src\\config\\config_wrapper.o" "src\\dll\\dll_server_api_wrapper.o" "src\\logger\\logger.o" "src\\main.o" "src\\server\\client_data.o" "src\\server\\server_api.o" "src\\server\\server_engine.o" "src\\server\\server_tcp_socket.o" "C:\\MinGW\\x86_64-w64-mingw32\\lib\\libwsock32.a" -lWs2_32 -static -shared 
+21:42:31 **** Incremental Build of configuration Debug for project client ****
+Info: Internal Builder is used for build
+g++ -std=c++1y -DADD_EXPORTS "-IC:\\Users\\olivier vannieuwenhu\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\client\\libraries" "-IC:\\Users\\olivier vannieuwenhu\\Documents\\GitHub\\SE_Abstract_Communication_Layer_Over_TCP_IP\\client\\include" -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\client\\requests\\command.o" "..\\src\\client\\requests\\command.cpp" 
+g++ -o libclient.dll "src\\client\\client_api.o" "src\\client\\client_engine.o" "src\\client\\client_tcp_socket.o" "src\\client\\requests\\cold_reset.o" "src\\client\\requests\\command.o" "src\\client\\requests\\diag.o" "src\\client\\requests\\disconnect.o" "src\\client\\requests\\echo.o" "src\\client\\requests\\flyweight_requests.o" "src\\client\\requests\\power_off_field.o" "src\\client\\requests\\power_on_field.o" "src\\client\\requests\\restart_target.o" "src\\client\\requests\\send_typeA.o" "src\\client\\requests\\send_typeB.o" "src\\client\\requests\\send_typeF.o" "src\\client\\requests\\warm_reset.o" "src\\config\\config_wrapper.o" "src\\dll\\dll_client_api_wrapper.o" "src\\logger\\logger.o" "src\\main.o" "src\\terminal\\factories\\example_factory_pcsc_contact.o" "src\\terminal\\factories\\example_factory_pcsc_contactless.o" "src\\terminal\\flyweight_terminal_factory.o" "src\\terminal\\terminals\\example_pcsc_contact.o" "src\\terminal\\terminals\\example_pcsc_contactless.o" "C:\\MinGW\\x86_64-w64-mingw32\\lib\\libwsock32.a" -lWinSCard "-LC:\\Program Files\\Microsoft SDKs\\Windows\\v7.1\\Lib\\x64" -lWs2_32 -static -shared 
+Info: Nothing to build for server
