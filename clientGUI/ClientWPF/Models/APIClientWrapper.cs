@@ -7,7 +7,7 @@ namespace ClientWPF.ViewModels
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     struct ResponseDLL
     {
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 2048)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 4096 * 2)]
         public string response;
 
         public int err_server_code;
@@ -39,7 +39,7 @@ namespace ClientWPF.ViewModels
         static private extern void disconnectClient(IntPtr client, ref ResponseDLL ptr);
 
         [DllImport(@"libs/libclient.dll")]
-        static private extern void initClient(IntPtr client, ref ResponseDLL ptr);
+        static private extern void initClient(IntPtr client, string jsonConfig, ref ResponseDLL ptr);
 
         [DllImport(@"libs/libclient.dll")]
         static private extern void loadAndListReaders(IntPtr client, ref ResponseDLL ptr);
@@ -81,7 +81,7 @@ namespace ClientWPF.ViewModels
         public static ResponseDLL InitClient()
         {
             ResponseDLL response = new ResponseDLL();
-            initClient(_client, ref response);
+            initClient(_client, null, ref response);
             return response;
         }
 

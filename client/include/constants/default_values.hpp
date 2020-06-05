@@ -25,6 +25,10 @@ namespace client {
 #define DEFAULT_PORT "62111"
 #define DEFAULT_BUFLEN 1024 * 64
 
+/* DLL Buffer Size */
+#define DEFAULT_DLL_BUFFER_SIZE 2*1024
+#define DEFAULT_DLL_BUFFER_SIZE_EXTENDED 2*4096
+
 /* client information */
 #define DEFAULT_NAME "default_name" // client's name
 

@@ -24,23 +24,24 @@
 #define ADDCALL __cdecl
 
 #include "client/client_api.hpp"
+#include "constants/default_values.hpp"
 #include "constants/callback.hpp"
 #include "constants/response_packet.hpp"
 
 struct ResponseDLL {
-	char response[2048];
+	char response[DEFAULT_DLL_BUFFER_SIZE_EXTENDED];
 
 	long int err_server_code;
-	char err_server_description[2048];
+	char err_server_description[DEFAULT_DLL_BUFFER_SIZE];
 
 	long int err_client_code;
-	char err_client_description[2048];
+	char err_client_description[DEFAULT_DLL_BUFFER_SIZE];
 
 	long int err_terminal_code;
-	char err_terminal_description[2048];
+	char err_terminal_description[DEFAULT_DLL_BUFFER_SIZE];
 
 	long int err_card_code;
-	char err_card_description[2048];
+	char err_card_description[DEFAULT_DLL_BUFFER_SIZE];
 };
 
 #ifdef __cplusplus

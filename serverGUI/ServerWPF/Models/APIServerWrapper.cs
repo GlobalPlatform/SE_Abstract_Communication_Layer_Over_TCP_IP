@@ -6,7 +6,7 @@ namespace ServerWPF.Models
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public struct ResponseDLL
     {
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 2048)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 2*4096)]
         public string response;
 
         public int err_server_code;
@@ -32,7 +32,7 @@ namespace ServerWPF.Models
         static private extern IntPtr createServerAPI();
 
         [DllImport(@"libs/libserver.dll")]
-        static private extern void initServer(IntPtr server, ref ResponseDLL response_packet);
+        static private extern void initServer(IntPtr server, string jsonConfig, ref ResponseDLL response_packet);
 
         [DllImport(@"libs/libserver.dll")]
         static private extern void startServer(IntPtr server, string ip, string port, ref ResponseDLL response_packet);
@@ -101,7 +101,7 @@ namespace ServerWPF.Models
         static public ResponseDLL InitServer()
         {
             ResponseDLL response = new ResponseDLL();
-            initServer(_server, ref response);
+            initServer(_server, null, ref response);
             return response;
         }
 
@@ -136,10 +136,7 @@ namespace ServerWPF.Models
         static public ResponseDLL SendCommand(int id_client, string command)
         {
             ResponseDLL response = new ResponseDLL();
-            if (command == "00") {
-                sendCommand(_server, id_client, command, 54999, ref response);
-
-            } else sendCommand(_server, id_client, command, _timeout_Request, ref response);
+            sendCommand(_server, id_client, command, _timeout_Request, ref response);
             return response;
         }
 

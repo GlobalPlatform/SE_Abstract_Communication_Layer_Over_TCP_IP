@@ -27,6 +27,10 @@ namespace server {
 #define DEFAULT_SOCKET_TIMEOUT "5500" // timer for socket operations recv/send in milliseconds
 #define DEFAULT_ADDED_TIME 500
 
+/* DLL Buffer Size */
+#define DEFAULT_DLL_BUFFER_SIZE 2*1024
+#define DEFAULT_DLL_BUFFER_SIZE_EXTENDED 2*4096
+
 /* logs */
 #define DEFAULT_LOG_LEVEL "info" // debug level - info or debug (more verbose)
 #define DEFAULT_LOG_DIRECTORY "./logs"
@@ -37,7 +41,7 @@ namespace server {
 /* timeouts */
 #define DEFAULT_REQUEST_TIMEOUT 5500 // waiting time used client's side for the terminal response
 
-#define DLL_VERSION "0.2.1" //Define the DLL Server Version
+#define DLL_VERSION "0.3.1" //Define the DLL Server Version
 
 } /* namespace server */
 
