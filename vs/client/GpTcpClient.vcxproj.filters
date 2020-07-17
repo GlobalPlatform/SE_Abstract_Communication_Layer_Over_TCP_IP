@@ -168,6 +168,9 @@
     <ClInclude Include="..\..\client\include\terminal\terminals\utils\type_converter.hpp">
       <Filter>Fichiers d%27en-tête\terminal\terminals\utils</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -245,5 +248,10 @@
     <ClCompile Include="..\..\client\src\terminal\terminals\example_pcsc_contactless.cpp">
       <Filter>Fichiers sources\terminal\terminals</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="GpTcpClient.rc">
+      <Filter>Fichiers de ressources</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>
