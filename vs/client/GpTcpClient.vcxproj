@@ -192,6 +192,7 @@
     <ClInclude Include="..\..\client\include\terminal\terminals\terminal.hpp" />
     <ClInclude Include="..\..\client\include\terminal\terminals\utils\type_converter.hpp" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\client\src\client\client_api.cpp" />
@@ -219,6 +220,9 @@
     <ClCompile Include="..\..\client\src\terminal\terminals\example_pcsc_contact.cpp" />
     <ClCompile Include="..\..\client\src\terminal\terminals\example_pcsc_contactless.cpp" />
     <ClCompile Include="dllmain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="GpTcpClient.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
