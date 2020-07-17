@@ -78,6 +78,9 @@
     <ClInclude Include="..\..\server\include\config\config_wrapper.hpp">
       <Filter>Fichiers d%27en-tête\config</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -104,5 +107,10 @@
     <ClCompile Include="..\..\server\src\config\config_wrapper.cpp">
       <Filter>Fichiers sources\config</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="GpTcpServer.rc">
+      <Filter>Fichiers de ressources</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>
