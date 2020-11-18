@@ -207,6 +207,7 @@ ResponsePacket ServerEngine::asyncRequest(SOCKET client_socket, std::string to_s
 	}
 
 	ResponsePacket response_packet = jresponse.get<ResponsePacket>();
+	LOG_INFO << "Data received from client" << "{response: " << response_packet.response << ", err_server_code: " << response_packet.err_server_code << ", err_server_description: " << response_packet.err_server_description << ", err_client_code: " << response_packet.err_client_code << ", err_client_description: " << response_packet.err_client_description << ", err_terminal_code: " << response_packet.err_terminal_code << ", err_terminal_description: " << response_packet.err_terminal_description << ", err_card_code: " << response_packet.err_card_code << ", err_card_description: " << response_packet.err_card_description << "}";
 	return response_packet;
 }
 
