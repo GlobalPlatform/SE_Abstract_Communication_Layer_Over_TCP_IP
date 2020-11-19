@@ -127,7 +127,7 @@ private:
 	 * @param isExpectedRes bool to mention if resp is expected
 	 * @return a ResponsePacket struct containing the request's result.
 	 */
-	ResponsePacket asyncRequest(SOCKET client_socket, std::string to_send, DWORD timeout, bool isExpectedRes);
+	ResponsePacket asyncRequest(int id_client, SOCKET client_socket, std::string to_send, DWORD timeout, bool isExpectedRes);
 };
 
 } /* namespace server */
