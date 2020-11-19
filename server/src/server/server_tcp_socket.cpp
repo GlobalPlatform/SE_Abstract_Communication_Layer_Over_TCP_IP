@@ -27,6 +27,13 @@
 
 namespace server {
 
+inline const char* getWsaErrorDescription(int wsaError)
+{
+	static char _wsaDescription[1024];
+	FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, wsaError, 0, _wsaDescription, 1024, NULL);
+	return _wsaDescription;
+}
+
 bool ServerTCPSocket::startServer(const char* ip, const char* port) {
 	int retval = 0;
 
@@ -134,8 +141,9 @@ int ServerTCPSocket::receivePacket(SOCKET client_socket, char* packet) {
 	// retrieve packet size
 	int retval = recv(client_socket, (char*) &net_received_size, sizeof(int), MSG_WAITALL);
 	if (retval == SOCKET_ERROR || retval == 0) {
-		LOG_DEBUG << "Failed to receive data size from client -  " << "[socket:" << client_socket << "][buffer:" << received_size << "][size:" << sizeof(int) << "][flags:" << NULL << "]";
-		return RES_SOCKET_WARNING;
+		int wsaError = WSAGetLastError();
+		LOG_DEBUG << "Failed to receive data size from client -  " << "[socket:" << client_socket << "][buffer:" << received_size << "][size:" << sizeof(int) << "][flags:" << NULL << "][WSAError:"<< wsaError << " " << getWsaErrorDescription(wsaError) << "]";
+		return wsaError == WSAEWOULDBLOCK ? RES_SOCKET_WARNING : RES_SOCKET_ERROR;
 	}
 	received_size = ntohl(net_received_size); // deal with endianness
 
