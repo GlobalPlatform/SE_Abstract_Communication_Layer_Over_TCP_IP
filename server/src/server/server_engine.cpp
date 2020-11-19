@@ -154,7 +154,7 @@ ResponsePacket ServerEngine::handleRequest(int id_client, RequestCode request, b
 		socket_timeout = request_timeout + DEFAULT_ADDED_TIME;
 	}
 	// sends async request to client
-	auto future = std::async(std::launch::async, &ServerEngine::asyncRequest, this, client_socket, j.dump(), socket_timeout, isExpectedRes);
+	auto future = std::async(std::launch::async, &ServerEngine::asyncRequest, this, id_client, client_socket, j.dump(), socket_timeout, isExpectedRes);
 	// blocks until the timeout has elapsed or the result became available
 	if (future.wait_for(std::chrono::milliseconds(socket_timeout)) == std::future_status::timeout) {
 		// thread has timed out
@@ -171,7 +171,7 @@ ResponsePacket ServerEngine::handleRequest(int id_client, RequestCode request, b
 	return future.get();
 }
 
-ResponsePacket ServerEngine::asyncRequest(SOCKET client_socket, std::string to_send, DWORD socket_timeout, bool isExpectedRes) {
+ResponsePacket ServerEngine::asyncRequest(int id_client, SOCKET client_socket, std::string to_send, DWORD socket_timeout, bool isExpectedRes) {
 	char recvbuf[DEFAULT_BUFLEN];
 	nlohmann::json jresponse;
 	int ret = 0;
@@ -179,7 +179,7 @@ ResponsePacket ServerEngine::asyncRequest(SOCKET client_socket, std::string to_s
 	if (!socket_->sendPacket(client_socket, to_send.c_str())) {
 		ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_NETWORK, .err_server_description = "Network error on send request" };
 	}
-	LOG_INFO << "Data sent to client: " << to_send.c_str();
+	LOG_INFO << "Data sent to client: [" << id_client << "] " << to_send.c_str();
 
 	do {
 		ret = socket_->receivePacket(client_socket, recvbuf);
@@ -207,7 +207,7 @@ ResponsePacket ServerEngine::asyncRequest(SOCKET client_socket, std::string to_s
 	}
 
 	ResponsePacket response_packet = jresponse.get<ResponsePacket>();
-	LOG_INFO << "Data received from client" << "{response: " << response_packet.response << ", err_server_code: " << response_packet.err_server_code << ", err_server_description: " << response_packet.err_server_description << ", err_client_code: " << response_packet.err_client_code << ", err_client_description: " << response_packet.err_client_description << ", err_terminal_code: " << response_packet.err_terminal_code << ", err_terminal_description: " << response_packet.err_terminal_description << ", err_card_code: " << response_packet.err_card_code << ", err_card_description: " << response_packet.err_card_description << "}";
+	LOG_INFO << "Data received from client [" << id_client << "] {response: \"" << response_packet.response << "\", err_server_code: " << response_packet.err_server_code << ", err_server_description: \"" << response_packet.err_server_description << "\", err_client_code: " << response_packet.err_client_code << ", err_client_description: \"" << response_packet.err_client_description << "\", err_terminal_code: " << response_packet.err_terminal_code << ", err_terminal_description: \"" << response_packet.err_terminal_description << "\", err_card_code: " << response_packet.err_card_code << ", err_card_description: \"" << response_packet.err_card_description << "\"}";
 	return response_packet;
 }
 
