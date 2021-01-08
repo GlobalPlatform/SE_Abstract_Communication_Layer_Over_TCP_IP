@@ -20,6 +20,9 @@ namespace ServerWPF.ViewModels
         public static readonly ActionMethod RESTART = new ActionMethod(10, nameof(RESTART));
         public static readonly ActionMethod STOP_CLIENT = new ActionMethod(11, nameof(STOP_CLIENT));
         public static readonly ActionMethod GET_VERSION = new ActionMethod(12, nameof(GET_VERSION));
+        public static readonly ActionMethod POLL_TYPE_A = new ActionMethod(13, nameof(POLL_TYPE_A));
+        public static readonly ActionMethod POLL_TYPE_B = new ActionMethod(14, nameof(POLL_TYPE_B));
+        public static readonly ActionMethod POLL_TYPE_F = new ActionMethod(15, nameof(POLL_TYPE_F));
 
         private ActionMethod(int value, String name)
         {

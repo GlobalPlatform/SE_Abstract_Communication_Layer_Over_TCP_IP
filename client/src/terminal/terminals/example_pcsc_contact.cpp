@@ -426,6 +426,24 @@ ResponsePacket ExampleTerminalPCSCContact::powerONField() {
 	return response;
 }
 
+ResponsePacket ExampleTerminalPCSCContact::pollTypeA() {
+	ResponsePacket response;
+	response.response = "Not supported";
+	return response;
+}
+
+ResponsePacket ExampleTerminalPCSCContact::pollTypeB() {
+	ResponsePacket response;
+	response.response = "Not supported";
+	return response;
+}
+
+ResponsePacket ExampleTerminalPCSCContact::pollTypeF() {
+	ResponsePacket response;
+	response.response = "Not supported";
+	return response;
+}
+
 std::string ExampleTerminalPCSCContact::errorToString(LONG error) {
 	switch (error) {
 	case ERROR_INVALID_PARAMETER:

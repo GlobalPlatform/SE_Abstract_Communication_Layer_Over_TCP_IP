@@ -173,6 +173,30 @@ public:
 	ResponsePacket powerONField(int id_client, DWORD timeout);
 
 	/**
+	 * pollTypeA - Perform the Anti-Collisison detection in Type A only.
+	 * @param id_client the client's id to send request to.
+	 * @param timeout the waiting time of the execution of the request.
+ 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
+	 */
+	ResponsePacket pollTypeA(int id_client, DWORD timeout);
+
+	/**
+	 * pollTypeB - Perform the Anti-Collisison detection in Type A only.
+	 * @param id_client the client's id to send request to.
+	 * @param timeout the waiting time of the execution of the request.
+ 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
+	 */
+	ResponsePacket pollTypeB(int id_client, DWORD timeout);
+
+	/**
+	 * pollTypeF - Perform the Anti-Collisison detection in Type A only.
+	 * @param id_client the client's id to send request to.
+	 * @param timeout the waiting time of the execution of the request.
+ 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
+	 */
+	ResponsePacket pollTypeF(int id_client, DWORD timeout);
+
+	/**
 	 * stopServer - stop the server and all its clients and their underlying layers.
 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
 	 */

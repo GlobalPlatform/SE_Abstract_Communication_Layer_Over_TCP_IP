@@ -186,5 +186,8 @@
         <Label x:Name="lbl_Version" Content="DLL Version" Grid.Column="1" HorizontalAlignment="Left" Margin="321.6,140.8,0,0" Grid.Row="4" VerticalAlignment="Top" IsManipulationEnabled="True"/>
         <TextBox x:Name="txt_Version" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="321.6,164.8,0,0" Grid.Row="4" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
         <Button x:Name="btn_GetVersion" Content="Version" Grid.Column="1" HorizontalAlignment="Left" Margin="462.6,165.8,0,0" Grid.Row="4" VerticalAlignment="Top" Width="75" Click="Btn_GetVersion_Click"/>
+        <Button x:Name="btn_Poll_Type_A" Command="{Binding PollTypeA}" Content="Send Poll Type A" HorizontalAlignment="Left" Margin="365,83,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
+        <Button x:Name="btn_Poll_Type_B" Command="{Binding PollTypeB}" Content="Send Poll Type B" HorizontalAlignment="Left" Margin="485,83,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
+        <Button x:Name="btn_Poll_Type_F" Command="{Binding PollTypeF}" Content="Send Poll Type F" HorizontalAlignment="Left" Margin="605,83,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
     </Grid>
 </Window>

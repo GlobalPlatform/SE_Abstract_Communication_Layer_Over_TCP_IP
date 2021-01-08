@@ -131,6 +131,25 @@ public:
  	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
 	 */
 	virtual ResponsePacket powerONField() = 0;
+
+	/**
+	 * pollTypeA - Start the polling sequence in Type A
+ 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
+	 */
+	virtual ResponsePacket pollTypeA() = 0;
+
+	/**
+	 * pollTypeA - Start the polling sequence in Type B
+ 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
+	 */
+	virtual ResponsePacket pollTypeB() = 0;
+
+	/**
+	 * pollTypeA - Start the polling sequence in Type F
+ 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
+	 */
+	virtual ResponsePacket pollTypeF() = 0;
+
 };
 
 } /* namespace client */

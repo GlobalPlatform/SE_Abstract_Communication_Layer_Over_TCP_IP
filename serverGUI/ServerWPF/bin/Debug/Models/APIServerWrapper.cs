@@ -74,6 +74,15 @@ namespace ServerWPF.Models
         static private extern void powerONField(IntPtr server, int id_client, Int32 timeout, ref ResponseDLL response_packet);
 
         [DllImport(@"libs/libserver.dll")]
+        static private extern void pollTypeA(IntPtr server, int id_client, Int32 timeout, ref ResponseDLL response_packet);
+
+        [DllImport(@"libs/libserver.dll")]
+        static private extern void pollTypeB(IntPtr server, int id_client, Int32 timeout, ref ResponseDLL response_packet);
+
+        [DllImport(@"libs/libserver.dll")]
+        static private extern void pollTypeF(IntPtr server, int id_client, Int32 timeout, ref ResponseDLL response_packet);
+
+        [DllImport(@"libs/libserver.dll")]
         static private extern void stopClient(IntPtr server, int id_client, Int32 timeout, ref ResponseDLL response_packet);
 
         [DllImport(@"libs/libserver.dll")]
@@ -193,6 +202,27 @@ namespace ServerWPF.Models
         {
             ResponseDLL response = new ResponseDLL();
             powerONField(_server, id_client, _timeout_Request, ref response);
+            return response;
+        }
+
+        static public ResponseDLL PollTypeA(int id_client)
+        {
+            ResponseDLL response = new ResponseDLL();
+            pollTypeA(_server, id_client, _timeout_Request, ref response);
+            return response;
+        }
+
+        static public ResponseDLL PollTypeB(int id_client)
+        {
+            ResponseDLL response = new ResponseDLL();
+            pollTypeB(_server, id_client, _timeout_Request, ref response);
+            return response;
+        }
+
+        static public ResponseDLL PollTypeF(int id_client)
+        {
+            ResponseDLL response = new ResponseDLL();
+            pollTypeF(_server, id_client, _timeout_Request, ref response);
             return response;
         }
 

@@ -44,6 +44,9 @@ namespace ServerWPF.ViewModels
             _warmReset = new DelegateCommand(OnWarmReset, IsClientSelected);
             _powerOFFField = new DelegateCommand(OnPowerOFFField, IsClientSelected);
             _powerONField = new DelegateCommand(OnPowerONField, IsClientSelected);
+            _pollTypeAField = new DelegateCommand(OnPollTypeAField, IsClientSelected);
+            _pollTypeBField = new DelegateCommand(OnPollTypeBField, IsClientSelected);
+            _pollTypeFField = new DelegateCommand(OnPollTypeFField, IsClientSelected);
             _clearLogs = new DelegateCommand(OnClearLogs, null);
             _browseFile = new DelegateCommand(OnBrowseFile, IsClientSelected);
             _sendCommandsBatch = new AsyncDelegateCommand(async () => await OnSendCommandBatch(), CanSendCommandBatch);
@@ -216,6 +219,15 @@ namespace ServerWPF.ViewModels
         private readonly DelegateCommand _powerONField;
         public ICommand PowerONField => _powerONField;
 
+        private readonly DelegateCommand _pollTypeAField;
+        public ICommand PollTypeAField => _pollTypeAField;
+
+        private readonly DelegateCommand _pollTypeBField;
+        public ICommand PollTypeBField => _pollTypeBField;
+
+        private readonly DelegateCommand _pollTypeFField;
+        public ICommand PollTypeFField => _pollTypeFField;
+
         private readonly DelegateCommand _browseFile;
         public ICommand BrowseFile => _browseFile;
 
@@ -328,6 +340,27 @@ namespace ServerWPF.ViewModels
         {
             ResponseDLL response = APIServerWrapper.PowerONField(_selectedClient.ClientID);
             AppendLog(ActionMethod.POWER_ON_FIELD.ToString(), response);
+            return APIServerWrapper.RetrieveErrorDescription(response).Equals(APIServerWrapper.NO_ERROR);
+        }
+
+        private bool OnPollTypeAField()
+        {
+            ResponseDLL response = APIServerWrapper.PollTypeA(_selectedClient.ClientID);
+            AppendLog(ActionMethod.POLL_TYPE_A.ToString(), response);
+            return APIServerWrapper.RetrieveErrorDescription(response).Equals(APIServerWrapper.NO_ERROR);
+        }
+
+        private bool OnPollTypeBField()
+        {
+            ResponseDLL response = APIServerWrapper.PollTypeB(_selectedClient.ClientID);
+            AppendLog(ActionMethod.POLL_TYPE_B.ToString(), response);
+            return APIServerWrapper.RetrieveErrorDescription(response).Equals(APIServerWrapper.NO_ERROR);
+        }
+
+        private bool OnPollTypeFField()
+        {
+            ResponseDLL response = APIServerWrapper.PollTypeF(_selectedClient.ClientID);
+            AppendLog(ActionMethod.POLL_TYPE_F.ToString(), response);
             return APIServerWrapper.RetrieveErrorDescription(response).Equals(APIServerWrapper.NO_ERROR);
         }
 

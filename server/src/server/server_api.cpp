@@ -101,6 +101,18 @@ ResponsePacket ServerAPI::powerONField(int id_client, DWORD timeout) {
 	return engine_->handleRequest(id_client, REQ_POWER_ON_FIELD, true, timeout);
 }
 
+ResponsePacket ServerAPI::pollTypeA(int id_client, DWORD timeout) {
+	return engine_->handleRequest(id_client, REQ_POLL_TYPE_A, true, timeout);
+}
+
+ResponsePacket ServerAPI::pollTypeB(int id_client, DWORD timeout) {
+	return engine_->handleRequest(id_client, REQ_POLL_TYPE_B, true, timeout);
+}
+
+ResponsePacket ServerAPI::pollTypeF(int id_client, DWORD timeout) {
+	return engine_->handleRequest(id_client, REQ_POLL_TYPE_F, true, timeout);
+}
+
 ResponsePacket ServerAPI::stopServer() {
 	return engine_->stopAllClients();
 }

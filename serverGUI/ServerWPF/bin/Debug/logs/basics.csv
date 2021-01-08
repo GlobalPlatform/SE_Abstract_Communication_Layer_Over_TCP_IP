@@ -542,3 +542,6 @@
 2020/06/05;16:20:28.476;DEBUG;11836;0;server::ServerEngine::handleRequest@153;"Socket timeout adapted. Previous value of socket_timeout:5500. Changed to 6000.]"
 2020/06/05;16:20:28.477;INFO;23608;0;server::ServerEngine::asyncRequest@182;"Data sent to client: {""data"":"""",""request"":3,""timeout"":5500}"
 2020/06/05;16:20:30.082;INFO;18048;0;server::ServerEngine::asyncRequest@182;"Data sent to client: {""data"":""00"",""request"":6,""timeout"":4999}"
+2021/01/08;17:07:56.460;INFO;24136;0;server::ServerEngine::initServer@58;"Server launched"
+2021/01/08;17:25:16.048;INFO;23632;0;server::ServerEngine::initServer@58;"Server launched"
+2021/01/08;17:39:22.458;INFO;23208;0;server::ServerEngine::initServer@58;"Server launched"

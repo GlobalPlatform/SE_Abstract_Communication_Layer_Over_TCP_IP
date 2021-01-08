@@ -71,6 +71,9 @@ ADDAPI void coldReset(server::ServerAPI* server, int id_client, DWORD timeout, R
 ADDAPI void warmReset(server::ServerAPI* server, int id_client, DWORD timeout, ResponseDLL& response_packet);
 ADDAPI void powerOFFField(server::ServerAPI* server, int id_client, DWORD timeout, ResponseDLL& response_packet);
 ADDAPI void powerONField(server::ServerAPI* server, int id_client, ResponseDLL& response_packet);
+ADDAPI void pollTypeA(server::ServerAPI* server, int id_client, ResponseDLL& response_packet);
+ADDAPI void pollTypeB(server::ServerAPI* server, int id_client, ResponseDLL& response_packet);
+ADDAPI void pollTypeF(server::ServerAPI* server, int id_client, ResponseDLL& response_packet);
 
 #ifdef __cplusplus
 }
