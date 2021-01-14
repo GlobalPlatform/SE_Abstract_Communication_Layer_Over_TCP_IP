@@ -15,6 +15,7 @@
  limitations under the License.
  *********************************************************************************/
 
+#include <terminal/factories/example_factory_pcsc_contactless_IDENTIV.hpp>
 #include "client/client_api.hpp"
 #include "client/requests/cold_reset.hpp"
 #include "client/requests/command.hpp"
@@ -36,8 +37,6 @@
 #include "constants/request_code.hpp"
 #include "terminal/factories/example_factory_pcsc_contact.hpp"
 #include "terminal/factories/example_factory_pcsc_contactless.hpp"
-#include "terminal/factories/example_factory_pcsc_contactless_SDI010.hpp"
-#include "terminal/factories/example_factory_pcsc_contactless_IDENTIV_4700.hpp"
 #include "terminal/flyweight_terminal_factory.hpp"
 #include "terminal/terminals/example_pcsc_contact.hpp"
 
@@ -48,8 +47,7 @@ int __cdecl main(void) {
 	FlyweightTerminalFactory available_terminals;
 	available_terminals.addFactory("EXAMPLE_PCSC_CONTACT", new ExamplePCSCContactFactory());
 	available_terminals.addFactory("EXAMPLE_PCSC_CONTACTLESS", new ExamplePCSCContactlessFactory());
-	available_terminals.addFactory("EXAMPLE_PCSC_CONTACTLESS_SDI010", new ExamplePCSCContactlessSDI010Factory());
-	available_terminals.addFactory("EXAMPLE_PCSC_CONTACTLESS_IDENTIV_4700", new ExamplePCSCContactlessIDENTIV4700Factory());
+	available_terminals.addFactory("EXAMPLE_PCSC_CONTACTLESS_IDENTIV", new ExamplePCSCContactlessIDENTIVFactory());
 
 	// config all requests the client can handle
 	FlyweightRequests available_requests;

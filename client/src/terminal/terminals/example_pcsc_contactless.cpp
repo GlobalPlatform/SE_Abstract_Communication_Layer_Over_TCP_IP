@@ -91,6 +91,8 @@ ResponsePacket ExampleTerminalPCSCContactless::loadAndListReaders() {
 
 ResponsePacket ExampleTerminalPCSCContactless::connect(const char* reader) {
 	ResponsePacket response;
+	ResponsePacket response2;
+
 	LONG resp;
 
 	int tries = 0;
@@ -393,8 +395,16 @@ ResponsePacket ExampleTerminalPCSCContactless::powerONField() {
 
 ResponsePacket ExampleTerminalPCSCContactless::pollTypeA() {
 	ResponsePacket response;
-	response.response = "Not supported";
+
+	// poll for type A only
+	unsigned long int length;
+	unsigned char* command_rawA = utils::stringToUnsignedChar("FF CC 00 00 02 95 00", &length);
+	response = sendCommand(command_rawA, length);
+//	if response.response.compare("KO") == 0) {
+//		return response;
+//	}
 	return response;
+
 }
 
 ResponsePacket ExampleTerminalPCSCContactless::pollTypeB() {

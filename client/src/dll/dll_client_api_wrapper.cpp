@@ -30,9 +30,13 @@
 #include "client/requests/send_typeB.hpp"
 #include "client/requests/send_typeF.hpp"
 #include "client/requests/warm_reset.hpp"
+#include "client/requests/poll_type_A.hpp"
+#include "client/requests/poll_type_B.hpp"
+#include "client/requests/poll_type_F.hpp"
 #include "constants/request_code.hpp"
 #include "terminal/factories/example_factory_pcsc_contact.hpp"
 #include "terminal/factories/example_factory_pcsc_contactless.hpp"
+#include "terminal/factories/example_factory_pcsc_contactless_IDENTIV.hpp"
 #include "terminal/flyweight_terminal_factory.hpp"
 #include "terminal/terminals/example_pcsc_contact.hpp"
 #include "dll/dll_client_api_wrapper.h"
@@ -73,6 +77,7 @@ void initClient(client::ClientAPI* client, const char* jsonConfig, ResponseDLL& 
 	FlyweightTerminalFactory available_terminals;
 	available_terminals.addFactory("EXAMPLE_PCSC_CONTACT", new ExamplePCSCContactFactory());
 	available_terminals.addFactory("EXAMPLE_PCSC_CONTACTLESS", new ExamplePCSCContactlessFactory());
+	available_terminals.addFactory("EXAMPLE_PCSC_CONTACTLESS_IDENTIV", new ExamplePCSCContactlessIDENTIVFactory());
 
 	// config all requests the client can handle
 	FlyweightRequests available_requests;
@@ -88,6 +93,9 @@ void initClient(client::ClientAPI* client, const char* jsonConfig, ResponseDLL& 
 	available_requests.addRequest(REQ_WARM_RESET, new WarmReset());
 	available_requests.addRequest(REQ_POWER_OFF_FIELD, new PowerOffField());
 	available_requests.addRequest(REQ_POWER_ON_FIELD, new PowerOnField());
+	available_requests.addRequest(REQ_POLL_TYPE_A, new PollTypeA());
+	available_requests.addRequest(REQ_POLL_TYPE_B, new PollTypeB());
+	available_requests.addRequest(REQ_POLL_TYPE_F, new PollTypeF());
 
 	ResponsePacket response_packet = client->initClient((jsonConfig != NULL) ? jsonConfig : "config/init.json", available_terminals, available_requests);
 	responsePacketForDll(response_packet, response_packet_dll);

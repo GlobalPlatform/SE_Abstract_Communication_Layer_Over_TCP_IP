@@ -77,6 +77,12 @@ inline const std::string requestCodeToString(RequestCode request_code) {
 		return "REQ_POWER_OFF_FIELD";
 	case REQ_POWER_ON_FIELD:
 		return "REQ_POWER_ON_FIELD";
+	case REQ_POLL_TYPE_A:
+		return "REQ_POLL_TYPE_A";
+	case REQ_POLL_TYPE_B:
+		return "REQ_POLL_TYPE_B";
+	case REQ_POLL_TYPE_F:
+		return "REQ_POLL_TYPE_F";
 	default:
 		return "[Unknown Request Code]";
 	}
