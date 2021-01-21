@@ -171,6 +171,21 @@
     <ClInclude Include="resource.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\client\include\client\requests\poll_type_A.hpp">
+      <Filter>Fichiers d%27en-tête\client\requests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\include\client\requests\poll_type_B.hpp">
+      <Filter>Fichiers d%27en-tête\client\requests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\include\client\requests\poll_type_F.hpp">
+      <Filter>Fichiers d%27en-tête\client\requests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\include\terminal\terminals\example_pcsc_contactless_IDENTIV.hpp">
+      <Filter>Fichiers d%27en-tête\terminal\terminals</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\include\terminal\factories\example_factory_pcsc_contactless_IDENTIV.hpp">
+      <Filter>Fichiers d%27en-tête\terminal\factories</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -247,6 +262,21 @@
     </ClCompile>
     <ClCompile Include="..\..\client\src\terminal\terminals\example_pcsc_contactless.cpp">
       <Filter>Fichiers sources\terminal\terminals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\src\client\requests\poll_type_A.cpp">
+      <Filter>Fichiers sources\client\requests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\src\client\requests\poll_type_B.cpp">
+      <Filter>Fichiers sources\client\requests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\src\client\requests\poll_type_F.cpp">
+      <Filter>Fichiers sources\client\requests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\src\terminal\terminals\example_pcsc_contactless_IDENTIV.cpp">
+      <Filter>Fichiers sources\terminal\terminals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\src\terminal\factories\example_factory_pcsc_contactless_IDENTIV.cpp">
+      <Filter>Fichiers sources\terminal\factories</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
