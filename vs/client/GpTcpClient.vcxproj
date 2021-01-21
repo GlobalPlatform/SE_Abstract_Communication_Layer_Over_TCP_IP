@@ -168,6 +168,9 @@
     <ClInclude Include="..\..\client\include\client\requests\disconnect.hpp" />
     <ClInclude Include="..\..\client\include\client\requests\echo.hpp" />
     <ClInclude Include="..\..\client\include\client\requests\flyweight_requests.hpp" />
+    <ClInclude Include="..\..\client\include\client\requests\poll_type_A.hpp" />
+    <ClInclude Include="..\..\client\include\client\requests\poll_type_B.hpp" />
+    <ClInclude Include="..\..\client\include\client\requests\poll_type_F.hpp" />
     <ClInclude Include="..\..\client\include\client\requests\power_off_field.hpp" />
     <ClInclude Include="..\..\client\include\client\requests\power_on_field.hpp" />
     <ClInclude Include="..\..\client\include\client\requests\request.hpp" />
@@ -185,10 +188,12 @@
     <ClInclude Include="..\..\client\include\logger\logger.hpp" />
     <ClInclude Include="..\..\client\include\terminal\factories\example_factory_pcsc_contact.hpp" />
     <ClInclude Include="..\..\client\include\terminal\factories\example_factory_pcsc_contactless.hpp" />
+    <ClInclude Include="..\..\client\include\terminal\factories\example_factory_pcsc_contactless_IDENTIV.hpp" />
     <ClInclude Include="..\..\client\include\terminal\factories\factory.hpp" />
     <ClInclude Include="..\..\client\include\terminal\flyweight_terminal_factory.hpp" />
     <ClInclude Include="..\..\client\include\terminal\terminals\example_pcsc_contact.hpp" />
     <ClInclude Include="..\..\client\include\terminal\terminals\example_pcsc_contactless.hpp" />
+    <ClInclude Include="..\..\client\include\terminal\terminals\example_pcsc_contactless_IDENTIV.hpp" />
     <ClInclude Include="..\..\client\include\terminal\terminals\terminal.hpp" />
     <ClInclude Include="..\..\client\include\terminal\terminals\utils\type_converter.hpp" />
     <ClInclude Include="framework.h" />
@@ -204,6 +209,9 @@
     <ClCompile Include="..\..\client\src\client\requests\disconnect.cpp" />
     <ClCompile Include="..\..\client\src\client\requests\echo.cpp" />
     <ClCompile Include="..\..\client\src\client\requests\flyweight_requests.cpp" />
+    <ClCompile Include="..\..\client\src\client\requests\poll_type_A.cpp" />
+    <ClCompile Include="..\..\client\src\client\requests\poll_type_B.cpp" />
+    <ClCompile Include="..\..\client\src\client\requests\poll_type_F.cpp" />
     <ClCompile Include="..\..\client\src\client\requests\power_off_field.cpp" />
     <ClCompile Include="..\..\client\src\client\requests\power_on_field.cpp" />
     <ClCompile Include="..\..\client\src\client\requests\restart_target.cpp" />
@@ -216,9 +224,11 @@
     <ClCompile Include="..\..\client\src\logger\logger.cpp" />
     <ClCompile Include="..\..\client\src\terminal\factories\example_factory_pcsc_contact.cpp" />
     <ClCompile Include="..\..\client\src\terminal\factories\example_factory_pcsc_contactless.cpp" />
+    <ClCompile Include="..\..\client\src\terminal\factories\example_factory_pcsc_contactless_IDENTIV.cpp" />
     <ClCompile Include="..\..\client\src\terminal\flyweight_terminal_factory.cpp" />
     <ClCompile Include="..\..\client\src\terminal\terminals\example_pcsc_contact.cpp" />
     <ClCompile Include="..\..\client\src\terminal\terminals\example_pcsc_contactless.cpp" />
+    <ClCompile Include="..\..\client\src\terminal\terminals\example_pcsc_contactless_IDENTIV.cpp" />
     <ClCompile Include="dllmain.cpp" />
   </ItemGroup>
   <ItemGroup>
