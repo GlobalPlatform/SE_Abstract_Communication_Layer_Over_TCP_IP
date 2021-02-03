@@ -377,9 +377,52 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::retrieveAtr(BYTE* bAttr, 
 }
 
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::powerOFFField() {
+	/*
 	ResponsePacket response;
 	unsigned char command[] = { 0xFF, 0xCC, 0x00, 0x00, 0x02, 0x96, 0x00 };
 	return sendCommand(command, sizeof command);
+	*/
+
+	LOG_DEBUG << "Contactless_IDENTIV Start PowerOFFField";
+
+	ResponsePacket response;
+	LOG_DEBUG << "Set power OFF Field: ";
+	// get initial polling
+	unsigned char command[] = { 0x96,  0x00};
+	DWORD commandLen = sizeof command;
+
+	if (sendEscapeCommand(command, &commandLen) != 0x00) {
+		LOG_DEBUG << "Set Power OFF Field: failed";
+		response.response = "Not supported";
+		return response;
+	}
+
+	if ((commandLen < 2) | (command[0x00]!=0x90) | (command[0x01]!=0x00) ){
+		LOG_DEBUG << "Set Power OFF Field failed: " << "Answer : " << command << " & length is : " << commandLen;
+		response.response = "Failed to Set Power OFF Field, wrong answer from the reader";
+		return response;
+
+	}
+
+	LOG_DEBUG << "Set Power OFF Field: Success";
+/*
+	LOG_DEBUG << "Set power OFF Field2: ";
+
+	if (sendEscapeCommand(command, &commandLen) != 0x00) {
+		LOG_DEBUG << "Set Power OFF Field2: failed";
+		response.response = "Not supported";
+		return response;
+	}
+
+	if ((commandLen < 2) | (command[0x00]!=0x90) | (command[0x01]!=0x00) ){
+		LOG_DEBUG << "Set Power OFF Field2 failed: " << "Answer : " << command << " & length is : " << commandLen;
+		response.response = "Failed to Set Power OFF Field2, wrong answer from the reader";
+		return response;
+
+	}
+	LOG_DEBUG << "Set Power OFF Field2: Success";
+*/
+	return response;
 }
 
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::powerONField() {
