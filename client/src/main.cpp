@@ -34,6 +34,7 @@
 #include "client/requests/send_typeB.hpp"
 #include "client/requests/send_typeF.hpp"
 #include "client/requests/warm_reset.hpp"
+#include "client/requests/automatic_interface_switching.hpp"
 #include "constants/request_code.hpp"
 #include "terminal/factories/example_factory_pcsc_contact.hpp"
 #include "terminal/factories/example_factory_pcsc_contactless.hpp"
@@ -66,6 +67,7 @@ int __cdecl main(void) {
 	available_requests.addRequest(REQ_POLL_TYPE_A, new PollTypeA());
 	available_requests.addRequest(REQ_POLL_TYPE_B, new PollTypeB());
 	available_requests.addRequest(REQ_POLL_TYPE_F, new PollTypeF());
+	available_requests.addRequest(AUTOMATIC_INTERFACE_SWITCHING, new AutomaticInterfaceSwitching());
 
 	ClientAPI* client = new ClientAPI(0, 0, 0);
 	client->initClient("./config/init.json", available_terminals, available_requests);

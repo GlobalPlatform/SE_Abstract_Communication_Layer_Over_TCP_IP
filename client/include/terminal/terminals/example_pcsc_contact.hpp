@@ -58,6 +58,7 @@ public:
 	ResponsePacket pollTypeA() override;
 	ResponsePacket pollTypeB() override;
 	ResponsePacket pollTypeF() override;
+	ResponsePacket automaticInterfaceSwitching() override;
 private:
 	ResponsePacket handleErrorResponse(std::string context_message, LONG error);
 	ResponsePacket retrieveAtr(BYTE* bAttr, DWORD* cByte);

@@ -39,7 +39,8 @@ enum RequestCode {
 	REQ_POWER_ON_FIELD,
 	REQ_POLL_TYPE_A,
 	REQ_POLL_TYPE_B,
-	REQ_POLL_TYPE_F
+	REQ_POLL_TYPE_F,
+	AUTOMATIC_INTERFACE_SWITCHING
 };
 
 /**
@@ -83,6 +84,8 @@ inline const std::string requestCodeToString(RequestCode request_code) {
 		return "REQ_POLL_TYPE_B";
 	case REQ_POLL_TYPE_F:
 		return "REQ_POLL_TYPE_F";
+	case AUTOMATIC_INTERFACE_SWITCHING:
+		return "AUTOMATIC_INTERFACE_SWITCHING";
 	default:
 		return "[Unknown Request Code]";
 	}

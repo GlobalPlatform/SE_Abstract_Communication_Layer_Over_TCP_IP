@@ -127,9 +127,10 @@
         </DataGrid>
         <Button Command ="{Binding DisconnectClient}" Content="Disconnect" Margin="0,0,10,0" Grid.Row="2" HorizontalAlignment="Right"/>
         <Button Command="{Binding ConnectClient}" Content="Connect" Margin="0,0,125,0" Grid.Row="2" HorizontalAlignment="Right"/>
+        <Button Command="{Binding AutomaticInterfaceSwitching}" Content="Aut.Swit" Margin="0,0,500,0" Grid.Row="2" HorizontalAlignment="Right"/>
 
         <!-- Available readers datagrid -->
-        <Label Margin="6,0,6,0" Content="Available readers" Grid.Row="3" FontWeight="Bold"/>
+        <Label Margin="6,7.05,37.2,147.75" Content="Available readers" Grid.Row="3" FontWeight="Bold" Grid.RowSpan="2"/>
         <DataGrid Name="dgReaders" SelectedItem="{Binding SelectedReader}" Margin="10,0,10,10" Grid.Row="4" 
                   AutoGenerateColumns="False" ItemsSource="{Binding ReadersList}" IsReadOnly="True" RowHeaderWidth="0">
             <DataGrid.Columns>

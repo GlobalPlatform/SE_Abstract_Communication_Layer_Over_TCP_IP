@@ -419,6 +419,11 @@ ResponsePacket ExampleTerminalPCSCContactless::pollTypeF() {
 	return response;
 }
 
+ResponsePacket ExampleTerminalPCSCContactless::automaticInterfaceSwitching(){
+	ResponsePacket response;
+	response.response = "Not supported";
+	return response;
+}
 
 ResponsePacket ExampleTerminalPCSCContactless::coldReset() {
 	ResponsePacket response;

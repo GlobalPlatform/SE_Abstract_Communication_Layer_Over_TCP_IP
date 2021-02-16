@@ -444,6 +444,13 @@ ResponsePacket ExampleTerminalPCSCContact::pollTypeF() {
 	return response;
 }
 
+ResponsePacket ExampleTerminalPCSCContact::automaticInterfaceSwitching(){
+	ResponsePacket response;
+	response.response = "Not supported";
+	return response;
+}
+
+
 std::string ExampleTerminalPCSCContact::errorToString(LONG error) {
 	switch (error) {
 	case ERROR_INVALID_PARAMETER:

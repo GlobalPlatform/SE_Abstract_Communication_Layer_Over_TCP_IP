@@ -158,11 +158,15 @@ int ExampleTerminalPCSCContactless_IDENTIV::sendEscapeCommand(unsigned char* com
 	APDU[0x01] = 0xCC;
 	APDU[0x02] = 0x00;
 	APDU[0x03] = 0x00;
-	APDU[0x04] = (*command_length) && 0xFF;
+	APDU[0x04] = (*command_length)/* && 0xFF*/;
 
-	for (unsigned int i = 0; i < APDU_Len ; i++){
+	for (unsigned int i = 0; i < *command_length ; i++){
 		APDU[i + 5] = command[i];
 	}
+
+//	LOG_DEBUG << "CommandEscape Input, Command : " << utils::unsignedCharToString(command, *command_length) << ", Command_Length : " << *command_length << ", APDU : " <<
+//			utils::unsignedCharToString(APDU, APDU_Len) << " Len : " << APDU_Len;
+
 
 	dwRecvLength_ = sizeof(pbRecvBuffer_);
 
@@ -181,7 +185,8 @@ int ExampleTerminalPCSCContactless_IDENTIV::sendEscapeCommand(unsigned char* com
 	}
 	LOG_DEBUG << "CommandEscape Success, APDU : " << utils::unsignedCharToString(APDU, APDU_Len) << " Len : " << APDU_Len << " [recvbuffer:" << utils::unsignedCharToString(pbRecvBuffer_, dwRecvLength_) << "][recvlength:" << dwRecvLength_ << "]";
 
-	for (unsigned int i=0; i<dwRecvLength_; i++){
+	*command_length = dwRecvLength_;
+	for (unsigned int i=0; i<*command_length; i++){
 		command[i] = pbRecvBuffer_[i];
 	}
 
@@ -405,23 +410,7 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::powerOFFField() {
 	}
 
 	LOG_DEBUG << "Set Power OFF Field: Success";
-/*
-	LOG_DEBUG << "Set power OFF Field2: ";
 
-	if (sendEscapeCommand(command, &commandLen) != 0x00) {
-		LOG_DEBUG << "Set Power OFF Field2: failed";
-		response.response = "Not supported";
-		return response;
-	}
-
-	if ((commandLen < 2) | (command[0x00]!=0x90) | (command[0x01]!=0x00) ){
-		LOG_DEBUG << "Set Power OFF Field2 failed: " << "Answer : " << command << " & length is : " << commandLen;
-		response.response = "Failed to Set Power OFF Field2, wrong answer from the reader";
-		return response;
-
-	}
-	LOG_DEBUG << "Set Power OFF Field2: Success";
-*/
 	return response;
 }
 
@@ -530,12 +519,118 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::pollTypeF() {
 		return response;
 
 	}
-	currentPollingType_ = TYPE_A;
+	currentPollingType_ = TYPE_F;
 	LOG_DEBUG << "Set Initial Polling (success): TYPE_F";
 
 	return response;
 }
 
+ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::automaticInterfaceSwitching(){
+	ResponsePacket response;
+
+	LOG_DEBUG << "Automatic Interface Switching: ";
+
+	// get initial polling
+	unsigned char command[256];
+	int i = 0;
+	DWORD commandLen;
+
+	i = 0;
+	command[i++] = 0xB2;
+	command[i++] = 0x00;
+	commandLen = i;
+
+	if (sendEscapeCommand(command, &commandLen) != 0x00) {
+		LOG_DEBUG << "READER_LED_CONTROL_BY_FW: failed";
+		response.response = "Not supported";
+		return response;
+	}
+
+	if ((commandLen < 2) | (command[0x00]!=0x90) | (command[0x01]!=0x00) ){
+		LOG_DEBUG << "READER_LED_CONTROL_BY_FW, " << "Answer : " << command << " & length is : " << commandLen;
+		response.response = "Failed to READER_LED_CONTROL_BY_FW, wrong answer from the reader";
+		return response;
+
+	}
+
+	i = 0;
+	command[i++] = 0x19;
+	command[i++] = 0x00;
+	command[i++] = 0x01;
+	commandLen = i;
+
+	if (sendEscapeCommand(command, &commandLen) != 0x00) {
+		LOG_DEBUG << "CNTLESS_SWITCH_RF_ON_OFF (RED): failed";
+		response.response = "Not supported";
+		return response;
+	}
+
+	if ((commandLen < 2) | (command[0x00]!=0x90) | (command[0x01]!=0x00) ){
+		LOG_DEBUG << "CNTLESS_SWITCH_RF_ON_OFF (RED), " << "Answer : " << command << " & length is : " << commandLen;
+		response.response = "Failed to CNTLESS_SWITCH_RF_ON_OFF (RED), wrong answer from the reader";
+		return response;
+
+	}
+
+
+	i = 0;
+	command[i++] = 0x19;
+	command[i++] = 0x00;
+	command[i++] = 0x01;
+	commandLen = i;
+
+	if (sendEscapeCommand(command, &commandLen) != 0x00) {
+		LOG_DEBUG << "CNTLESS_SWITCH_RF_ON_OFF (GREEN): failed";
+		response.response = "Not supported";
+		return response;
+	}
+
+	if ((commandLen < 2) | (command[0x00]!=0x90) | (command[0x01]!=0x00) ){
+		LOG_DEBUG << "CNTLESS_SWITCH_RF_ON_OFF (GREEN), " << "Answer : " << command << " & length is : " << commandLen;
+		response.response = "Failed to CNTLESS_SWITCH_RF_ON_OFF (GREEN), wrong answer from the reader";
+		return response;
+
+	}
+
+	i = 0;
+	command[i++] = 0x9C;
+	command[i++] = 0x01;
+	commandLen = i;
+
+	if (sendEscapeCommand(command, &commandLen) != 0x00) {
+		LOG_DEBUG << "CNTLESS_SWITCH_RF_ON_OFF (Leave RF Field ON when contact card is present in the reader): failed";
+		response.response = "Not supported";
+		return response;
+	}
+
+	if ((commandLen < 2) | (command[0x00]!=0x90) | (command[0x01]!=0x00) ){
+		LOG_DEBUG << "CNTLESS_SWITCH_RF_ON_OFF (Leave RF Field ON when contact card is present in the reader), " << "Answer : " << command << " & length is : " << commandLen;
+		response.response = "Failed to CNTLESS_SWITCH_RF_ON_OFF (Leave RF Field ON when contact card is present in the reader), wrong answer from the reader";
+		return response;
+
+	}
+
+/*
+	i.	RESET On CL interface
+
+	ii.	READER_LED_CONTROL_BY_FW
+	FF CC 00 00 02 B2 00
+
+	iii.	CNTLESS_SWITCH_RF_ON_OFF - 0-RED
+	FF CC 00 00 03 19 00 01
+
+	iv.	CNTLESS_SWITCH_RF_ON_OFF - 1-GREEN
+	FF CC 00 00 03 19 01 01
+
+	v.	CNTLESS_SWITCH_RF_ON_OFF - Leave RF Field ON when contact card is present in the reader
+	FF CC 00 00 02 9C 01
+
+	vi.	Keep the card in Contact interface and open another dedicated client for the interface
+	Perform a RESET
+*/
+
+	return response;
+}
 
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::coldReset() {
 	ResponsePacket response;

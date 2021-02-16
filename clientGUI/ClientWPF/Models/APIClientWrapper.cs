@@ -48,6 +48,9 @@ namespace ClientWPF.ViewModels
         static private extern void connectClient(IntPtr client, string reader, string ip, string port, ref ResponseDLL ptr);
 
         [DllImport(@"libs/libclient.dll")]
+        static private extern void automaticInterfaceSwitching(IntPtr client, ref ResponseDLL ptr);
+
+        [DllImport(@"libs/libclient.dll")]
         static private extern void setCallbackConnectionLost(Callback fn);
 
         [DllImport(@"libs/libclient.dll")]
@@ -96,6 +99,13 @@ namespace ClientWPF.ViewModels
         {
             ResponseDLL response = new ResponseDLL();
             connectClient(_client, reader, ip, port, ref response);
+            return response;
+        }
+
+        public static ResponseDLL AutomaticInterfaceSwitching()
+        {
+            ResponseDLL response = new ResponseDLL();
+            automaticInterfaceSwitching(_client, ref response);
             return response;
         }
 
