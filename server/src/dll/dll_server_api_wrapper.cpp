@@ -127,6 +127,21 @@ void pollTypeF(server::ServerAPI* server, int id_client, DWORD timeout, Response
 	responsePacketForDll(response, response_packet);
 }
 
+void automaticInterfaceSwitching(server::ServerAPI* server, int id_client, DWORD timeout, ResponseDLL& response_packet) {
+	ResponsePacket response = server->automaticInterfaceSwitching(id_client, timeout);
+	responsePacketForDll(response, response_packet);
+}
+
+void disconnect_HW(server::ServerAPI* server, int id_client, DWORD timeout, ResponseDLL& response_packet) {
+	ResponsePacket response = server->disconnect_HW(id_client, timeout);
+	responsePacketForDll(response, response_packet);
+}
+
+void reconnect_HW(server::ServerAPI* server, int id_client, DWORD timeout, ResponseDLL& response_packet) {
+	ResponsePacket response = server->reconnect_HW(id_client, timeout);
+	responsePacketForDll(response, response_packet);
+}
+
  void stopServer(server::ServerAPI* server, ResponseDLL& response_packet) {
 	ResponsePacket response = server->stopServer();
 	responsePacketForDll(response, response_packet);

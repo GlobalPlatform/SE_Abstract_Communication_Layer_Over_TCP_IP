@@ -113,6 +113,19 @@ ResponsePacket ServerAPI::pollTypeF(int id_client, DWORD timeout) {
 	return engine_->handleRequest(id_client, REQ_POLL_TYPE_F, true, timeout);
 }
 
+ResponsePacket ServerAPI::automaticInterfaceSwitching(int id_client, DWORD timeout) {
+	return engine_->handleRequest(id_client, REQ_AUTOMATIC_INTERFACE_SWITCHING, true, timeout);
+}
+
+ResponsePacket ServerAPI::disconnect_HW(int id_client, DWORD timeout) {
+	return engine_->handleRequest(id_client, REQ_DISCONNECT_HW, true, timeout);
+}
+
+ResponsePacket ServerAPI::reconnect_HW(int id_client, DWORD timeout) {
+	return engine_->handleRequest(id_client, REQ_RECONNECT_HW, true, timeout);
+}
+
+
 ResponsePacket ServerAPI::stopServer() {
 	return engine_->stopAllClients();
 }

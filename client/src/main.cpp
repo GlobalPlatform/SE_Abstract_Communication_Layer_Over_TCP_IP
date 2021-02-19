@@ -21,12 +21,14 @@
 #include "client/requests/command.hpp"
 #include "client/requests/diag.hpp"
 #include "client/requests/disconnect.hpp"
+#include "client/requests/disconnect_HW.hpp"
 #include "client/requests/echo.hpp"
 #include "client/requests/power_off_field.hpp"
 #include "client/requests/power_on_field.hpp"
 #include "client/requests/poll_type_A.hpp"
 #include "client/requests/poll_type_B.hpp"
 #include "client/requests/poll_type_F.hpp"
+#include "client/requests/reconnect_HW.hpp"
 #include "client/requests/request.hpp"
 #include "client/requests/request.hpp"
 #include "client/requests/restart_target.hpp"
@@ -67,7 +69,9 @@ int __cdecl main(void) {
 	available_requests.addRequest(REQ_POLL_TYPE_A, new PollTypeA());
 	available_requests.addRequest(REQ_POLL_TYPE_B, new PollTypeB());
 	available_requests.addRequest(REQ_POLL_TYPE_F, new PollTypeF());
-	available_requests.addRequest(AUTOMATIC_INTERFACE_SWITCHING, new AutomaticInterfaceSwitching());
+	available_requests.addRequest(REQ_AUTOMATIC_INTERFACE_SWITCHING, new AutomaticInterfaceSwitching());
+	available_requests.addRequest(REQ_DISCONNECT_HW, new Disconnect_HW());
+	available_requests.addRequest(REQ_RECONNECT_HW, new Reconnect_HW());
 
 	ClientAPI* client = new ClientAPI(0, 0, 0);
 	client->initClient("./config/init.json", available_terminals, available_requests);

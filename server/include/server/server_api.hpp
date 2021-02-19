@@ -197,6 +197,30 @@ public:
 	ResponsePacket pollTypeF(int id_client, DWORD timeout);
 
 	/**
+	 * automaticInterfaceSwitching - Allow an switching between 2 interfaces, need to be used with IDENTIV_470x.
+	 * @param id_client the client's id to send request to.
+	 * @param timeout the waiting time of the execution of the request.
+ 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
+	 */
+	ResponsePacket automaticInterfaceSwitching(int id_client, DWORD timeout);
+
+	/**
+	 * disconnect_HW - Disconnect the HW from the client.
+	 * @param id_client the client's id to send request to.
+	 * @param timeout the waiting time of the execution of the request.
+ 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
+	 */
+	ResponsePacket disconnect_HW(int id_client, DWORD timeout);
+
+	/**
+	 * reconnect_HW - Reconnect the HW from the client.
+	 * @param id_client the client's id to send request to.
+	 * @param timeout the waiting time of the execution of the request.
+ 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
+	 */
+	ResponsePacket reconnect_HW(int id_client, DWORD timeout);
+
+	/**
 	 * stopServer - stop the server and all its clients and their underlying layers.
 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
 	 */

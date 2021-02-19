@@ -33,7 +33,7 @@ private:
 	std::string current_reader_;
 	SCARDCONTEXT hContext_;
 	LPTSTR mszReaders_;
-	SCARDHANDLE hCard;
+	SCARDHANDLE hCard_;
 	DWORD dwReaders_, dwActiveProtocol_, dwRecvLength_;
 	SCARD_IO_REQUEST pioSendPci_;
 	BYTE pbRecvBuffer_[DEFAULT_BUFLEN];
@@ -49,6 +49,7 @@ public:
 	ResponsePacket sendTypeF(unsigned char command[], unsigned long int command_length) override;
 	ResponsePacket diag() override;
 	ResponsePacket disconnect() override;
+	ResponsePacket disconnect_HW() override;
 	ResponsePacket isAlive() override;
 	ResponsePacket restart() override;
 	ResponsePacket coldReset() override;
@@ -59,6 +60,7 @@ public:
 	ResponsePacket pollTypeB() override;
 	ResponsePacket pollTypeF() override;
 	ResponsePacket automaticInterfaceSwitching() override;
+	ResponsePacket reconnect_HW() override;
 private:
 	ResponsePacket handleErrorResponse(std::string context_message, LONG error);
 	ResponsePacket retrieveAtr(BYTE* bAttr, DWORD* cByte);

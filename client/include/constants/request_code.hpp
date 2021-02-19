@@ -40,7 +40,9 @@ enum RequestCode {
 	REQ_POLL_TYPE_A,
 	REQ_POLL_TYPE_B,
 	REQ_POLL_TYPE_F,
-	AUTOMATIC_INTERFACE_SWITCHING
+	REQ_AUTOMATIC_INTERFACE_SWITCHING,
+	REQ_DISCONNECT_HW,
+	REQ_RECONNECT_HW
 };
 
 /**
@@ -84,8 +86,12 @@ inline const std::string requestCodeToString(RequestCode request_code) {
 		return "REQ_POLL_TYPE_B";
 	case REQ_POLL_TYPE_F:
 		return "REQ_POLL_TYPE_F";
-	case AUTOMATIC_INTERFACE_SWITCHING:
-		return "AUTOMATIC_INTERFACE_SWITCHING";
+	case REQ_AUTOMATIC_INTERFACE_SWITCHING:
+		return "REQ_AUTOMATIC_INTERFACE_SWITCHING";
+	case REQ_DISCONNECT_HW:
+		return "REQ_DISCONNECT_HW";
+	case REQ_RECONNECT_HW:
+		return "REQ_RECONNECT_HW";
 	default:
 		return "[Unknown Request Code]";
 	}

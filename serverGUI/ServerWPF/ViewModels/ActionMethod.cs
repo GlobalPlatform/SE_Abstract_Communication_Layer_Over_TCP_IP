@@ -23,6 +23,9 @@ namespace ServerWPF.ViewModels
         public static readonly ActionMethod POLL_TYPE_A = new ActionMethod(13, nameof(POLL_TYPE_A));
         public static readonly ActionMethod POLL_TYPE_B = new ActionMethod(14, nameof(POLL_TYPE_B));
         public static readonly ActionMethod POLL_TYPE_F = new ActionMethod(15, nameof(POLL_TYPE_F));
+        public static readonly ActionMethod AUTOMATIC_INTERFACE_SWITCHING = new ActionMethod(16, nameof(AUTOMATIC_INTERFACE_SWITCHING));
+        public static readonly ActionMethod DISCONNECT_HW = new ActionMethod(17, nameof(DISCONNECT_HW));
+        public static readonly ActionMethod RECONNECT_HW = new ActionMethod(18, nameof(RECONNECT_HW));
 
         private ActionMethod(int value, String name)
         {

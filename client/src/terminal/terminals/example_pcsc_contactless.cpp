@@ -296,6 +296,34 @@ ResponsePacket ExampleTerminalPCSCContactless::disconnect() {
 	return response;
 }
 
+ResponsePacket ExampleTerminalPCSCContactless::disconnect_HW() {
+	LOG_INFO << "Disconnect_HW called";
+
+	return disconnect();
+}
+
+ResponsePacket ExampleTerminalPCSCContactless::reconnect_HW() {
+	LONG resp;
+	ResponsePacket response;
+
+	int tries = 0;
+	LOG_INFO << "Reconnect_HW called";
+	if ((resp = SCardConnect(hContext_, current_reader_.c_str(), SCARD_SHARE_DIRECT, 0, &hCard_, &dwActiveProtocol_)) != SCARD_S_SUCCESS) {
+		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
+			resp = handleRetry();
+			LOG_INFO << "[Retry] SCardConnect called";
+			resp = SCardConnect(hContext_, current_reader_.c_str(), SCARD_SHARE_DIRECT, 0, &hCard_, &dwActiveProtocol_);
+			tries++;
+		}
+		if (resp != SCARD_S_SUCCESS) {
+			LOG_DEBUG << "Failed to call SCardConnect() " << "[error:" << errorToString(resp) << "]" << "[hContext:" << hContext_ << "][szReader:" << current_reader_ << "][dwShareMode:"
+					  << SCARD_SHARE_DIRECT << "]" << "[dwPreferredProtocols:" << 0 << "][hCard:" << hCard_ << "][dwActiveProtocol:" << dwActiveProtocol_ << "]";
+			return handleErrorResponse("Failed to connect", resp);
+		}
+	}
+	return response;
+}
+
 ResponsePacket ExampleTerminalPCSCContactless::restart() {
 	ResponsePacket response;
 	LONG resp;

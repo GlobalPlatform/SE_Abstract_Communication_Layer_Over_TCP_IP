@@ -97,6 +97,12 @@ public:
 	virtual ResponsePacket disconnect() = 0;
 
 	/**
+	 * disconnect_HW - disconnect the HW from the client.
+	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
+	 */
+	virtual ResponsePacket disconnect_HW() = 0;
+
+	/**
 	 * isAlive - send a valid packet to the terminal to check whether it is responding.
 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
 	 */
@@ -155,6 +161,12 @@ public:
  	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
 	 */
 	virtual ResponsePacket automaticInterfaceSwitching() = 0;
+
+	/**
+	 * Reconnect_HW - Reconnect a disconnected HW to the client
+ 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
+	 */
+	virtual ResponsePacket reconnect_HW() = 0;
 
 };
 

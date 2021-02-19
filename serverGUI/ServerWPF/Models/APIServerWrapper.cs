@@ -83,6 +83,15 @@ namespace ServerWPF.Models
         static private extern void pollTypeF(IntPtr server, int id_client, Int32 timeout, ref ResponseDLL response_packet);
 
         [DllImport(@"libs/libserver.dll")]
+        static private extern void automaticInterfaceSwitching(IntPtr server, int id_client, Int32 timeout, ref ResponseDLL response_packet);
+
+        [DllImport(@"libs/libserver.dll")]
+        static private extern void disconnect_HW(IntPtr server, int id_client, Int32 timeout, ref ResponseDLL response_packet);
+
+        [DllImport(@"libs/libserver.dll")]
+        static private extern void reconnect_HW(IntPtr server, int id_client, Int32 timeout, ref ResponseDLL response_packet);
+
+        [DllImport(@"libs/libserver.dll")]
         static private extern void stopClient(IntPtr server, int id_client, Int32 timeout, ref ResponseDLL response_packet);
 
         [DllImport(@"libs/libserver.dll")]
@@ -223,6 +232,27 @@ namespace ServerWPF.Models
         {
             ResponseDLL response = new ResponseDLL();
             pollTypeF(_server, id_client, _timeout_Request, ref response);
+            return response;
+        }
+
+        static public ResponseDLL AutomaticInterfaceSwitching(int id_client)
+        {
+            ResponseDLL response = new ResponseDLL();
+            automaticInterfaceSwitching(_server, id_client, _timeout_Request, ref response);
+            return response;
+        }
+
+        static public ResponseDLL Disconnect_HW(int id_client)
+        {
+            ResponseDLL response = new ResponseDLL();
+            disconnect_HW(_server, id_client, _timeout_Request, ref response);
+            return response;
+        }
+
+        static public ResponseDLL Reconnect_HW(int id_client)
+        {
+            ResponseDLL response = new ResponseDLL();
+            reconnect_HW(_server, id_client, _timeout_Request, ref response);
             return response;
         }
 
