@@ -17,6 +17,7 @@
 
 #include "client/requests/flyweight_requests.hpp"
 #include "client/requests/request.hpp"
+#include "logger/logger.hpp"
 
 #include <map>
 
@@ -28,6 +29,8 @@ boolean FlyweightRequests::addRequest(RequestCode key, IRequest* factory) {
 
 IRequest* FlyweightRequests::getRequest(RequestCode key) {
 	if (requests.count(key) != 1) {
+		LOG_DEBUG << "Number of activated request: " << requests.size() << ", looking for the number : " << key;
+
 		return NULL;
 	}
 	return requests.at(key);
