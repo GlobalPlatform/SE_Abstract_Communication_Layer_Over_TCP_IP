@@ -463,16 +463,31 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::powerONField() {
 		}
 	}
 
-	// set RF field on
-	unsigned char command[] = { 0xFF, 0xCC, 0x00, 0x00, 0x02, 0x96, 0x01 };
-	response = sendCommand(command, sizeof command);
-	if (response.response.compare("KO") == 0) {
+	Sleep(500); // hardware needs delay
+
+	LOG_DEBUG << "Set power ON Field: ";
+	unsigned char command[] = { 0x96,  0x01};
+	DWORD commandLen = sizeof command;
+
+	if (sendEscapeCommand(command, &commandLen) != 0x00) {
+		LOG_DEBUG << "Set Power ON Field: failed";
+		response.response = "Not supported";
 		return response;
 	}
 
+	if ((commandLen < 2) | (command[0x00]!=0x90) | (command[0x01]!=0x00) ){
+		LOG_DEBUG << "Set Power ON Field failed: " << "Answer : " << command << " & length is : " << commandLen;
+		response.response = "Failed to Set Power ON Field, wrong answer from the reader";
+		return response;
+
+	}
+
+	return response;
+/*
 	Sleep(500); // hardware needs delay
 	// reconnect shared & T0|T1 protocol
 	return restart();
+*/
 }
 
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::pollTypeA() {
