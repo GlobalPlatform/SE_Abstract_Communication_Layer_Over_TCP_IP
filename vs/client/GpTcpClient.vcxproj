@@ -162,10 +162,12 @@
     <ClInclude Include="..\..\client\include\client\client_api.hpp" />
     <ClInclude Include="..\..\client\include\client\client_engine.hpp" />
     <ClInclude Include="..\..\client\include\client\client_tcp_socket.hpp" />
+    <ClInclude Include="..\..\client\include\client\requests\automatic_interface_switching.hpp" />
     <ClInclude Include="..\..\client\include\client\requests\cold_reset.hpp" />
     <ClInclude Include="..\..\client\include\client\requests\command.hpp" />
     <ClInclude Include="..\..\client\include\client\requests\diag.hpp" />
     <ClInclude Include="..\..\client\include\client\requests\disconnect.hpp" />
+    <ClInclude Include="..\..\client\include\client\requests\disconnect_HW.hpp" />
     <ClInclude Include="..\..\client\include\client\requests\echo.hpp" />
     <ClInclude Include="..\..\client\include\client\requests\flyweight_requests.hpp" />
     <ClInclude Include="..\..\client\include\client\requests\poll_type_A.hpp" />
@@ -173,6 +175,7 @@
     <ClInclude Include="..\..\client\include\client\requests\poll_type_F.hpp" />
     <ClInclude Include="..\..\client\include\client\requests\power_off_field.hpp" />
     <ClInclude Include="..\..\client\include\client\requests\power_on_field.hpp" />
+    <ClInclude Include="..\..\client\include\client\requests\reconnect_HW.hpp" />
     <ClInclude Include="..\..\client\include\client\requests\request.hpp" />
     <ClInclude Include="..\..\client\include\client\requests\restart_target.hpp" />
     <ClInclude Include="..\..\client\include\client\requests\send_typeA.hpp" />
@@ -203,10 +206,12 @@
     <ClCompile Include="..\..\client\src\client\client_api.cpp" />
     <ClCompile Include="..\..\client\src\client\client_engine.cpp" />
     <ClCompile Include="..\..\client\src\client\client_tcp_socket.cpp" />
+    <ClCompile Include="..\..\client\src\client\requests\automatic_interface_switching.cpp" />
     <ClCompile Include="..\..\client\src\client\requests\cold_reset.cpp" />
     <ClCompile Include="..\..\client\src\client\requests\command.cpp" />
     <ClCompile Include="..\..\client\src\client\requests\diag.cpp" />
     <ClCompile Include="..\..\client\src\client\requests\disconnect.cpp" />
+    <ClCompile Include="..\..\client\src\client\requests\disconnect_HW.cpp" />
     <ClCompile Include="..\..\client\src\client\requests\echo.cpp" />
     <ClCompile Include="..\..\client\src\client\requests\flyweight_requests.cpp" />
     <ClCompile Include="..\..\client\src\client\requests\poll_type_A.cpp" />
@@ -214,6 +219,7 @@
     <ClCompile Include="..\..\client\src\client\requests\poll_type_F.cpp" />
     <ClCompile Include="..\..\client\src\client\requests\power_off_field.cpp" />
     <ClCompile Include="..\..\client\src\client\requests\power_on_field.cpp" />
+    <ClCompile Include="..\..\client\src\client\requests\reconnect_HW.cpp" />
     <ClCompile Include="..\..\client\src\client\requests\restart_target.cpp" />
     <ClCompile Include="..\..\client\src\client\requests\send_typeA.cpp" />
     <ClCompile Include="..\..\client\src\client\requests\send_typeB.cpp" />

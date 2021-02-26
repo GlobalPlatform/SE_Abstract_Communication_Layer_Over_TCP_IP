@@ -186,6 +186,15 @@
     <ClInclude Include="..\..\client\include\terminal\factories\example_factory_pcsc_contactless_IDENTIV.hpp">
       <Filter>Fichiers d%27en-tête\terminal\factories</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\client\include\client\requests\disconnect_HW.hpp">
+      <Filter>Fichiers d%27en-tête\client\requests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\include\client\requests\reconnect_HW.hpp">
+      <Filter>Fichiers d%27en-tête\client\requests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\include\client\requests\automatic_interface_switching.hpp">
+      <Filter>Fichiers d%27en-tête\client\requests</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -277,6 +286,15 @@
     </ClCompile>
     <ClCompile Include="..\..\client\src\terminal\factories\example_factory_pcsc_contactless_IDENTIV.cpp">
       <Filter>Fichiers sources\terminal\factories</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\src\client\requests\disconnect_HW.cpp">
+      <Filter>Fichiers sources\client\requests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\src\client\requests\reconnect_HW.cpp">
+      <Filter>Fichiers sources\client\requests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\src\client\requests\automatic_interface_switching.cpp">
+      <Filter>Fichiers sources\client\requests</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
