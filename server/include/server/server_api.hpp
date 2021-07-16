@@ -125,6 +125,15 @@ public:
 	ResponsePacket sendTypeF(int id_client, std::string command, DWORD timeout);
 
 	/**
+	 * sendTypeABF - send an APDU command over All RF Types.
+	 * @param id_client the client's id to send request to.
+	 * @param command the APDU command to be sent to the smartcard.
+	 * @param timeout the waiting time of the execution of the request.
+	 * @return a ResponsePacket struct containing either the smartcard's response or error codes and error descriptions in case of error.
+	 */
+	ResponsePacket sendTypeAllTypes(int id_client, std::string command, DWORD timeout);
+
+	/**
 	 * restartTarget - restart the given target.
 	 * @param id_client the client's id to send request to.
 	 * @param timeout the waiting time of the execution of the request.
@@ -189,12 +198,36 @@ public:
 	ResponsePacket pollTypeB(int id_client, DWORD timeout);
 
 	/**
-	 * pollTypeF - Perform the Anti-Collisison detection in Type A only.
+	 * pollTypeF - Perform the Anti-Collisison detection in Type F only.
 	 * @param id_client the client's id to send request to.
 	 * @param timeout the waiting time of the execution of the request.
  	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
 	 */
 	ResponsePacket pollTypeF(int id_client, DWORD timeout);
+
+	/**
+	 * pollTypeF - Perform the Anti-Collisison detection in All RF Type.
+	 * @param id_client the client's id to send request to.
+	 * @param timeout the waiting time of the execution of the request.
+ 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
+	 */
+	ResponsePacket pollTypeAllTypes(int id_client, DWORD timeout);
+
+	/**
+	 * getNotifications - Get all notifications buffered in the client
+	 * @param id_client the client's id to send request to.
+	 * @param timeout the waiting time of the execution of the request.
+ 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions and the notifications.
+	 */
+	ResponsePacket getNotifications(int id_client, DWORD timeout);
+
+	/**
+	 * clearNotifications - Clear all notifications buffered in the client
+	 * @param id_client the client's id to send request to.
+	 * @param timeout the waiting time of the execution of the request.
+	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
+	 */
+	ResponsePacket clearNotifications(int id_client, DWORD timeout);
 
 	/**
 	 * automaticInterfaceSwitching - Allow an switching between 2 interfaces, need to be used with IDENTIV_470x.

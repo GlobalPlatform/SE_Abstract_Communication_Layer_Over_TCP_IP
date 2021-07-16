@@ -97,10 +97,10 @@ public:
 	virtual ResponsePacket disconnect() = 0;
 
 	/**
-	 * disconnect_HW - disconnect the HW from the client.
+	 * Deactivate an Interface - Deactivate an interface (procedure use when switch between 2 interfaces of the client).
 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
 	 */
-	virtual ResponsePacket disconnect_HW() = 0;
+	virtual ResponsePacket deactivate_Interface() = 0;
 
 	/**
 	 * isAlive - send a valid packet to the terminal to check whether it is responding.
@@ -157,16 +157,34 @@ public:
 	virtual ResponsePacket pollTypeF() = 0;
 
 	/**
+	 * pollingTypeABF - Start the polling sequence with all types available for the reader (in principle A, B and F)
+ 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
+	 */
+	virtual ResponsePacket pollTypeAllTypes() = 0;
+
+	/**
+	 * getNotifications - Get Notifications
+ 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
+	 */
+	virtual ResponsePacket getNotifications() = 0;
+
+	/**
+	 * clearNotifications - Clear Notifications
+ 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
+	 */
+	virtual ResponsePacket clearNotifications() = 0;
+
+	/**
 	 * automaticInterfaceSwitching - Perform the Automatic Interface Switching for reader (like IDENTIV 470x)
  	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
 	 */
 	virtual ResponsePacket automaticInterfaceSwitching() = 0;
 
 	/**
-	 * Reconnect_HW - Reconnect a disconnected HW to the client
+	 * activate_Interface - Activate a deactivated interface (procedure use when switch between 2 interfaces of the client)
  	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
 	 */
-	virtual ResponsePacket reconnect_HW() = 0;
+	virtual ResponsePacket activate_Interface() = 0;
 
 };
 

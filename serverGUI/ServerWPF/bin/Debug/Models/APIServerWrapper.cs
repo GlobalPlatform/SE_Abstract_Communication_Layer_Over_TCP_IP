@@ -83,13 +83,22 @@ namespace ServerWPF.Models
         static private extern void pollTypeF(IntPtr server, int id_client, Int32 timeout, ref ResponseDLL response_packet);
 
         [DllImport(@"libs/libserver.dll")]
+        static private extern void pollTypeAllTypes(IntPtr server, int id_client, Int32 timeout, ref ResponseDLL response_packet);
+
+        [DllImport(@"libs/libserver.dll")]
+        static private extern void getNotifications(IntPtr server, int id_client, Int32 timeout, ref ResponseDLL response_packet);
+
+        [DllImport(@"libs/libserver.dll")]
+        static private extern void clearNotifications(IntPtr server, int id_client, Int32 timeout, ref ResponseDLL response_packet);
+
+        [DllImport(@"libs/libserver.dll")]
         static private extern void automaticInterfaceSwitching(IntPtr server, int id_client, Int32 timeout, ref ResponseDLL response_packet);
 
         [DllImport(@"libs/libserver.dll")]
-        static private extern void disconnect_HW(IntPtr server, int id_client, Int32 timeout, ref ResponseDLL response_packet);
+        static private extern void deactivate_Interface(IntPtr server, int id_client, Int32 timeout, ref ResponseDLL response_packet);
 
         [DllImport(@"libs/libserver.dll")]
-        static private extern void reconnect_HW(IntPtr server, int id_client, Int32 timeout, ref ResponseDLL response_packet);
+        static private extern void activate_Interface(IntPtr server, int id_client, Int32 timeout, ref ResponseDLL response_packet);
 
         [DllImport(@"libs/libserver.dll")]
         static private extern void stopClient(IntPtr server, int id_client, Int32 timeout, ref ResponseDLL response_packet);
@@ -235,24 +244,38 @@ namespace ServerWPF.Models
             return response;
         }
 
-        static public ResponseDLL AutomaticInterfaceSwitching(int id_client)
+        static public ResponseDLL PollTypeAllTypes(int id_client)
         {
             ResponseDLL response = new ResponseDLL();
-            automaticInterfaceSwitching(_server, id_client, _timeout_Request, ref response);
+            pollTypeAllTypes(_server, id_client, _timeout_Request, ref response);
             return response;
         }
 
-        static public ResponseDLL Disconnect_HW(int id_client)
+        static public ResponseDLL GetNotifications(int id_client)
         {
             ResponseDLL response = new ResponseDLL();
-            disconnect_HW(_server, id_client, _timeout_Request, ref response);
+            getNotifications(_server, id_client, _timeout_Request, ref response);
             return response;
         }
 
-        static public ResponseDLL Reconnect_HW(int id_client)
+        static public ResponseDLL ClearNotifications(int id_client)
         {
             ResponseDLL response = new ResponseDLL();
-            reconnect_HW(_server, id_client, _timeout_Request, ref response);
+            clearNotifications(_server, id_client, _timeout_Request, ref response);
+            return response;
+        }
+
+        static public ResponseDLL Deactivate_Interface(int id_client)
+        {
+            ResponseDLL response = new ResponseDLL();
+            deactivate_Interface(_server, id_client, _timeout_Request, ref response);
+            return response;
+        }
+
+        static public ResponseDLL Activate_Interface(int id_client)
+        {
+            ResponseDLL response = new ResponseDLL();
+            activate_Interface(_server, id_client, _timeout_Request, ref response);
             return response;
         }
 

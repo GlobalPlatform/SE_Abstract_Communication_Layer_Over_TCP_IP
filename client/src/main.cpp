@@ -15,20 +15,22 @@
  limitations under the License.
  *********************************************************************************/
 
-#include <terminal/factories/example_factory_pcsc_contactless_IDENTIV.hpp>
+#include <client/requests/activate_interface.hpp>
+#include <client/requests/deactivate_interface.hpp>
 #include "client/client_api.hpp"
 #include "client/requests/cold_reset.hpp"
 #include "client/requests/command.hpp"
 #include "client/requests/diag.hpp"
 #include "client/requests/disconnect.hpp"
-#include "client/requests/disconnect_HW.hpp"
 #include "client/requests/echo.hpp"
 #include "client/requests/power_off_field.hpp"
 #include "client/requests/power_on_field.hpp"
 #include "client/requests/poll_type_A.hpp"
 #include "client/requests/poll_type_B.hpp"
 #include "client/requests/poll_type_F.hpp"
-#include "client/requests/reconnect_HW.hpp"
+#include "client/requests/poll_type_all_types.hpp"
+#include "client/requests/get_notifications.hpp"
+#include "client/requests/clear_notifications.hpp"
 #include "client/requests/request.hpp"
 #include "client/requests/request.hpp"
 #include "client/requests/restart_target.hpp"
@@ -36,10 +38,13 @@
 #include "client/requests/send_typeB.hpp"
 #include "client/requests/send_typeF.hpp"
 #include "client/requests/warm_reset.hpp"
-#include "client/requests/automatic_interface_switching.hpp"
 #include "constants/request_code.hpp"
 #include "terminal/factories/example_factory_pcsc_contact.hpp"
+#include "terminal/factories/example_factory_pcsc_contact_IDENTIV_Dual.hpp"
+#include "terminal/factories/example_factory_pcsc_HCI_TH.hpp"
 #include "terminal/factories/example_factory_pcsc_contactless.hpp"
+#include <terminal/factories/example_factory_pcsc_contactless_IDENTIV.hpp>
+#include <terminal/factories/example_factory_pcsc_contactless_IDENTIV_Dual.hpp>
 #include "terminal/flyweight_terminal_factory.hpp"
 #include "terminal/terminals/example_pcsc_contact.hpp"
 
@@ -49,8 +54,11 @@ int __cdecl main(void) {
 	// config available terminal factories
 	FlyweightTerminalFactory available_terminals;
 	available_terminals.addFactory("EXAMPLE_PCSC_CONTACT", new ExamplePCSCContactFactory());
+	available_terminals.addFactory("EXAMPLE_PCSC_CONTACT_IDENTIV_DUAL", new ExamplePCSCContactIDENTIVDualFactory());
+	available_terminals.addFactory("EXAMPLE_PCSC_HCI_TH", new ExamplePCSCHCITHFactory());
 	available_terminals.addFactory("EXAMPLE_PCSC_CONTACTLESS", new ExamplePCSCContactlessFactory());
 	available_terminals.addFactory("EXAMPLE_PCSC_CONTACTLESS_IDENTIV", new ExamplePCSCContactlessIDENTIVFactory());
+	available_terminals.addFactory("EXAMPLE_PCSC_CONTACTLESS_IDENTIV_DUAL", new ExamplePCSCContactlessIDENTIVDualFactory());
 
 	// config all requests the client can handle
 	FlyweightRequests available_requests;
@@ -69,9 +77,11 @@ int __cdecl main(void) {
 	available_requests.addRequest(REQ_POLL_TYPE_A, new PollTypeA());
 	available_requests.addRequest(REQ_POLL_TYPE_B, new PollTypeB());
 	available_requests.addRequest(REQ_POLL_TYPE_F, new PollTypeF());
-	available_requests.addRequest(REQ_AUTOMATIC_INTERFACE_SWITCHING, new AutomaticInterfaceSwitching());
-	available_requests.addRequest(REQ_DISCONNECT_HW, new Disconnect_HW());
-	available_requests.addRequest(REQ_RECONNECT_HW, new Reconnect_HW());
+	available_requests.addRequest(REQ_POLL_TYPE_ALL_TYPES, new PollTypeF());
+	available_requests.addRequest(REQ_DEACTIVATE_INTERFACE, new Deactivate_Interface());
+	available_requests.addRequest(REQ_ACTIVATE_INTERFACE, new Activate_Interface());
+	available_requests.addRequest(REQ_GET_NOTIFICATIONS, new GetNotifications());
+	available_requests.addRequest(REQ_CLEAR_NOTIFICATIONS,new ClearNotifications());
 
 	ClientAPI* client = new ClientAPI(0, 0, 0);
 	client->initClient("./config/init.json", available_terminals, available_requests);

@@ -142,7 +142,8 @@
         <Button Command="{Binding BrowseFile}" Content="Browse" HorizontalAlignment="Left" Margin="245,22,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
         <Button Command="{Binding SendCommandsBatch}" Content="Send batch" HorizontalAlignment="Left" Margin="365,22,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
         <Button Command="{Binding SendCommandsBatchRandom}" Content="Send batch random" HorizontalAlignment="Left" Margin="485,22,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
-        <Button Command="{Binding AutoIntSwitch}" Content="Auto Int Switch" HorizontalAlignment="Left" Margin="605,22,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
+        <Button Command="{Binding PollAllTypes}" Content="Poll All Types" HorizontalAlignment="Left" Margin="365,112,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
+        <Button Command="{Binding GetNotifications}" Content="Get Notifications" HorizontalAlignment="Left" Margin="485,112,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
 
 
         <TextBox Text="{Binding CurrentCommand}" Grid.Column="1" HorizontalAlignment="Left" Height="22" Margin="5,53,0,0" Grid.Row="4" TextWrapping="Wrap" VerticalContentAlignment="Center" VerticalAlignment="Top" Width="230" />
@@ -150,6 +151,7 @@
         <Button Command="{Binding SendTypeA}" Content="Send RF type A" HorizontalAlignment="Left" Margin="365,53,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
         <Button Command="{Binding SendTypeB}" Content="Send RF type B" HorizontalAlignment="Left" Margin="485,53,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1" />
         <Button Command="{Binding SendTypeF}" Content="Send RF type F" HorizontalAlignment="Left" Margin="605,53,0,0" Grid.Row="4" VerticalAlignment="Top"  Grid.Column="1"/>
+        <Button Command="{Binding ClearNotifications}" Content="Clear Notifications" HorizontalAlignment="Left" Margin="605,112,0,0" Grid.Row="4" VerticalAlignment="Top"  Grid.Column="1"/>
 
         <Button Command="{Binding EchoClient}" Content="Is alive ?" HorizontalAlignment="Left" Margin="5,83,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
         <Button Command="{Binding DiagnoseClient}" Content="Diagnose" HorizontalAlignment="Left" Margin="125,83,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
@@ -159,8 +161,8 @@
         <Button Command="{Binding WarmReset}" Content="Warn reset" HorizontalAlignment="Left" Margin="125,112,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
         <Button Command="{Binding PowerOFFField}" Content="Power OFF field" HorizontalAlignment="Left" Margin="125,142,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
         <Button Command="{Binding PowerONField}" Content="Power ON field" HorizontalAlignment="Left" Margin="5,142,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
-        <Button Command="{Binding Disconnect_HW}" Content="Disconnect_HW" HorizontalAlignment="Left" Margin="245,142,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
-        <Button Command="{Binding Reconnect_HW}" Content="Reconnect_HW" HorizontalAlignment="Left" Margin="245,172,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
+        <Button Command="{Binding Deactivate_Interface}" Content="Deactivate Interface" HorizontalAlignment="Left" Margin="245,142,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
+        <Button Command="{Binding Activate_Interface}" Content="Activate Interface" HorizontalAlignment="Left" Margin="245,172,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
         <Button Command="{Binding PollTypeAField}" Content="Poll Type A" HorizontalAlignment="Left" Margin="365,83,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
         <Button Command="{Binding PollTypeBField}" Content="Poll Type B" HorizontalAlignment="Left" Margin="485,83,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
         <Button Command="{Binding PollTypeFField}" Content="Poll Type F" HorizontalAlignment="Left" Margin="605,83,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>

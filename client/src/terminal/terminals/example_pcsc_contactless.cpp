@@ -296,18 +296,18 @@ ResponsePacket ExampleTerminalPCSCContactless::disconnect() {
 	return response;
 }
 
-ResponsePacket ExampleTerminalPCSCContactless::disconnect_HW() {
-	LOG_INFO << "Disconnect_HW called";
+ResponsePacket ExampleTerminalPCSCContactless::deactivate_Interface() {
+	LOG_INFO << "Deactivate Interface";
 
 	return disconnect();
 }
 
-ResponsePacket ExampleTerminalPCSCContactless::reconnect_HW() {
+ResponsePacket ExampleTerminalPCSCContactless::activate_Interface() {
 	LONG resp;
 	ResponsePacket response;
 
 	int tries = 0;
-	LOG_INFO << "Reconnect_HW called";
+	LOG_INFO << "activate_Interface";
 	if ((resp = SCardConnect(hContext_, current_reader_.c_str(), SCARD_SHARE_DIRECT, 0, &hCard_, &dwActiveProtocol_)) != SCARD_S_SUCCESS) {
 		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
 			resp = handleRetry();
@@ -395,6 +395,7 @@ ResponsePacket ExampleTerminalPCSCContactless::powerONField() {
 	disconnect();
 	int tries = 0;
 	LOG_INFO << "SCardConnect called";
+
 	if ((resp = SCardConnect(hContext_, current_reader_.c_str(), SCARD_SHARE_DIRECT, 0, &hCard_, &dwActiveProtocol_)) != SCARD_S_SUCCESS) {
 		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
 			resp = handleRetry();
@@ -442,6 +443,24 @@ ResponsePacket ExampleTerminalPCSCContactless::pollTypeB() {
 }
 
 ResponsePacket ExampleTerminalPCSCContactless::pollTypeF() {
+	ResponsePacket response;
+	response.response = "Not supported";
+	return response;
+}
+
+ResponsePacket ExampleTerminalPCSCContactless::pollTypeAllTypes() {
+	ResponsePacket response;
+	response.response = "Not supported";
+	return response;
+}
+
+ResponsePacket ExampleTerminalPCSCContactless::getNotifications() {
+	ResponsePacket response;
+	response.response = "Not supported";
+	return response;
+}
+
+ResponsePacket ExampleTerminalPCSCContactless::clearNotifications() {
 	ResponsePacket response;
 	response.response = "Not supported";
 	return response;

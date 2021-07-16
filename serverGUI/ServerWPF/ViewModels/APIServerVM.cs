@@ -47,11 +47,13 @@ namespace ServerWPF.ViewModels
             _pollTypeA = new DelegateCommand(OnPollTypeA, IsClientSelected);
             _pollTypeB = new DelegateCommand(OnPollTypeB, IsClientSelected);
             _pollTypeF = new DelegateCommand(OnPollTypeF, IsClientSelected);
+            _pollTypeAllTypes = new DelegateCommand(OnPollTypeAllTypes, IsClientSelected);
+            _getNotifications = new DelegateCommand(OnGetNotifications, IsClientSelected);
+            _clearNotifications = new DelegateCommand(OnClearNotifications, IsClientSelected);
             _clearLogs = new DelegateCommand(OnClearLogs, null);
             _browseFile = new DelegateCommand(OnBrowseFile, IsClientSelected);
-            _automaticInterfaceSwitching = new DelegateCommand(OnAutomaticInterfaceSwitching, IsClientSelected);
-            _disconnect_HW = new DelegateCommand(OnDisconnect_HW, IsClientSelected);
-            _reconnect_HW = new DelegateCommand(OnReconnect_HW, IsClientSelected);
+            _deactivate_Interface = new DelegateCommand(OnDeactivate_Interface, IsClientSelected);
+            _activate_Interface = new DelegateCommand(OnActivate_Interface, IsClientSelected);
 
             _sendCommandsBatch = new AsyncDelegateCommand(async () => await OnSendCommandBatch(), CanSendCommandBatch);
             _sendCommandsBatchRandom = new AsyncDelegateCommand(async () => await OnSendCommandBatchRandom(), CanSendCommandBatch);
@@ -72,9 +74,11 @@ namespace ServerWPF.ViewModels
             _actions.AddAction(ActionMethod.POLL_TYPE_A.ToString(), OnPollTypeA);
             _actions.AddAction(ActionMethod.POLL_TYPE_B.ToString(), OnPollTypeB);
             _actions.AddAction(ActionMethod.POLL_TYPE_F.ToString(), OnPollTypeF);
-            _actions.AddAction(ActionMethod.AUTOMATIC_INTERFACE_SWITCHING.ToString(), OnAutomaticInterfaceSwitching);
-            _actions.AddAction(ActionMethod.DISCONNECT_HW.ToString(), OnDisconnect_HW);
-            _actions.AddAction(ActionMethod.RECONNECT_HW.ToString(), OnReconnect_HW);
+            _actions.AddAction(ActionMethod.POLL_TYPE_ALL_TYPES.ToString(), OnPollTypeAllTypes);
+            _actions.AddAction(ActionMethod.DEACTIVATE_INTERFACE.ToString(), OnDeactivate_Interface);
+            _actions.AddAction(ActionMethod.ACTIVATE_INTERFACE.ToString(), OnActivate_Interface);
+            _actions.AddAction(ActionMethod.GET_NOTIFICATIONS.ToString(), OnGetNotifications);
+            _actions.AddAction(ActionMethod.CLEAR_NOTIFICATIONS.ToString(), OnClearNotifications);
 
             LoadServerData();
             APIServerWrapper.InitServer();
@@ -173,9 +177,11 @@ namespace ServerWPF.ViewModels
                 _pollTypeA.InvokeCanExecuteChanged();
                 _pollTypeB.InvokeCanExecuteChanged();
                 _pollTypeF.InvokeCanExecuteChanged();
-                _automaticInterfaceSwitching.InvokeCanExecuteChanged();
-                _disconnect_HW.InvokeCanExecuteChanged();
-                _reconnect_HW.InvokeCanExecuteChanged();
+                _pollTypeAllTypes.InvokeCanExecuteChanged();
+                _getNotifications.InvokeCanExecuteChanged();
+                _clearNotifications.InvokeCanExecuteChanged();
+                _deactivate_Interface.InvokeCanExecuteChanged();
+                _activate_Interface.InvokeCanExecuteChanged();
                 _browseFile.InvokeCanExecuteChanged();
                 _sendCommandsBatch.InvokeCanExecuteChanged();
                 _sendCommandsBatchRandom.InvokeCanExecuteChanged();
@@ -244,14 +250,20 @@ namespace ServerWPF.ViewModels
         private readonly DelegateCommand _pollTypeF;
         public ICommand PollTypeFField => _pollTypeF;
 
-        private readonly DelegateCommand _automaticInterfaceSwitching;
-        public ICommand AutoIntSwitch => _automaticInterfaceSwitching;
+        private readonly DelegateCommand _pollTypeAllTypes;
+        public ICommand PollTypeAllTypesField => _pollTypeAllTypes;
 
-        private readonly DelegateCommand _disconnect_HW;
-        public ICommand Disconnect_HW => _disconnect_HW;
+        private readonly DelegateCommand _getNotifications;
+        public ICommand GetNotifications => _getNotifications;
 
-        private readonly DelegateCommand _reconnect_HW;
-        public ICommand Reconnect_HW => _reconnect_HW;
+        private readonly DelegateCommand _clearNotifications;
+        public ICommand ClearNotifications => _clearNotifications;
+
+        private readonly DelegateCommand _deactivate_Interface;
+        public ICommand Deactivate_Interface => _deactivate_Interface;
+
+        private readonly DelegateCommand _activate_Interface;
+        public ICommand Activate_Interface => _activate_Interface;
 
         private readonly DelegateCommand _browseFile;
         public ICommand BrowseFile => _browseFile;
@@ -389,24 +401,39 @@ namespace ServerWPF.ViewModels
             return APIServerWrapper.RetrieveErrorDescription(response).Equals(APIServerWrapper.NO_ERROR);
         }
 
-        private bool OnAutomaticInterfaceSwitching()
+        private bool OnPollTypeAllTypes()
         {
-            ResponseDLL response = APIServerWrapper.AutomaticInterfaceSwitching(_selectedClient.ClientID);
-            AppendLog(ActionMethod.AUTOMATIC_INTERFACE_SWITCHING.ToString(), response);
+            ResponseDLL response = APIServerWrapper.PollTypeF(_selectedClient.ClientID);
+            AppendLog(ActionMethod.POLL_TYPE_ALL_TYPES.ToString(), response);
             return APIServerWrapper.RetrieveErrorDescription(response).Equals(APIServerWrapper.NO_ERROR);
         }
 
-        private bool OnDisconnect_HW()
+        private bool OnGetNotifications()
         {
-            ResponseDLL response = APIServerWrapper.Disconnect_HW(_selectedClient.ClientID);
-            AppendLog(ActionMethod.DISCONNECT_HW.ToString(), response);
+            ResponseDLL response = APIServerWrapper.GetNotifications(_selectedClient.ClientID);
+            AppendLog(ActionMethod.GET_NOTIFICATIONS.ToString(), response);
             return APIServerWrapper.RetrieveErrorDescription(response).Equals(APIServerWrapper.NO_ERROR);
         }
 
-        private bool OnReconnect_HW()
+        private bool OnClearNotifications()
         {
-            ResponseDLL response = APIServerWrapper.Reconnect_HW(_selectedClient.ClientID);
-            AppendLog(ActionMethod.RECONNECT_HW.ToString(), response);
+            ResponseDLL response = APIServerWrapper.ClearNotifications(_selectedClient.ClientID);
+            AppendLog(ActionMethod.CLEAR_NOTIFICATIONS.ToString(), response);
+            return APIServerWrapper.RetrieveErrorDescription(response).Equals(APIServerWrapper.NO_ERROR);
+        }
+
+
+        private bool OnDeactivate_Interface()
+        {
+            ResponseDLL response = APIServerWrapper.Deactivate_Interface(_selectedClient.ClientID);
+            AppendLog(ActionMethod.DEACTIVATE_INTERFACE.ToString(), response);
+            return APIServerWrapper.RetrieveErrorDescription(response).Equals(APIServerWrapper.NO_ERROR);
+        }
+
+        private bool OnActivate_Interface()
+        {
+            ResponseDLL response = APIServerWrapper.Activate_Interface(_selectedClient.ClientID);
+            AppendLog(ActionMethod.ACTIVATE_INTERFACE.ToString(), response);
             return APIServerWrapper.RetrieveErrorDescription(response).Equals(APIServerWrapper.NO_ERROR);
         }
 
