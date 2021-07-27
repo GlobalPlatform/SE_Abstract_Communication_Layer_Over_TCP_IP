@@ -125,6 +125,14 @@ ResponsePacket ServerAPI::clearNotifications(int id_client, DWORD timeout) {
 	return engine_->handleRequest(id_client, REQ_CLEAR_NOTIFICATIONS, true, timeout);
 }
 
+ResponsePacket ServerAPI::deactivate_Interface(int id_client, DWORD timeout) {
+	return engine_->handleRequest(id_client, REQ_DEACTIVATE_INTERFACE, true, timeout);
+}
+
+ResponsePacket ServerAPI::activate_Interface(int id_client, DWORD timeout) {
+	return engine_->handleRequest(id_client, REQ_ACTIVATE_INTERFACE, true, timeout);
+}
+
 ResponsePacket ServerAPI::stopServer() {
 	return engine_->stopAllClients();
 }

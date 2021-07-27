@@ -78,6 +78,8 @@ ADDAPI void pollTypeF(server::ServerAPI* server, int id_client, DWORD timeout, R
 ADDAPI void pollTypeAllTypes(server::ServerAPI* server, int id_client, DWORD timeout, ResponseDLL& response_packet);
 ADDAPI void getNotifications(server::ServerAPI* server, int id_client, DWORD timeout, ResponseDLL& response_packet);
 ADDAPI void clearNotifications(server::ServerAPI* server, int id_client, DWORD timeout, ResponseDLL& response_packet);
+ADDAPI void deactivate_Interface(server::ServerAPI* server, int id_client, DWORD timeout, ResponseDLL& response_packet);
+ADDAPI void activate_Interface(server::ServerAPI* server, int id_client, DWORD timeout, ResponseDLL& response_packet);
 
 #ifdef __cplusplus
 }

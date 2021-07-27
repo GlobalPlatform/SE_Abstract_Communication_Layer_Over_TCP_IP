@@ -160,6 +160,12 @@ int ExampleTerminalPCSCContactless_IDENTIV::sendEscapeCommand(unsigned char* com
 	APDU[0x03] = 0x00;
 	APDU[0x04] = (*command_length)/* && 0xFF*/;
 
+	//APDU[0x00] = 0xFF;
+	//APDU[0x01] = 0x70;
+	//APDU[0x02] = 0x04;
+	//APDU[0x03] = 0xE6;
+	//APDU[0x04] = (*command_length)/* && 0xFF*/;
+
 	for (unsigned int i = 0; i < *command_length ; i++){
 		APDU[i + 5] = command[i];
 	}
@@ -340,6 +346,9 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::deactivate_Interface() {
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::activate_Interface() {
 	LOG_INFO << "Activate_Interface called";
 
+	ResponsePacket response;
+
+	return response;
 }
 
 
@@ -429,10 +438,18 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::powerOFFField() {
 	unsigned char command[] = { 0xFF, 0xCC, 0x00, 0x00, 0x02, 0x96, 0x00 };
 	return sendCommand(command, sizeof command);
 	*/
+	ResponsePacket response;
+	int ret;
 
 	LOG_DEBUG << "Contactless_IDENTIV Start PowerOFFField";
+	//Get Power Field State
 
-	ResponsePacket response;
+	ret = powerFieldState();
+	if (ret == -1) {
+		response.response = "Not supported";
+		return response;
+	}
+
 	LOG_DEBUG << "Set power OFF Field: ";
 	// get initial polling
 	unsigned char command[] = { 0x96,  0x00};
@@ -453,14 +470,28 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::powerOFFField() {
 
 	LOG_DEBUG << "Set Power OFF Field: Success";
 
+	ret = powerFieldState();
+	if (ret == -1) {
+		response.response = "Not supported";
+		return response;
+	}
+
+
 	return response;
 }
 
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::powerONField() {
-	LONG resp;
+//	LONG resp;
 	ResponsePacket response;
 
+	int ret;
+	ret = powerFieldState();
+	if (ret == -1) {
+		response.response = "Not supported";
+		return response;
+	}
 
+/*
 	disconnect();
 	int tries = 0;
 	LOG_INFO << "SCardConnect called";
@@ -478,7 +509,7 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::powerONField() {
 			return handleErrorResponse("Failed to connect", resp);
 		}
 	}
-
+*/
 	LOG_DEBUG << "Set power ON Field: ";
 	unsigned char command[] = { 0x96,  0x01};
 	DWORD commandLen = sizeof command;
@@ -498,7 +529,52 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::powerONField() {
 
 	Sleep(500); // hardware needs delay
 	// reconnect shared & T0|T1 protocol
-	return restart();
+
+	ret = powerFieldState();
+	if (ret == -1) {
+		response.response = "Not supported";
+		return response;
+	}
+
+//	return restart();
+	return response;
+}
+
+int ExampleTerminalPCSCContactless_IDENTIV::powerFieldState(){
+
+	ResponsePacket response;
+	LOG_DEBUG << "Get power Field State: ";
+	// get initial polling
+	unsigned char command[] = { 0x96,  0xFF, 0x00};
+	DWORD commandLen = sizeof command;
+	commandLen = 0x02;
+
+	if (sendEscapeCommand(command, &commandLen) != 0x00) {
+		LOG_DEBUG << "Get Power Field State: failed";
+		response.response = "Not supported";
+		return -1;
+	}
+
+	if ((commandLen < 3) | (command[0x01]!=0x90) | (command[0x02]!=0x00) ){
+		LOG_DEBUG << "Get Power Field State failed: " << "Answer : " << command << " & length is : " << commandLen;
+		response.response = "Failed to Get Power Field State, wrong answer from the reader";
+		return -1;
+
+	}
+
+	switch (command[0x00]) {
+	case 0x00:
+		LOG_DEBUG << "Get Power Field State: Field ON";
+		break;
+	case 0x01:
+		LOG_DEBUG << "Get Power Field State: Field OFF";
+		break;
+	default:
+		LOG_DEBUG << "Get Power Field State: Unknow Field State";
+		break;
+	}
+
+	return command[0x00];
 }
 
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::pollTypeA() {
@@ -804,13 +880,15 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::warmReset() {
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::warmReset() {
 	LOG_DEBUG << "Contactless_IDENTIV Start WarmReset";
 
+	ResponsePacket response;
+	//unsigned char command[] = { 0x96,  0x00};
+	//DWORD commandLen = sizeof command;
+
+/*
 	LOG_DEBUG << "Contactless_IDENTIV Start PowerOFFField";
 
-	ResponsePacket response;
 	LOG_DEBUG << "Set power OFF Field: ";
 	// get initial polling
-	unsigned char command[] = { 0x96,  0x00};
-	DWORD commandLen = sizeof command;
 
 	if (sendEscapeCommand(command, &commandLen) != 0x00) {
 		LOG_DEBUG << "Set Power OFF Field: failed";
@@ -826,9 +904,17 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::warmReset() {
 	}
 
 	LOG_DEBUG << "Set Power OFF Field: Success";
+*/
+	response = powerOFFField();
+/*
+	if (response!="OK") {
+		return response;
+	}
+*/
+//	Sleep(100);
 
-	Sleep(500);
-
+	response = powerONField();
+/*
 	LOG_DEBUG << "Start Set power ON Field: ";
 	commandLen = 0x00;
 	command[commandLen++] = 0x96;
@@ -848,7 +934,7 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::warmReset() {
 	}
 
 	LOG_DEBUG << "Set power ON Success";
-
+*/
 	return response;
 
 }

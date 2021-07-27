@@ -238,20 +238,20 @@ public:
 	ResponsePacket automaticInterfaceSwitching(int id_client, DWORD timeout);
 
 	/**
-	 * disconnect_HW - Disconnect the HW from the client.
+	 * deactivate_Interface - deactivate_Interface from the client.
 	 * @param id_client the client's id to send request to.
 	 * @param timeout the waiting time of the execution of the request.
  	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
 	 */
-	ResponsePacket disconnect_HW(int id_client, DWORD timeout);
+	ResponsePacket deactivate_Interface(int id_client, DWORD timeout);
 
 	/**
-	 * reconnect_HW - Reconnect the HW from the client.
+	 * activate_Interface - activate_Interface from the client.
 	 * @param id_client the client's id to send request to.
 	 * @param timeout the waiting time of the execution of the request.
  	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
 	 */
-	ResponsePacket reconnect_HW(int id_client, DWORD timeout);
+	ResponsePacket activate_Interface(int id_client, DWORD timeout);
 
 	/**
 	 * stopServer - stop the server and all its clients and their underlying layers.

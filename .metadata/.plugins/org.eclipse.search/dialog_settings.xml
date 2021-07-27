@@ -189,16 +189,13 @@
 		</list>
 	</section>
 	<section name="SearchDialog">
-		<item key="PREVIOUS_PAGE" value="org.eclipse.search.internal.ui.text.TextSearchPage"/>
+		<item key="PREVIOUS_PAGE" value="org.eclipse.cdt.ui.pdomSearchPage"/>
 	</section>
 	<section name="DialogBounds_SearchDialog">
-		<item key="DIALOG_WIDTH" value="649"/>
+		<item key="DIALOG_WIDTH" value="669"/>
 		<item key="DIALOG_FONT_NAME" value="1|Segoe UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI"/>
-		<item key="DIALOG_HEIGHT" value="553"/>
+		<item key="DIALOG_HEIGHT" value="525"/>
 		<item key="DIALOG_X_ORIGIN" value="716"/>
 		<item key="DIALOG_Y_ORIGIN" value="280"/>
-	</section>
-	<section name="">
-		<item key="org.eclipse.search.resultpage.limit" value="1000"/>
 	</section>
 </section>

@@ -142,7 +142,7 @@
         <Button Command="{Binding BrowseFile}" Content="Browse" HorizontalAlignment="Left" Margin="245,22,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
         <Button Command="{Binding SendCommandsBatch}" Content="Send batch" HorizontalAlignment="Left" Margin="365,22,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
         <Button Command="{Binding SendCommandsBatchRandom}" Content="Send batch random" HorizontalAlignment="Left" Margin="485,22,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
-        <Button Command="{Binding PollAllTypes}" Content="Poll All Types" HorizontalAlignment="Left" Margin="365,112,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
+        <Button Command="{Binding PollTypeAllTypesField}" Content="Poll Type All Types" HorizontalAlignment="Left" Margin="365,112,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
         <Button Command="{Binding GetNotifications}" Content="Get Notifications" HorizontalAlignment="Left" Margin="485,112,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
 
 

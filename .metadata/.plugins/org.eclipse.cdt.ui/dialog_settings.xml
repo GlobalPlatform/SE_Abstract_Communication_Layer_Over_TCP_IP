@@ -44,6 +44,7 @@
 		<item key="caseSensitive" value="true"/>
 		<item key="searchFlags" value="227191"/>
 		<list key="previousPatterns">
+			<item value="case"/>
 			<item value="REQ_POLL_TYPE_F"/>
 			<item value="\n\n\n"/>
 			<item value="\n\n"/>

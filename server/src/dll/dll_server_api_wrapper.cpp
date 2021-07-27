@@ -142,6 +142,16 @@ void clearNotifications(server::ServerAPI* server, int id_client, DWORD timeout,
 	responsePacketForDll(response, response_packet);
 }
 
+void deactivate_Interface(server::ServerAPI* server, int id_client, DWORD timeout, ResponseDLL& response_packet) {
+	ResponsePacket response = server->deactivate_Interface(id_client, timeout);
+	responsePacketForDll(response, response_packet);
+}
+
+void activate_Interface(server::ServerAPI* server, int id_client, DWORD timeout, ResponseDLL& response_packet) {
+	ResponsePacket response = server->activate_Interface(id_client, timeout);
+	responsePacketForDll(response, response_packet);
+}
+
  void stopServer(server::ServerAPI* server, ResponseDLL& response_packet) {
 	ResponsePacket response = server->stopServer();
 	responsePacketForDll(response, response_packet);
