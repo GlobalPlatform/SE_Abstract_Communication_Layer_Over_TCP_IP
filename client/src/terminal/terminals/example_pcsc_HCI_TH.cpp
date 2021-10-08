@@ -541,8 +541,15 @@ ResponsePacket ExampleTerminalPCSCHCI_TH::pollTypeAllTypes() {
 }
 
 ResponsePacket ExampleTerminalPCSCHCI_TH::getNotifications() {
-	unsigned char APDU[] = {0x80, 0xDD, 0x00, 0x00, 0x00};
-	unsigned long int APDU_Len = sizeof APDU;
+	unsigned char APDU[256];
+	unsigned long int APDU_Len = 0;
+
+	APDU_Len=0;
+	APDU[APDU_Len++] = 0x80;
+	APDU[APDU_Len++] = 0xDD;
+	APDU[APDU_Len++] = 0x00;
+	APDU[APDU_Len++] = 0x00;
+	APDU[APDU_Len++] = 0x00;
 
 	return sendCommand(APDU, APDU_Len);
 }

@@ -94,22 +94,24 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::loadAndListReaders()
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::connect(const char* reader) {
 	ResponsePacket response;
 	LONG resp;
+	BYTE config = SCARD_SHARE_SHARED;
 
 	int tries = 0;
-	if ((resp = SCardConnect(hContext_, reader, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, &hCard_, &dwActiveProtocol_)) != SCARD_S_SUCCESS) {
+
+
+	if ((resp = SCardConnect(hContext_, reader, config, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, &hCard_, &dwActiveProtocol_)) != SCARD_S_SUCCESS) {
 		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
 			resp = handleRetry();
-			resp = SCardConnect(hContext_, reader, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, &hCard_, &dwActiveProtocol_);
+			resp = SCardConnect(hContext_, reader, config, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, &hCard_, &dwActiveProtocol_);
 			tries++;
 		}
 		if (resp != SCARD_S_SUCCESS) {
 			LOG_DEBUG << "Failed to call SCardConnect() " << "[error:" << errorToString(resp) << "]"
-					  << "[hContext:" << hContext_ << "][szReader:" << reader << "][dwShareMode:" << SCARD_SHARE_SHARED << "]"
+					  << "[hContext:" << hContext_ << "][szReader:" << reader << "][dwShareMode:" << config << "]"
 					  << "[dwPreferredProtocols:" << 0 << "][hCard:" << hCard_ << "][dwActiveProtocol:" << dwActiveProtocol_ << "]";
 			return handleErrorResponse("Failed to connect", resp);
 		}
 	}
-
 	this->current_reader_ = std::string(reader);
 	switch (dwActiveProtocol_) {
 	case SCARD_PROTOCOL_T0:
@@ -335,12 +337,19 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::disconnect_HW() {
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::deactivate_Interface() {
 	LOG_INFO << "Deactivate_Interface called";
 
-	return disconnect();
+//	return disconnect();
+	ResponsePacket response;
+
+	return response;
+
 }
 
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::activate_Interface() {
 	LOG_INFO << "Activate_Interface called";
 
+	ResponsePacket response;
+
+	return response;
 }
 
 

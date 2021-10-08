@@ -36,6 +36,8 @@
 #include "client/requests/poll_type_B.hpp"
 #include "client/requests/poll_type_F.hpp"
 #include "client/requests/poll_type_all_types.hpp"
+#include "client/requests/get_notifications.hpp"
+#include "client/requests/clear_notifications.hpp"
 #include "constants/request_code.hpp"
 #include "terminal/factories/example_factory_pcsc_contact.hpp"
 #include "terminal/factories/example_factory_pcsc_contact_IDENTIV_Dual.hpp"
@@ -86,7 +88,7 @@ void initClient(client::ClientAPI* client, const char* jsonConfig, ResponseDLL& 
 	available_terminals.addFactory("EXAMPLE_PCSC_HCI_TH", new ExamplePCSCHCITHFactory());
 	available_terminals.addFactory("EXAMPLE_PCSC_CONTACTLESS", new ExamplePCSCContactlessFactory());
 	available_terminals.addFactory("EXAMPLE_PCSC_CONTACTLESS_IDENTIV", new ExamplePCSCContactlessIDENTIVFactory());
-	available_terminals.addFactory("EXAMPLE_PCSC_CONTACTLESS_IDENTIV_Dual", new ExamplePCSCContactlessIDENTIVDualFactory());
+	available_terminals.addFactory("EXAMPLE_PCSC_CONTACTLESS_IDENTIV_DUAL", new ExamplePCSCContactlessIDENTIVDualFactory());
 
 	// config all requests the client can handle
 	FlyweightRequests available_requests;
@@ -108,6 +110,8 @@ void initClient(client::ClientAPI* client, const char* jsonConfig, ResponseDLL& 
 	available_requests.addRequest(REQ_POLL_TYPE_ALL_TYPES, new PollTypeAllTypes());
 	available_requests.addRequest(REQ_DEACTIVATE_INTERFACE, new Deactivate_Interface());
 	available_requests.addRequest(REQ_ACTIVATE_INTERFACE, new Activate_Interface());
+	available_requests.addRequest(REQ_GET_NOTIFICATIONS, new GetNotifications());
+	available_requests.addRequest(REQ_CLEAR_NOTIFICATIONS,new ClearNotifications());
 
 	ResponsePacket response_packet = client->initClient((jsonConfig != NULL) ? jsonConfig : "config/init.json", available_terminals, available_requests);
 	responsePacketForDll(response_packet, response_packet_dll);
