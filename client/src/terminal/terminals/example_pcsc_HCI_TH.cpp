@@ -161,35 +161,102 @@ ResponsePacket ExampleTerminalPCSCHCI_TH::sendCommand(unsigned char command[], D
 	return response;
 }
 
-int ExampleTerminalPCSCHCI_TH::sendInternalCommand(unsigned char* command, unsigned long int* command_length) {
-	LONG resp = SCARD_SWALLOWED;
-	//std::string strCommand = utils::unsignedCharToString(command, command_length);
-	unsigned long int APDU_Len = 5 + *command_length;
+ResponsePacket ExampleTerminalPCSCHCI_TH::sendCommand_T1(unsigned char* command, unsigned long int command_length) {
+	ResponsePacket response;
+
+	unsigned long int APDU_Len = command_length;
 	unsigned char APDU[270];
+	unsigned char APDU_Resp[DEFAULT_BUFLEN];
+	unsigned long int APDU_Resp_Len = 0;
+	std::string responseAPDU;
 
-	APDU[0x00] = 0xFF;
-	APDU[0x01] = 0xCC;
-	APDU[0x02] = 0x00;
-	APDU[0x03] = 0x00;
-	APDU[0x04] = (*command_length)/* && 0xFF*/;
-
-	//APDU[0x00] = 0xFF;
-	//APDU[0x01] = 0x70;
-	//APDU[0x02] = 0x04;
-	//APDU[0x03] = 0xE6;
-	//APDU[0x04] = (*command_length)/* && 0xFF*/;
-
-	for (unsigned int i = 0; i < *command_length ; i++){
-		APDU[i + 5] = command[i];
+	for (unsigned int i = 0; i < APDU_Len ; i++){
+		APDU[i] = command[i];
 	}
 
-	LOG_DEBUG << "CommandEscape Input, Command : " << utils::unsignedCharToString(command, *command_length) << ", Command_Length : " << *command_length << ", APDU : " <<
+	if (sendInternalCommand(APDU, &APDU_Len) != 0x00) {
+		LOG_DEBUG << "sendCommand T1: failed";
+		response.response = "Problem when sending T1 command";
+		return response;
+	}
+
+	if (APDU_Len < 2){
+		LOG_DEBUG << "Send Command T1 , " << "Answer : " << utils::unsignedCharToString(APDU, APDU_Len) << " & length is : " << APDU_Len;
+		response.response = "Failed to Send Command T1, wrong answer from the reader";
+		return response;
+
+	} else if ((APDU_Len != 2) | (APDU[0x00]!=0x61)){
+		if ((APDU[APDU_Len - 2] != 0x90) | (APDU[APDU_Len -1] != 0x00)) {
+			LOG_DEBUG << "sendCommand T1: received " << utils::unsignedCharToString(APDU, APDU_Len);
+			response.response = "Problem when received T1 command";
+			return response;
+		}
+
+		responseAPDU =  utils::unsignedCharToString(APDU, APDU_Len);
+		response = { .response = responseAPDU };
+		return response;
+
+	} else {
+		while (APDU[APDU_Len - 2]==0x61){
+			for (unsigned int i= 0; i < APDU_Len - 2; i++) {
+				APDU_Resp[APDU_Resp_Len++] = APDU[i];
+			}
+
+			APDU[0x04] = APDU[APDU_Len - 1];
+
+			APDU[0x00] = 0x00;
+			APDU[0x01] = 0xC0;
+			APDU[0x02] = 0x00;
+			APDU[0x03] = 0x00;
+			APDU_Len = 0x05;
+
+			if (sendInternalCommand(APDU, &APDU_Len) != 0x00) {
+				LOG_DEBUG << "sendCommand T1: failed";
+				response.response = "Problem when sending T1 command";
+				return response;
+			}
+
+		}
+
+		for (unsigned int i= 0; i < APDU_Len - 2; i++) {
+			APDU_Resp[APDU_Resp_Len++] = APDU[i];
+		}
+
+		APDU_Resp[APDU_Resp_Len++] = APDU[APDU_Len-2];
+		APDU_Resp[APDU_Resp_Len++] = APDU[APDU_Len-1];
+
+		if ((APDU[APDU_Len - 2] != 0x90) | (APDU[APDU_Len -1] != 0x00)) {
+			LOG_DEBUG << "sendCommand T1: received " << utils::unsignedCharToString(APDU, APDU_Len);
+			response.response = "Problem when received T1 command";
+			return response;
+		}
+
+	}
+
+	responseAPDU =  utils::unsignedCharToString(APDU_Resp, APDU_Resp_Len);
+	response = { .response = responseAPDU };
+
+	return response;
+}
+
+int ExampleTerminalPCSCHCI_TH::sendInternalCommand(unsigned char* command, unsigned long int* command_length) {
+
+	LONG resp = SCARD_SWALLOWED;
+	//std::string strCommand = utils::unsignedCharToString(command, command_length);
+	unsigned long int APDU_Len = *command_length;
+	unsigned char APDU[270];
+
+	for (unsigned int i = 0; i < APDU_Len ; i++){
+		APDU[i] = command[i];
+	}
+
+	LOG_DEBUG << "sendInternalCommand Input, Command : " << utils::unsignedCharToString(command, *command_length) << ", Command_Length : " << *command_length << ", APDU : " <<
 			utils::unsignedCharToString(APDU, APDU_Len) << " Len : " << APDU_Len;
 
 
 	dwRecvLength_ = sizeof(pbRecvBuffer_);
 
-	LOG_DEBUG << "hCard_ After SendEscapeCommand Connect " << "[hCard:" << hCard_ << "]";
+	LOG_DEBUG << "hCard_ After SendInternalCommand Connect " << "[hCard:" << hCard_ << "]";
 
 	int tries = 0;
 	if ((resp = SCardTransmit(hCard_, &pioSendPci_, APDU, APDU_Len, NULL, pbRecvBuffer_, &dwRecvLength_)) != SCARD_S_SUCCESS) {
@@ -204,7 +271,7 @@ int ExampleTerminalPCSCHCI_TH::sendInternalCommand(unsigned char* command, unsig
 			return -1;
 		}
 	}
-	LOG_DEBUG << "CommandEscape Success, APDU : " << utils::unsignedCharToString(APDU, APDU_Len) << " Len : " << APDU_Len << " [recvbuffer:" << utils::unsignedCharToString(pbRecvBuffer_, dwRecvLength_) << "][recvlength:" << dwRecvLength_ << "]";
+	LOG_DEBUG << "sendInternalCommand Success, APDU : " << utils::unsignedCharToString(APDU, APDU_Len) << " Len : " << APDU_Len << " [recvbuffer:" << utils::unsignedCharToString(pbRecvBuffer_, dwRecvLength_) << "][recvlength:" << dwRecvLength_ << "]";
 
 	*command_length = dwRecvLength_;
 	for (unsigned int i=0; i<*command_length; i++){
@@ -212,7 +279,6 @@ int ExampleTerminalPCSCHCI_TH::sendInternalCommand(unsigned char* command, unsig
 	}
 
 	return 0;
-
 }
 
 ResponsePacket ExampleTerminalPCSCHCI_TH::sendTypeA(unsigned char command[],  unsigned long int command_length) {
@@ -551,14 +617,17 @@ ResponsePacket ExampleTerminalPCSCHCI_TH::getNotifications() {
 	APDU[APDU_Len++] = 0x00;
 	APDU[APDU_Len++] = 0x00;
 
-	return sendCommand(APDU, APDU_Len);
+
+	//return sendCommand(APDU, APDU_Len);
+	return sendCommand_T1(APDU, APDU_Len);
+
 }
 
 ResponsePacket ExampleTerminalPCSCHCI_TH::clearNotifications() {
 	unsigned char APDU[] = {0x80, 0xDD, 0x01, 0x00, 0x00};
 	unsigned long int APDU_Len = sizeof APDU;
 
-	return sendCommand(APDU, APDU_Len);
+	return sendCommand_T1(APDU, APDU_Len);
 }
 
 
