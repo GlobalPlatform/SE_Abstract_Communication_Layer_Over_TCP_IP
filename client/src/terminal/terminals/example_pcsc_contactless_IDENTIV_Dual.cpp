@@ -238,6 +238,28 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::isAlive() {
 	return sendCommand(command, sizeof(command));
 }
 
+ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::disconnect() {
+	ResponsePacket response;
+	LONG resp;
+
+	int tries = 0;
+	if ((resp = SCardDisconnect(hCard_, SCARD_LEAVE_CARD)) != SCARD_S_SUCCESS) {
+		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
+			resp = handleRetry();
+			resp = SCardDisconnect(hCard_, SCARD_LEAVE_CARD);
+			tries++;
+		}
+		if (resp != SCARD_S_SUCCESS) {
+			LOG_DEBUG << "Failed to call SCardDisconnect() "
+					  << "[card:" << hCard_ << "][dwDisposition:" << SCARD_LEAVE_CARD << "]";
+			return handleErrorResponse("Failed to disconnect", resp);
+		}
+	}
+
+	LOG_INFO << "Terminal PCSC disconnected successfully";
+	return response;
+}
+
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::diag() {
 	ResponsePacket response;
 	LONG resp;
@@ -306,28 +328,6 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::diag() {
 	return response;
 }
 
-ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::disconnect() {
-	ResponsePacket response;
-	LONG resp;
-
-	int tries = 0;
-	if ((resp = SCardDisconnect(hCard_, SCARD_LEAVE_CARD)) != SCARD_S_SUCCESS) {
-		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
-			resp = handleRetry();
-			resp = SCardDisconnect(hCard_, SCARD_LEAVE_CARD);
-			tries++;
-		}
-		if (resp != SCARD_S_SUCCESS) {
-			LOG_DEBUG << "Failed to call SCardDisconnect() "
-					  << "[card:" << hCard_ << "][dwDisposition:" << SCARD_LEAVE_CARD << "]";
-			return handleErrorResponse("Failed to disconnect", resp);
-		}
-	}
-
-	LOG_INFO << "Terminal PCSC disconnected successfully";
-	return response;
-}
-
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::disconnect_HW() {
 	LOG_INFO << "Disconnect_HW called";
 
@@ -340,16 +340,19 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::deactivate_Interface
 //	return disconnect();
 	ResponsePacket response;
 
-	return response;
+//	return response;
+	return disconnect();
 
 }
 
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::activate_Interface() {
 	LOG_INFO << "Activate_Interface called";
 
-	ResponsePacket response;
+	/*ResponsePacket response;
 
 	return response;
+	*/
+	return reconnect_HW();
 }
 
 

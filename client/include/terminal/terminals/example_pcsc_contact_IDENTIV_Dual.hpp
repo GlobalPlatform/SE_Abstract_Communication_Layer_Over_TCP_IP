@@ -67,6 +67,8 @@ public:
 private:
 	ResponsePacket handleErrorResponse(std::string context_message, LONG error);
 	ResponsePacket retrieveAtr(BYTE* bAttr, DWORD* cByte);
+	int sendInternalCommand(unsigned char* command, unsigned long int* command_length);
+	ResponsePacket sendCommand_T1(unsigned char* command, unsigned long int command_length);
 	std::string errorToString(LONG error);
 	LONG handleRetry();
 };
