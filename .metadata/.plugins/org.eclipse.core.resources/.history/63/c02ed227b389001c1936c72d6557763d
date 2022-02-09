@@ -16,7 +16,7 @@
  *********************************************************************************/
 
 #include "constants/response_packet.hpp"
-#include "terminal/terminals/example_pcsc_contact_IDENTIV_Dual.hpp"
+#include "terminal/terminals/example_pcsc_contactless_IDENTIV_Dual.hpp"
 #include "terminal/terminals/utils/type_converter.hpp"
 #include "plog/include/plog/Log.h"
 
@@ -24,27 +24,24 @@
 #include <winscard.h>
 #include <map>
 
-#define TRIES_LIMIT 2
+#define TRIES_LIMIT 3
 
 namespace client {
 
-ExampleTerminalPCSCContact_IDENTIV_Dual::~ExampleTerminalPCSCContact_IDENTIV_Dual() {
-	LOG_INFO << "SCardFreeMemory called";
+ExampleTerminalPCSCContactless_IDENTIV_Dual::~ExampleTerminalPCSCContactless_IDENTIV_Dual() {
 	if (SCardFreeMemory(hContext_, mszReaders_) != SCARD_S_SUCCESS) {
 		LOG_DEBUG << "Failed to call SCardFreeMemory() " << "[card:" << hCard_ << "][mszReaders:" << mszReaders_ << "]";
 	}
 
-	LOG_INFO << "SCardReleaseContext called";
 	if (SCardReleaseContext(hContext_) != SCARD_S_SUCCESS) {
 		LOG_DEBUG << "Failed to call SCardReleaseContext() " << "[card:" << hCard_ << "][hContext:" << hContext_ << "]";
 	}
 }
 
-ResponsePacket ExampleTerminalPCSCContact_IDENTIV_Dual::init() {
+ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::init() {
 	ResponsePacket response;
 	LONG resp;
-
-	LOG_INFO << "SCardEstablishContext called";
+	currentPollingType_ = TYPE_ABF;
 	if ((resp = SCardEstablishContext(SCARD_SCOPE_SYSTEM, NULL, NULL, &hContext_)) != SCARD_S_SUCCESS) {
 		LOG_DEBUG << "Failed to call SCardEstablishContext() [error:" << errorToString(resp) << "]"
 				  << "[dwScope:" << SCARD_SCOPE_SYSTEM << "][pvReserved1:" << NULL << "][pvReserved1:" << NULL << "][hContext:" << hContext_ << "]";
@@ -53,32 +50,29 @@ ResponsePacket ExampleTerminalPCSCContact_IDENTIV_Dual::init() {
 
 	LOG_INFO << "Terminal PCSC initialized";
 	return response;
+//	return automaticInterfaceSwitching();
 }
 
-ResponsePacket ExampleTerminalPCSCContact_IDENTIV_Dual::loadAndListReaders() {
+ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::loadAndListReaders() {
 	ResponsePacket response;
 	LONG resp;
 
-	LOG_INFO << "SCardFreeMemory called";
 	if (SCardFreeMemory(hContext_, mszReaders_) != SCARD_S_SUCCESS) {
 		LOG_DEBUG << "Failed to call SCardFreeMemory() " << "[card:" << hCard_ << "][mszReaders:" << mszReaders_ << "]";
 	}
 
 	dwReaders_ = SCARD_AUTOALLOCATE;
 	int tries = 0;
-
-	LOG_INFO << "SCardListReaders called";
 	if ((resp = SCardListReaders(hContext_, NULL, (LPTSTR) &mszReaders_, &dwReaders_)) != SCARD_S_SUCCESS) {
 		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
 			resp = handleRetry();
-			LOG_INFO << "[Retry] SCardListReaders called";
 			resp = SCardListReaders(hContext_, NULL, (LPTSTR) &mszReaders_, &dwReaders_);
 			if (resp != SCARD_S_SUCCESS) {
 				tries++;
 			}
 		}
 		if (resp != SCARD_S_SUCCESS) {
-			return handleErrorResponse("Failed to list readers", resp);
+			return handleErrorResponse("Failed to connect", resp);
 		}
 	}
 
@@ -97,30 +91,28 @@ ResponsePacket ExampleTerminalPCSCContact_IDENTIV_Dual::loadAndListReaders() {
 	return response;
 }
 
-ResponsePacket ExampleTerminalPCSCContact_IDENTIV_Dual::connect(const char* reader) {
+ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::connect(const char* reader) {
 	ResponsePacket response;
 	LONG resp;
+	BYTE config = SCARD_SHARE_SHARED;
 
-	LOG_INFO << "Trying to connect: " << reader;
 	int tries = 0;
 
-	LOG_INFO << "SCardConnect called";
-	if ((resp = SCardConnect(hContext_, reader, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, &hCard_, &dwActiveProtocol_)) != SCARD_S_SUCCESS) {
+
+	if ((resp = SCardConnect(hContext_, reader, config, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, &hCard_, &dwActiveProtocol_)) != SCARD_S_SUCCESS) {
 		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
 			resp = handleRetry();
-			LOG_INFO << "[Retry] SCardConnect called";
-			resp = SCardConnect(hContext_, reader, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, &hCard_, &dwActiveProtocol_);
+			resp = SCardConnect(hContext_, reader, config, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, &hCard_, &dwActiveProtocol_);
 			tries++;
 		}
 		if (resp != SCARD_S_SUCCESS) {
 			LOG_DEBUG << "Failed to call SCardConnect() " << "[error:" << errorToString(resp) << "]"
-					  << "[hContext:" << hContext_ << "][szReader:" << reader << "][dwShareMode:" << SCARD_SHARE_SHARED << "]"
+					  << "[hContext:" << hContext_ << "][szReader:" << reader << "][dwShareMode:" << config << "]"
 					  << "[dwPreferredProtocols:" << 0 << "][hCard:" << hCard_ << "][dwActiveProtocol:" << dwActiveProtocol_ << "]";
 			return handleErrorResponse("Failed to connect", resp);
 		}
 	}
-
-	current_reader_ = std::string(reader);
+	this->current_reader_ = std::string(reader);
 	switch (dwActiveProtocol_) {
 	case SCARD_PROTOCOL_T0:
 		pioSendPci_ = *SCARD_PCI_T0;
@@ -132,20 +124,20 @@ ResponsePacket ExampleTerminalPCSCContact_IDENTIV_Dual::connect(const char* read
 	}
 
 	LOG_DEBUG << "Reader connected: " << reader;
-	return response;
+//	return response;
+
+	return automaticInterfaceSwitching();
 }
 
-ResponsePacket ExampleTerminalPCSCContact_IDENTIV_Dual::sendCommand(unsigned char command[], DWORD command_length) {
+ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::sendCommand(unsigned char command[], DWORD command_length) {
 	LONG resp = SCARD_SWALLOWED;
-	std::string strCommand = utils::unsignedCharToString(command, command_length);
+//	std::string strCommand = utils::unsignedCharToString(command, command_length);
 	dwRecvLength_ = sizeof(pbRecvBuffer_);
 
 	int tries = 0;
-	LOG_INFO << "SCardTransmit called";
 	if ((resp = SCardTransmit(hCard_, &pioSendPci_, command, command_length, NULL, pbRecvBuffer_, &dwRecvLength_)) != SCARD_S_SUCCESS) {
 		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
 			resp = handleRetry();
-			LOG_INFO << "[Retry] SCardTransmit called";
 			resp = SCardTransmit(hCard_, &pioSendPci_, command, command_length, NULL, pbRecvBuffer_, &dwRecvLength_);
 			tries++;
 		}
@@ -156,107 +148,34 @@ ResponsePacket ExampleTerminalPCSCContact_IDENTIV_Dual::sendCommand(unsigned cha
 		}
 	}
 
-	std::string responseAPDU = utils::unsignedCharToString(pbRecvBuffer_, dwRecvLength_);
+	std::string responseAPDU =  utils::unsignedCharToString(pbRecvBuffer_, dwRecvLength_);
 	ResponsePacket response = { .response = responseAPDU };
 	return response;
 }
 
-ResponsePacket ExampleTerminalPCSCContact_IDENTIV_Dual::sendCommand_T1(unsigned char* command, unsigned long int command_length) {
-	ResponsePacket response;
-
-	unsigned long int APDU_Len = command_length;
-	unsigned char APDU[270];
-	unsigned char APDU_Resp[DEFAULT_BUFLEN];
-	unsigned long int APDU_Resp_Len = 0;
-	std::string responseAPDU;
-
-	for (unsigned int i = 0; i < APDU_Len ; i++){
-		APDU[i] = command[i];
-	}
-
-	if (sendInternalCommand(APDU, &APDU_Len) != 0x00) {
-		LOG_DEBUG << "sendCommand T1: failed";
-		response.response = "Problem when sending T1 command";
-		return response;
-	}
-
-	if (APDU_Len < 2){
-		LOG_DEBUG << "Send Command T1 , " << "Answer : " << utils::unsignedCharToString(APDU, APDU_Len) << " & length is : " << APDU_Len;
-		response.response = "Failed to Send Command T1, wrong answer from the reader";
-		return response;
-
-	} else if ((APDU_Len != 2) | (APDU[0x00]!=0x61)){
-		if ((APDU[APDU_Len - 2] != 0x90) | (APDU[APDU_Len -1] != 0x00)) {
-			LOG_DEBUG << "sendCommand T1: received " << utils::unsignedCharToString(APDU, APDU_Len);
-			response.response = "Problem when received T1 command";
-			return response;
-		}
-
-		responseAPDU =  utils::unsignedCharToString(APDU, APDU_Len);
-		response = { .response = responseAPDU };
-		return response;
-
-	} else {
-		while (APDU[APDU_Len - 2]==0x61){
-			for (unsigned int i= 0; i < APDU_Len - 2; i++) {
-				APDU_Resp[APDU_Resp_Len++] = APDU[i];
-			}
-
-			APDU[0x04] = APDU[APDU_Len - 1];
-
-			APDU[0x00] = 0x00;
-			APDU[0x01] = 0xC0;
-			APDU[0x02] = 0x00;
-			APDU[0x03] = 0x00;
-			APDU_Len = 0x05;
-
-			if (sendInternalCommand(APDU, &APDU_Len) != 0x00) {
-				LOG_DEBUG << "sendCommand T1: failed";
-				response.response = "Problem when sending T1 command";
-				return response;
-			}
-
-		}
-
-		for (unsigned int i= 0; i < APDU_Len - 2; i++) {
-			APDU_Resp[APDU_Resp_Len++] = APDU[i];
-		}
-
-		APDU_Resp[APDU_Resp_Len++] = APDU[APDU_Len-2];
-		APDU_Resp[APDU_Resp_Len++] = APDU[APDU_Len-1];
-
-		if ((APDU[APDU_Len - 2] != 0x90) | (APDU[APDU_Len -1] != 0x00)) {
-			LOG_DEBUG << "sendCommand T1: received " << utils::unsignedCharToString(APDU, APDU_Len);
-			response.response = "Problem when received T1 command";
-			return response;
-		}
-
-	}
-
-	responseAPDU =  utils::unsignedCharToString(APDU_Resp, APDU_Resp_Len);
-	response = { .response = responseAPDU };
-
-	return response;
-
-}
-
-int ExampleTerminalPCSCContact_IDENTIV_Dual::sendInternalCommand(unsigned char* command, unsigned long int* command_length) {
+int ExampleTerminalPCSCContactless_IDENTIV_Dual::sendEscapeCommand(unsigned char* command, unsigned long int* command_length) {
 	LONG resp = SCARD_SWALLOWED;
 	//std::string strCommand = utils::unsignedCharToString(command, command_length);
-	unsigned long int APDU_Len = *command_length;
+	unsigned long int APDU_Len = 5 + *command_length;
 	unsigned char APDU[270];
 
-	for (unsigned int i = 0; i < APDU_Len ; i++){
-		APDU[i] = command[i];
+	APDU[0x00] = 0xFF;
+	APDU[0x01] = 0xCC;
+	APDU[0x02] = 0x00;
+	APDU[0x03] = 0x00;
+	APDU[0x04] = (*command_length)/* && 0xFF*/;
+
+	for (unsigned int i = 0; i < *command_length ; i++){
+		APDU[i + 5] = command[i];
 	}
 
-	LOG_DEBUG << "sendInternalCommand Input, Command : " << utils::unsignedCharToString(command, *command_length) << ", Command_Length : " << *command_length << ", APDU : " <<
+	LOG_DEBUG << "CommandEscape Input, Command : " << utils::unsignedCharToString(command, *command_length) << ", Command_Length : " << *command_length << ", APDU : " <<
 			utils::unsignedCharToString(APDU, APDU_Len) << " Len : " << APDU_Len;
 
 
 	dwRecvLength_ = sizeof(pbRecvBuffer_);
 
-	LOG_DEBUG << "hCard_ After SendInternalCommand Connect " << "[hCard:" << hCard_ << "]";
+	LOG_DEBUG << "hCard_ After SendEscapeCommand Connect " << "[hCard:" << hCard_ << "]";
 
 	int tries = 0;
 	if ((resp = SCardTransmit(hCard_, &pioSendPci_, APDU, APDU_Len, NULL, pbRecvBuffer_, &dwRecvLength_)) != SCARD_S_SUCCESS) {
@@ -271,7 +190,7 @@ int ExampleTerminalPCSCContact_IDENTIV_Dual::sendInternalCommand(unsigned char* 
 			return -1;
 		}
 	}
-	LOG_DEBUG << "sendInternalCommand Success, APDU : " << utils::unsignedCharToString(APDU, APDU_Len) << " Len : " << APDU_Len << " [recvbuffer:" << utils::unsignedCharToString(pbRecvBuffer_, dwRecvLength_) << "][recvlength:" << dwRecvLength_ << "]";
+	LOG_DEBUG << "CommandEscape Success, APDU : " << utils::unsignedCharToString(APDU, APDU_Len) << " Len : " << APDU_Len << " [recvbuffer:" << utils::unsignedCharToString(pbRecvBuffer_, dwRecvLength_) << "][recvlength:" << dwRecvLength_ << "]";
 
 	*command_length = dwRecvLength_;
 	for (unsigned int i=0; i<*command_length; i++){
@@ -279,32 +198,71 @@ int ExampleTerminalPCSCContact_IDENTIV_Dual::sendInternalCommand(unsigned char* 
 	}
 
 	return 0;
+
 }
 
-ResponsePacket ExampleTerminalPCSCContact_IDENTIV_Dual::sendTypeA(unsigned char command[],  unsigned long int command_length) {
-	ResponsePacket response;
-	response.response = "Not supported";
-	return response;
+ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::sendTypeA(unsigned char command[],  unsigned long int command_length) {
+
+	if (currentPollingType_ != TYPE_A) {
+		LOG_DEBUG << "Send Type A, the current state is not Type A, the current state is : " << currentPollingType_;
+		ResponsePacket response = { .response = "KO", .err_client_code = ERR_OTHER, .err_client_description = "Current state is not type A." };
+		return response;
+	}
+
+	// send requested command
+	return sendCommand(command, command_length);
 }
 
-ResponsePacket ExampleTerminalPCSCContact_IDENTIV_Dual::sendTypeB(unsigned char command[],  unsigned long int command_length) {
-	ResponsePacket response;
-	response.response = "Not supported";
-	return response;
+ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::sendTypeB(unsigned char command[],  unsigned long int command_length) {
+	if (currentPollingType_ != TYPE_B) {
+		LOG_DEBUG << "Send Type B, the current state is not Type B, the current state is : " << currentPollingType_;
+		ResponsePacket response = { .response = "KO", .err_client_code = ERR_OTHER, .err_client_description = "Current state is not type B." };
+		return response;
+	}
+
+	// send requested command
+	return sendCommand(command, command_length);
 }
 
-ResponsePacket ExampleTerminalPCSCContact_IDENTIV_Dual::sendTypeF(unsigned char command[],  unsigned long int command_length) {
-	ResponsePacket response;
-	response.response = "Not supported";
-	return response;
+ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::sendTypeF(unsigned char command[],  unsigned long int command_length) {
+	if (currentPollingType_ != TYPE_F) {
+		LOG_DEBUG << "Send Type F, the current state is not Type F, the current state is : " << currentPollingType_;
+		ResponsePacket response = { .response = "KO", .err_client_code = ERR_OTHER, .err_client_description = "Current state is not type F." };
+		return response;
+	}
+
+	// send requested command
+	return sendCommand(command, command_length);
 }
 
-ResponsePacket ExampleTerminalPCSCContact_IDENTIV_Dual::isAlive() {
+ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::isAlive() {
 	unsigned char command[] = { 0x00, 0x00, 0x00, 0x00 };
 	return sendCommand(command, sizeof(command));
 }
 
-ResponsePacket ExampleTerminalPCSCContact_IDENTIV_Dual::diag() {
+ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::disconnect() {
+	ResponsePacket response;
+	LONG resp;
+
+	int tries = 0;
+	if ((resp = SCardDisconnect(hCard_, SCARD_LEAVE_CARD)) != SCARD_S_SUCCESS) {
+		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
+			resp = handleRetry();
+			resp = SCardDisconnect(hCard_, SCARD_LEAVE_CARD);
+			tries++;
+		}
+		if (resp != SCARD_S_SUCCESS) {
+			LOG_DEBUG << "Failed to call SCardDisconnect() "
+					  << "[card:" << hCard_ << "][dwDisposition:" << SCARD_LEAVE_CARD << "]";
+			return handleErrorResponse("Failed to disconnect", resp);
+		}
+	}
+
+	LOG_INFO << "Terminal PCSC disconnected successfully";
+	return response;
+}
+
+ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::diag() {
 	ResponsePacket response;
 	LONG resp;
 	CHAR szReader[200];
@@ -314,11 +272,9 @@ ResponsePacket ExampleTerminalPCSCContact_IDENTIV_Dual::diag() {
 	DWORD dwState, dwProtocol;
 
 	int tries = 0;
-	LOG_INFO << "SCardStatus called";
 	if ((resp = SCardStatus(hCard_, szReader, &cch, &dwState, &dwProtocol, (LPBYTE) &bAttr, &cByte)) != SCARD_S_SUCCESS) {
 		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
 			resp = handleRetry();
-			LOG_INFO << "[Retry] SCardStatus called";
 			resp = SCardStatus(hCard_, szReader, &cch, &dwState, &dwProtocol, (LPBYTE) &bAttr, &cByte);
 			tries++;
 		}
@@ -374,80 +330,45 @@ ResponsePacket ExampleTerminalPCSCContact_IDENTIV_Dual::diag() {
 	return response;
 }
 
-ResponsePacket ExampleTerminalPCSCContact_IDENTIV_Dual::disconnect() {
-	ResponsePacket response;
-	LONG resp;
+ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::disconnect_HW() {
+	LOG_INFO << "Disconnect_HW called";
 
-	int tries = 0;
-	LOG_INFO << "SCardDisconnect called";
-	if ((resp = SCardDisconnect(hCard_, SCARD_LEAVE_CARD)) != SCARD_S_SUCCESS) {
-		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
-			resp = handleRetry();
-			LOG_INFO << "[Retry] SCardDisconnect called";
-			resp = SCardDisconnect(hCard_, SCARD_LEAVE_CARD);
-			tries++;
-		}
-		if (resp != SCARD_S_SUCCESS) {
-			LOG_DEBUG << "Failed to call SCardDisconnect() "
-					  << "[card:" << hCard_ << "][dwDisposition:" << SCARD_LEAVE_CARD << "]";
-			return handleErrorResponse("Failed to disconnect", resp);
-		}
-	}
-
-	LOG_INFO << "Terminal PCSC disconnected successfully";
-	return response;
+	return disconnect();
 }
 
-ResponsePacket ExampleTerminalPCSCContact_IDENTIV_Dual::deactivate_Interface() {
-	LOG_INFO << "Deactivate_Interface";
-/*
+ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::deactivate_Interface() {
+	LOG_INFO << "Deactivate_Interface called";
+
+//	return disconnect();
 	ResponsePacket response;
-	return response;
-*/
+
+//	return response;
 	return disconnect();
 
-/*	unsigned char APDU[256];
-	unsigned long int APDU_Len = 0;
-
-	APDU_Len=0;
-	APDU[APDU_Len++] = 0xFF;
-	APDU[APDU_Len++] = 0x70;
-	APDU[APDU_Len++] = 0x04;
-	APDU[APDU_Len++] = 0xE6;
-	APDU[APDU_Len++] = 0x02;
-	APDU[APDU_Len++] = 0x05;
-	APDU[APDU_Len++] = 0x00;
-	APDU[APDU_Len++] = 0x00;
-
-	sendCommand_T1(APDU, APDU_Len);
-
-	APDU_Len=0;
-	APDU[APDU_Len++] = 0xFF;
-	APDU[APDU_Len++] = 0x70;
-	APDU[APDU_Len++] = 0x04;
-	APDU[APDU_Len++] = 0xE6;
-	APDU[APDU_Len++] = 0x03;
-	APDU[APDU_Len++] = 0x05;
-	APDU[APDU_Len++] = 0x01;
-	APDU[APDU_Len++] = 0x00;
-	APDU[APDU_Len++] = 0x00;
-
-
-	return sendCommand_T1(APDU, APDU_Len);
-*/
 }
 
-ResponsePacket ExampleTerminalPCSCContact_IDENTIV_Dual::activate_Interface() {
+ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::activate_Interface() {
+	LOG_INFO << "Activate_Interface called";
+
+	/*ResponsePacket response;
+
+	return response;
+	*/
+	return reconnect_HW();
+}
+
+
+ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::reconnect_HW() {
 	LONG resp;
 	ResponsePacket response;
 
 	int tries = 0;
-	LOG_INFO << "Activate_Interface called";
-	if ((resp = SCardConnect(hContext_, current_reader_.c_str(), SCARD_SHARE_DIRECT, 0, &hCard_, &dwActiveProtocol_)) != SCARD_S_SUCCESS) {
+	LOG_INFO << "Reconnect_HW called";
+	if ((resp = SCardConnect(hContext_, current_reader_.c_str(), SCARD_SHARE_DIRECT, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, &hCard_, &dwActiveProtocol_)) != SCARD_S_SUCCESS) {
 		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
 			resp = handleRetry();
 			LOG_INFO << "[Retry] SCardConnect called";
-			resp = SCardConnect(hContext_, current_reader_.c_str(), SCARD_SHARE_DIRECT, 0, &hCard_, &dwActiveProtocol_);
+			resp = SCardConnect(hContext_, current_reader_.c_str(), SCARD_SHARE_DIRECT, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, &hCard_, &dwActiveProtocol_);
 			tries++;
 		}
 		if (resp != SCARD_S_SUCCESS) {
@@ -459,11 +380,20 @@ ResponsePacket ExampleTerminalPCSCContact_IDENTIV_Dual::activate_Interface() {
 	LOG_DEBUG << "Success to call SCardConnect() " << "[hContext:" << hContext_ << "][szReader:" << current_reader_ << "][dwShareMode:"
 			  << SCARD_SHARE_DIRECT << "]" << "[dwPreferredProtocols:" << 0 << "][hCard:" << hCard_ << "][dwActiveProtocol:" << dwActiveProtocol_ << "]";
 
-	return response;
+	switch (dwActiveProtocol_) {
+	case SCARD_PROTOCOL_T0:
+		pioSendPci_ = *SCARD_PCI_T0;
+		break;
 
+	case SCARD_PROTOCOL_T1:
+		pioSendPci_ = *SCARD_PCI_T1;
+		break;
+	}
+
+	return response;
 }
 
-ResponsePacket ExampleTerminalPCSCContact_IDENTIV_Dual::restart() {
+ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::restart() {
 	ResponsePacket response;
 	LONG resp;
 	DWORD dwProtocol;
@@ -497,24 +427,348 @@ ResponsePacket ExampleTerminalPCSCContact_IDENTIV_Dual::restart() {
 	return response;
 }
 
-ResponsePacket ExampleTerminalPCSCContact_IDENTIV_Dual::coldReset() {
+ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::retrieveAtr(BYTE* bAttr, DWORD* cByte) {
+	LONG resp;
+	ResponsePacket response;
+	DWORD cch = 200;
+	DWORD dwState;
+
+	int tries = 0;
+	if ((resp = SCardStatus(hCard_, mszReaders_, &cch, &dwState, &dwActiveProtocol_, (LPBYTE) bAttr, cByte)) != SCARD_S_SUCCESS) {
+		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
+			resp = handleRetry();
+			resp = SCardStatus(hCard_, mszReaders_, &cch, &dwState, &dwActiveProtocol_, (LPBYTE) bAttr, cByte);
+			tries++;
+		}
+		if (resp != SCARD_S_SUCCESS) {
+			LOG_DEBUG << "Failed to call SCardStatus() "
+					  << "[hContext:" << hContext_ << "][[mszReaders:" << mszReaders_ << "]"
+					  << "[dwActiveProtocol:" << dwActiveProtocol_ << "]";
+			return handleErrorResponse("Failed to retrieve atr", resp);
+		}
+	}
+
+	return response;
+}
+
+ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::powerOFFField() {
+	/*
+	ResponsePacket response;
+	unsigned char command[] = { 0xFF, 0xCC, 0x00, 0x00, 0x02, 0x96, 0x00 };
+	return sendCommand(command, sizeof command);
+	*/
+
+	LOG_DEBUG << "Contactless_IDENTIV Start PowerOFFField";
+
+	ResponsePacket response;
+	LOG_DEBUG << "Set power OFF Field: ";
+	// get initial polling
+	unsigned char command[] = { 0x96,  0x00};
+	DWORD commandLen = sizeof command;
+
+	if (sendEscapeCommand(command, &commandLen) != 0x00) {
+		LOG_DEBUG << "Set Power OFF Field: failed";
+		response.response = "Not supported";
+		return response;
+	}
+
+	if ((commandLen < 2) | (command[0x00]!=0x90) | (command[0x01]!=0x00) ){
+		LOG_DEBUG << "Set Power OFF Field failed: " << "Answer : " << command << " & length is : " << commandLen;
+		response.response = "Failed to Set Power OFF Field, wrong answer from the reader";
+		return response;
+
+	}
+
+	LOG_DEBUG << "Set Power OFF Field: Success";
+
+	return response;
+}
+
+ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::powerONField() {
+	LONG resp;
+	ResponsePacket response;
+
+
+	disconnect();
+	int tries = 0;
+	LOG_INFO << "SCardConnect called";
+
+	if ((resp = SCardConnect(hContext_, current_reader_.c_str(), SCARD_SHARE_DIRECT, 0, &hCard_, &dwActiveProtocol_)) != SCARD_S_SUCCESS) {
+		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
+			resp = handleRetry();
+			LOG_INFO << "[Retry] SCardConnect called";
+			resp = SCardConnect(hContext_, current_reader_.c_str(), SCARD_SHARE_DIRECT, 0, &hCard_, &dwActiveProtocol_);
+			tries++;
+		}
+		if (resp != SCARD_S_SUCCESS) {
+			LOG_DEBUG << "Failed to call SCardConnect() " << "[error:" << errorToString(resp) << "]" << "[hContext:" << hContext_ << "][szReader:" << current_reader_ << "][dwShareMode:"
+					  << SCARD_SHARE_DIRECT << "]" << "[dwPreferredProtocols:" << 0 << "][hCard:" << hCard_ << "][dwActiveProtocol:" << dwActiveProtocol_ << "]";
+			return handleErrorResponse("Failed to connect", resp);
+		}
+	}
+
+	LOG_DEBUG << "Set power ON Field: ";
+	unsigned char command[] = { 0x96,  0x01};
+	DWORD commandLen = sizeof command;
+
+	if (sendEscapeCommand(command, &commandLen) != 0x00) {
+		LOG_DEBUG << "Set Power ON Field: failed";
+		response.response = "Not supported";
+		return response;
+	}
+
+	if ((commandLen < 2) | (command[0x00]!=0x90) | (command[0x01]!=0x00) ){
+		LOG_DEBUG << "Set Power ON Field failed: " << "Answer : " << command << " & length is : " << commandLen;
+		response.response = "Failed to Set Power ON Field, wrong answer from the reader";
+		return response;
+
+	}
+
+	Sleep(500); // hardware needs delay
+	// reconnect shared & T0|T1 protocol
+	return restart();
+}
+
+ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::pollTypeA() {
+	ResponsePacket response;
+
+	LOG_DEBUG << "Get Initial Polling: ";
+	// get initial polling
+	unsigned char command[] = { 0x95,  TYPE_A};
+	DWORD commandLen = sizeof command;
+
+	if (sendEscapeCommand(command, &commandLen) != 0x00) {
+		LOG_DEBUG << "Set Initial Polling: failed";
+		response.response = "Not supported";
+		return response;
+	}
+
+	if ((commandLen < 2) | (command[0x00]!=0x90) | (command[0x01]!=0x00) ){
+		LOG_DEBUG << "Set Initial Polling failed: TYPE_A " << "Answer : " << command << " & length is : " << commandLen;
+		response.response = "Failed to set polling type A, wrong answer from the reader";
+		return response;
+
+	}
+	currentPollingType_ = TYPE_A;
+	LOG_DEBUG << "Set Initial Polling (success): TYPE_A";
+
+	return response;
+}
+
+ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::pollTypeB() {
+	ResponsePacket response;
+
+	LOG_DEBUG << "Get Initial Polling: ";
+	// get initial polling
+	unsigned char command[] = { 0x95,  TYPE_B};
+	DWORD commandLen = sizeof command;
+
+	if (sendEscapeCommand(command, &commandLen) != 0x00) {
+		LOG_DEBUG << "Set Initial Polling: failed";
+		response.response = "Not supported";
+		return response;
+	}
+
+	if ((commandLen < 2) | (command[0x00]!=0x90) | (command[0x01]!=0x00) ){
+		LOG_DEBUG << "Set Initial Polling failed: TYPE_B " << "Answer : " << command << " & length is : " << commandLen;
+		response.response = "Failed to set polling type B, wrong answer from the reader";
+		return response;
+
+	}
+	currentPollingType_ = TYPE_B;
+	LOG_DEBUG << "Set Initial Polling (success): TYPE_B";
+
+	return response;
+}
+
+ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::pollTypeF() {
+	ResponsePacket response;
+
+	LOG_DEBUG << "Get Initial Polling: ";
+	// get initial polling
+	unsigned char command[] = { 0x95,  TYPE_F};
+	DWORD commandLen = sizeof command;
+
+	if (sendEscapeCommand(command, &commandLen) != 0x00) {
+		LOG_DEBUG << "Set Initial Polling: failed";
+		response.response = "Not supported";
+		return response;
+	}
+
+	if ((commandLen < 2) | (command[0x00]!=0x90) | (command[0x01]!=0x00) ){
+		LOG_DEBUG << "Set Initial Polling failed: TYPE_F " << "Answer : " << command << " & length is : " << commandLen;
+		response.response = "Failed to set polling type F, wrong answer from the reader";
+		return response;
+
+	}
+	currentPollingType_ = TYPE_F;
+	LOG_DEBUG << "Set Initial Polling (success): TYPE_F";
+
+	return response;
+}
+
+ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::pollTypeAllTypes() {
+	ResponsePacket response;
+
+	LOG_DEBUG << "Get Initial Polling: ";
+	// get initial polling
+	unsigned char command[] = { 0x95,  TYPE_ABF};
+	DWORD commandLen = sizeof command;
+
+	if (sendEscapeCommand(command, &commandLen) != 0x00) {
+		LOG_DEBUG << "Set Initial Polling: failed";
+		response.response = "Not supported";
+		return response;
+	}
+
+	if ((commandLen < 2) | (command[0x00]!=0x90) | (command[0x01]!=0x00) ){
+		LOG_DEBUG << "Set Initial Polling failed: TYPE_ABF " << "Answer : " << command << " & length is : " << commandLen;
+		response.response = "Failed to set polling type ABF, wrong answer from the reader";
+		return response;
+
+	}
+	currentPollingType_ = TYPE_ABF;
+	LOG_DEBUG << "Set Initial Polling (success): TYPE_ABF";
+
+	return response;
+}
+
+ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::getNotifications() {
+	ResponsePacket response;
+	response.response = "Not supported";
+	return response;
+}
+
+ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::clearNotifications() {
+	ResponsePacket response;
+	response.response = "Not supported";
+	return response;
+}
+
+ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::automaticInterfaceSwitching(){
+	ResponsePacket response;
+
+	LOG_DEBUG << "Automatic Interface Switching: ";
+
+	// get initial polling
+	unsigned char command[256];
+	int i = 0;
+	DWORD commandLen;
+
+	i = 0;
+	command[i++] = 0xB2;
+	command[i++] = 0x00;
+	commandLen = i;
+
+	if (sendEscapeCommand(command, &commandLen) != 0x00) {
+		LOG_DEBUG << "READER_LED_CONTROL_BY_FW: failed";
+		response.response = "Not supported";
+		return response;
+	}
+
+	if ((commandLen < 2) | (command[0x00]!=0x90) | (command[0x01]!=0x00) ){
+		LOG_DEBUG << "READER_LED_CONTROL_BY_FW, " << "Answer : " << command << " & length is : " << commandLen;
+		response.response = "Failed to READER_LED_CONTROL_BY_FW, wrong answer from the reader";
+		return response;
+
+	}
+
+	i = 0;
+	command[i++] = 0x19;
+	command[i++] = 0x00;
+	command[i++] = 0x01;
+	commandLen = i;
+
+	if (sendEscapeCommand(command, &commandLen) != 0x00) {
+		LOG_DEBUG << "CNTLESS_SWITCH_RF_ON_OFF (RED): failed";
+		response.response = "Not supported";
+		return response;
+	}
+
+	if ((commandLen < 2) | (command[0x00]!=0x90) | (command[0x01]!=0x00) ){
+		LOG_DEBUG << "CNTLESS_SWITCH_RF_ON_OFF (RED), " << "Answer : " << command << " & length is : " << commandLen;
+		response.response = "Failed to CNTLESS_SWITCH_RF_ON_OFF (RED), wrong answer from the reader";
+		return response;
+
+	}
+
+
+	i = 0;
+	command[i++] = 0x19;
+	command[i++] = 0x00;
+	command[i++] = 0x01;
+	commandLen = i;
+
+	if (sendEscapeCommand(command, &commandLen) != 0x00) {
+		LOG_DEBUG << "CNTLESS_SWITCH_RF_ON_OFF (GREEN): failed";
+		response.response = "Not supported";
+		return response;
+	}
+
+	if ((commandLen < 2) | (command[0x00]!=0x90) | (command[0x01]!=0x00) ){
+		LOG_DEBUG << "CNTLESS_SWITCH_RF_ON_OFF (GREEN), " << "Answer : " << command << " & length is : " << commandLen;
+		response.response = "Failed to CNTLESS_SWITCH_RF_ON_OFF (GREEN), wrong answer from the reader";
+		return response;
+
+	}
+
+	i = 0;
+	command[i++] = 0x9C;
+	command[i++] = 0x01;
+	commandLen = i;
+
+	if (sendEscapeCommand(command, &commandLen) != 0x00) {
+		LOG_DEBUG << "CNTLESS_SWITCH_RF_ON_OFF (Leave RF Field ON when contact card is present in the reader): failed";
+		response.response = "Not supported";
+		return response;
+	}
+
+	if ((commandLen < 2) | (command[0x00]!=0x90) | (command[0x01]!=0x00) ){
+		LOG_DEBUG << "CNTLESS_SWITCH_RF_ON_OFF (Leave RF Field ON when contact card is present in the reader), " << "Answer : " << command << " & length is : " << commandLen;
+		response.response = "Failed to CNTLESS_SWITCH_RF_ON_OFF (Leave RF Field ON when contact card is present in the reader), wrong answer from the reader";
+		return response;
+
+	}
+
 /*
+	i.	RESET On CL interface
+
+	ii.	READER_LED_CONTROL_BY_FW
+	FF CC 00 00 02 B2 00
+
+	iii.	CNTLESS_SWITCH_RF_ON_OFF - 0-RED
+	FF CC 00 00 03 19 00 01
+
+	iv.	CNTLESS_SWITCH_RF_ON_OFF - 1-GREEN
+	FF CC 00 00 03 19 01 01
+
+	v.	CNTLESS_SWITCH_RF_ON_OFF - Leave RF Field ON when contact card is present in the reader
+	FF CC 00 00 02 9C 01
+
+	vi.	Keep the card in Contact interface and open another dedicated client for the interface
+	Perform a RESET
+*/
+
+	return response;
+}
+
+ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::coldReset() {
 	ResponsePacket response;
 	LONG resp;
-//	DWORD dwProtocol;
+	DWORD dwProtocol;
 
 	int tries = 0;
 	LOG_INFO << "SCardReconnect called";
-	if ((resp = SCardReconnect(hCard_, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_UNPOWER_CARD, &dwActiveProtocol_)) != SCARD_S_SUCCESS) {
+	if ((resp = SCardReconnect(hCard_, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_UNPOWER_CARD, &dwProtocol)) != SCARD_S_SUCCESS) {
 		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
 			resp = handleRetry();
 			LOG_INFO << "[Retry] SCardReconnect called";
-			resp = SCardReconnect(hCard_, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_UNPOWER_CARD, &dwActiveProtocol_);
+			resp = SCardReconnect(hCard_, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_UNPOWER_CARD, &dwProtocol);
 			tries++;
 		}
 		if (resp != SCARD_S_SUCCESS) {
 			LOG_DEBUG << "Failed to call SCardReconnect() "
-					  << "[hContext:" << hContext_ << "][[dwShareMode:" << SCARD_SHARE_SHARED << "]"
+					  << "[hCard_:" << hCard_ << "][[dwShareMode:" << SCARD_SHARE_SHARED << "]"
 					  << "[dwActiveProtocol:" << dwActiveProtocol_ << "]";
 			return handleErrorResponse("Failed to cold reset", resp);
 		}
@@ -534,43 +788,10 @@ ResponsePacket ExampleTerminalPCSCContact_IDENTIV_Dual::coldReset() {
 	response = retrieveAtr(bAttr, &cByte);
 	response.response = utils::unsignedCharToString(bAttr, cByte);
 	return response;
-*/
-	ResponsePacket response;
-	LONG resp;
-
-	int tries = 0;
-	LOG_INFO << "Reconnect_HW called";
-	if ((resp = SCardReconnect(hCard_, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_UNPOWER_CARD, &dwActiveProtocol_)) != SCARD_S_SUCCESS) {
-		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
-			resp = handleRetry();
-			LOG_INFO << "[Retry] SCardReconnect called";
-			resp = SCardReconnect(hCard_, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_UNPOWER_CARD, &dwActiveProtocol_);
-			Sleep(300);
-			tries++;
-		}
-		if (resp != SCARD_S_SUCCESS) {
-			LOG_DEBUG << "Failed to call SCardReconnect() "
-					  << "[hCard_:" << hCard_ << "][[dwShareMode:" << SCARD_SHARE_SHARED << "]"
-					  << "[dwActiveProtocol:" << dwActiveProtocol_ << "]";
-			return handleErrorResponse("Failed to cold reset", resp);
-		}
-	}
-
-	switch (dwActiveProtocol_) {
-	case SCARD_PROTOCOL_T0:
-		pioSendPci_ = *SCARD_PCI_T0;
-		break;
-
-	case SCARD_PROTOCOL_T1:
-		pioSendPci_ = *SCARD_PCI_T1;
-		break;
-	}
-
-	return response;
-
 }
 
-ResponsePacket ExampleTerminalPCSCContact_IDENTIV_Dual::warmReset() {
+/*
+ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::warmReset() {
 	ResponsePacket response;
 	LONG resp;
 	DWORD dwProtocol;
@@ -586,7 +807,7 @@ ResponsePacket ExampleTerminalPCSCContact_IDENTIV_Dual::warmReset() {
 		}
 		if (resp != SCARD_S_SUCCESS) {
 			LOG_DEBUG << "Failed to call SCardReconnect() "
-					  << "[hContext:" << hContext_ << "][[dwShareMode:" << SCARD_SHARE_SHARED << "]"
+					  << "[hCard_:" << hCard_ << "][[dwShareMode:" << SCARD_SHARE_SHARED << "]"
 					  << "[dwActiveProtocol:" << dwActiveProtocol_ << "]";
 			return handleErrorResponse("Failed to warm reset", resp);
 		}
@@ -607,90 +828,60 @@ ResponsePacket ExampleTerminalPCSCContact_IDENTIV_Dual::warmReset() {
 	response.response = utils::unsignedCharToString(bAttr, cByte);
 	return response;
 }
+*/
+ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::warmReset() {
+	LOG_DEBUG << "Contactless_IDENTIV Start WarmReset";
 
-ResponsePacket ExampleTerminalPCSCContact_IDENTIV_Dual::retrieveAtr(BYTE* bAttr, DWORD* cByte) {
-	LONG resp;
+	LOG_DEBUG << "Contactless_IDENTIV Start PowerOFFField";
+
 	ResponsePacket response;
-	DWORD cch = 200;
-	DWORD dwState;
+	LOG_DEBUG << "Set power OFF Field: ";
+	// get initial polling
+	unsigned char command[] = { 0x96,  0x00};
+	DWORD commandLen = sizeof command;
 
-	int tries = 0;
-	LOG_INFO << "SCardStatus called";
-	if ((resp = SCardStatus(hCard_, mszReaders_, &cch, &dwState, &dwActiveProtocol_, (LPBYTE) bAttr, cByte)) != SCARD_S_SUCCESS) {
-		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
-			resp = handleRetry();
-			LOG_INFO << "[Retry] SCardStatus called";
-			resp = SCardStatus(hCard_, mszReaders_, &cch, &dwState, &dwActiveProtocol_, (LPBYTE) bAttr, cByte);
-			tries++;
-		}
-		if (resp != SCARD_S_SUCCESS) {
-			LOG_DEBUG << "Failed to call SCardStatus() "
-					  << "[hContext:" << hContext_ << "][[mszReaders:" << mszReaders_ << "]"
-					  << "[dwActiveProtocol:" << dwActiveProtocol_ << "]";
-			return handleErrorResponse("Failed to retrieve atr", resp);
-		}
+	if (sendEscapeCommand(command, &commandLen) != 0x00) {
+		LOG_DEBUG << "Set Power OFF Field: failed";
+		response.response = "Not supported";
+		return response;
 	}
 
+	if ((commandLen < 2) | (command[0x00]!=0x90) | (command[0x01]!=0x00) ){
+		LOG_DEBUG << "Set Power OFF Field failed: " << "Answer : " << command << " & length is : " << commandLen;
+		response.response = "Failed to Set Power OFF Field, wrong answer from the reader";
+		return response;
+
+	}
+
+	LOG_DEBUG << "Set Power OFF Field: Success";
+
+	Sleep(500);
+
+	LOG_DEBUG << "Start Set power ON Field: ";
+	commandLen = 0x00;
+	command[commandLen++] = 0x96;
+	command[commandLen++] = 0x01;
+
+	if (sendEscapeCommand(command, &commandLen) != 0x00) {
+		LOG_DEBUG << "Set Power ON Field: failed";
+		response.response = "Not supported";
+		return response;
+	}
+
+	if ((commandLen < 2) | (command[0x00]!=0x90) | (command[0x01]!=0x00) ){
+		LOG_DEBUG << "Set Power ON Field failed: " << "Answer : " << command << " & length is : " << commandLen;
+		response.response = "Failed to Set Power ON Field, wrong answer from the reader";
+		return response;
+
+	}
+
+	LOG_DEBUG << "Set power ON Success";
+
 	return response;
+
 }
 
-ResponsePacket ExampleTerminalPCSCContact_IDENTIV_Dual::powerOFFField() {
-	ResponsePacket response;
-	response.response = "Not supported";
-	return response;
-}
-
-ResponsePacket ExampleTerminalPCSCContact_IDENTIV_Dual::powerONField() {
-	ResponsePacket response;
-	response.response = "Not supported";
-	return response;
-}
-
-ResponsePacket ExampleTerminalPCSCContact_IDENTIV_Dual::pollTypeA() {
-	ResponsePacket response;
-	response.response = "Not supported";
-	return response;
-}
-
-ResponsePacket ExampleTerminalPCSCContact_IDENTIV_Dual::pollTypeB() {
-	ResponsePacket response;
-	response.response = "Not supported";
-	return response;
-}
-
-ResponsePacket ExampleTerminalPCSCContact_IDENTIV_Dual::pollTypeF() {
-	ResponsePacket response;
-	response.response = "Not supported";
-	return response;
-}
-
-ResponsePacket ExampleTerminalPCSCContact_IDENTIV_Dual::pollTypeAllTypes() {
-	ResponsePacket response;
-	response.response = "Not supported";
-	return response;
-}
-
-ResponsePacket ExampleTerminalPCSCContact_IDENTIV_Dual::getNotifications() {
-	ResponsePacket response;
-	response.response = "Not supported";
-	return response;
-}
-
-ResponsePacket ExampleTerminalPCSCContact_IDENTIV_Dual::clearNotifications() {
-	ResponsePacket response;
-	response.response = "Not supported";
-	return response;
-}
-
-
-ResponsePacket ExampleTerminalPCSCContact_IDENTIV_Dual::automaticInterfaceSwitching(){
-	ResponsePacket response;
-	response.response = "Not supported";
-	return response;
-}
-
-
-std::string ExampleTerminalPCSCContact_IDENTIV_Dual::errorToString(LONG error) {
+std::string ExampleTerminalPCSCContactless_IDENTIV_Dual::errorToString(LONG error) {
 	switch (error) {
 	case ERROR_INVALID_PARAMETER:
 		return "The parameter is incorrect.";
@@ -829,13 +1020,13 @@ std::string ExampleTerminalPCSCContact_IDENTIV_Dual::errorToString(LONG error) {
 	}
 }
 
-ResponsePacket ExampleTerminalPCSCContact_IDENTIV_Dual::handleErrorResponse(std::string context_message, LONG error) {
+ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::handleErrorResponse(std::string context_message, LONG error) {
 	std::string message = context_message + ": " + errorToString(error);
 	ResponsePacket response = { .response = "KO", .err_terminal_code = error, .err_terminal_description = message };
 	return response;
 }
 
-LONG ExampleTerminalPCSCContact_IDENTIV_Dual::handleRetry() {
+LONG ExampleTerminalPCSCContactless_IDENTIV_Dual::handleRetry() {
 	LONG response = SCardEstablishContext(SCARD_SCOPE_SYSTEM, NULL, NULL, &hContext_);
 	response = SCardConnect(hContext_, current_reader_.c_str(), SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, &hCard_, &dwActiveProtocol_);
 	return response;

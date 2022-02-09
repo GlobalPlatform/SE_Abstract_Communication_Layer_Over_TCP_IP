@@ -359,6 +359,7 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::activate_Interface()
 
 
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::reconnect_HW() {
+/*
 	LONG resp;
 	ResponsePacket response;
 
@@ -380,7 +381,51 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::reconnect_HW() {
 	LOG_DEBUG << "Success to call SCardConnect() " << "[hContext:" << hContext_ << "][szReader:" << current_reader_ << "][dwShareMode:"
 			  << SCARD_SHARE_DIRECT << "]" << "[dwPreferredProtocols:" << 0 << "][hCard:" << hCard_ << "][dwActiveProtocol:" << dwActiveProtocol_ << "]";
 
+	switch (dwActiveProtocol_) {
+	case SCARD_PROTOCOL_T0:
+		pioSendPci_ = *SCARD_PCI_T0;
+		break;
+
+	case SCARD_PROTOCOL_T1:
+		pioSendPci_ = *SCARD_PCI_T1;
+		break;
+	}
+
 	return response;
+*/
+	ResponsePacket response;
+	LONG resp;
+
+	int tries = 0;
+	LOG_INFO << "Reconnect_HW called";
+	if ((resp = SCardReconnect(hCard_, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_UNPOWER_CARD, &dwActiveProtocol_)) != SCARD_S_SUCCESS) {
+		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
+			resp = handleRetry();
+			LOG_INFO << "[Retry] SCardReconnect called";
+			resp = SCardReconnect(hCard_, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_UNPOWER_CARD, &dwActiveProtocol_);
+			Sleep(300);
+			tries++;
+		}
+		if (resp != SCARD_S_SUCCESS) {
+			LOG_DEBUG << "Failed to call Reconnect_HW() "
+					  << "[hCard_:" << hCard_ << "][[dwShareMode:" << SCARD_SHARE_SHARED << "]"
+					  << "[dwActiveProtocol:" << dwActiveProtocol_ << "]";
+			return handleErrorResponse("Failed to cold reset", resp);
+		}
+	}
+
+	switch (dwActiveProtocol_) {
+	case SCARD_PROTOCOL_T0:
+		pioSendPci_ = *SCARD_PCI_T0;
+		break;
+
+	case SCARD_PROTOCOL_T1:
+		pioSendPci_ = *SCARD_PCI_T1;
+		break;
+	}
+
+	return response;
+
 }
 
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::restart() {
@@ -745,15 +790,15 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::automaticInterfaceSw
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::coldReset() {
 	ResponsePacket response;
 	LONG resp;
-	DWORD dwProtocol;
+//	DWORD dwProtocol;
 
 	int tries = 0;
 	LOG_INFO << "SCardReconnect called";
-	if ((resp = SCardReconnect(hCard_, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_UNPOWER_CARD, &dwProtocol)) != SCARD_S_SUCCESS) {
+	if ((resp = SCardReconnect(hCard_, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_UNPOWER_CARD, &dwActiveProtocol_)) != SCARD_S_SUCCESS) {
 		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
 			resp = handleRetry();
 			LOG_INFO << "[Retry] SCardReconnect called";
-			resp = SCardReconnect(hCard_, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_UNPOWER_CARD, &dwProtocol);
+			resp = SCardReconnect(hCard_, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_UNPOWER_CARD, &dwActiveProtocol_);
 			tries++;
 		}
 		if (resp != SCARD_S_SUCCESS) {

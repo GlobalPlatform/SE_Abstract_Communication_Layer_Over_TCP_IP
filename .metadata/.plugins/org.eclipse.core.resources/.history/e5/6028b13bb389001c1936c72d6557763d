@@ -498,18 +498,17 @@ ResponsePacket ExampleTerminalPCSCContact_IDENTIV_Dual::restart() {
 }
 
 ResponsePacket ExampleTerminalPCSCContact_IDENTIV_Dual::coldReset() {
-/*
 	ResponsePacket response;
 	LONG resp;
-//	DWORD dwProtocol;
+	DWORD dwProtocol;
 
 	int tries = 0;
 	LOG_INFO << "SCardReconnect called";
-	if ((resp = SCardReconnect(hCard_, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_UNPOWER_CARD, &dwActiveProtocol_)) != SCARD_S_SUCCESS) {
+	if ((resp = SCardReconnect(hCard_, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_UNPOWER_CARD, &dwProtocol)) != SCARD_S_SUCCESS) {
 		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
 			resp = handleRetry();
 			LOG_INFO << "[Retry] SCardReconnect called";
-			resp = SCardReconnect(hCard_, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_UNPOWER_CARD, &dwActiveProtocol_);
+			resp = SCardReconnect(hCard_, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_UNPOWER_CARD, &dwProtocol);
 			tries++;
 		}
 		if (resp != SCARD_S_SUCCESS) {
@@ -534,40 +533,6 @@ ResponsePacket ExampleTerminalPCSCContact_IDENTIV_Dual::coldReset() {
 	response = retrieveAtr(bAttr, &cByte);
 	response.response = utils::unsignedCharToString(bAttr, cByte);
 	return response;
-*/
-	ResponsePacket response;
-	LONG resp;
-
-	int tries = 0;
-	LOG_INFO << "Reconnect_HW called";
-	if ((resp = SCardReconnect(hCard_, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_UNPOWER_CARD, &dwActiveProtocol_)) != SCARD_S_SUCCESS) {
-		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
-			resp = handleRetry();
-			LOG_INFO << "[Retry] SCardReconnect called";
-			resp = SCardReconnect(hCard_, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_UNPOWER_CARD, &dwActiveProtocol_);
-			Sleep(300);
-			tries++;
-		}
-		if (resp != SCARD_S_SUCCESS) {
-			LOG_DEBUG << "Failed to call SCardReconnect() "
-					  << "[hCard_:" << hCard_ << "][[dwShareMode:" << SCARD_SHARE_SHARED << "]"
-					  << "[dwActiveProtocol:" << dwActiveProtocol_ << "]";
-			return handleErrorResponse("Failed to cold reset", resp);
-		}
-	}
-
-	switch (dwActiveProtocol_) {
-	case SCARD_PROTOCOL_T0:
-		pioSendPci_ = *SCARD_PCI_T0;
-		break;
-
-	case SCARD_PROTOCOL_T1:
-		pioSendPci_ = *SCARD_PCI_T1;
-		break;
-	}
-
-	return response;
-
 }
 
 ResponsePacket ExampleTerminalPCSCContact_IDENTIV_Dual::warmReset() {
