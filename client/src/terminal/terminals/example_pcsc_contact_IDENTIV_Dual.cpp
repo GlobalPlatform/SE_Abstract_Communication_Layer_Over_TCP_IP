@@ -456,6 +456,9 @@ ResponsePacket ExampleTerminalPCSCContact_IDENTIV_Dual::activate_Interface() {
 			return handleErrorResponse("Failed to connect", resp);
 		}
 	}
+	LOG_DEBUG << "Success to call SCardConnect() " << "[hContext:" << hContext_ << "][szReader:" << current_reader_ << "][dwShareMode:"
+			  << SCARD_SHARE_DIRECT << "]" << "[dwPreferredProtocols:" << 0 << "][hCard:" << hCard_ << "][dwActiveProtocol:" << dwActiveProtocol_ << "]";
+
 	return response;
 
 }

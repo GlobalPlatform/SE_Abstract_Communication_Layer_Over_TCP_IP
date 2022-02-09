@@ -61,3 +61,25 @@ C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_O
 C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\clientGUI\ClientWPF\bin\Debug\ClientWPF.pdb
 C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\clientGUI\ClientWPF\obj\Debug\ClientWPF.csproj.CopyComplete
 C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\clientGUI\ClientWPF\obj\Debug\ClientWPF.csprojAssemblyReference.cache
+C:\Users\olivier vannieuwenhu\OneDrive - STMicroelectronics\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\clientGUI\ClientWPF\bin\Debug\libs\libclient.dll
+C:\Users\olivier vannieuwenhu\OneDrive - STMicroelectronics\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\clientGUI\ClientWPF\bin\Debug\config\init.json
+C:\Users\olivier vannieuwenhu\OneDrive - STMicroelectronics\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\clientGUI\ClientWPF\bin\Debug\ClientWPF.exe.config
+C:\Users\olivier vannieuwenhu\OneDrive - STMicroelectronics\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\clientGUI\ClientWPF\bin\Debug\ClientWPF.exe
+C:\Users\olivier vannieuwenhu\OneDrive - STMicroelectronics\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\clientGUI\ClientWPF\bin\Debug\ClientWPF.pdb
+C:\Users\olivier vannieuwenhu\OneDrive - STMicroelectronics\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\clientGUI\ClientWPF\bin\Debug\Newtonsoft.Json.dll
+C:\Users\olivier vannieuwenhu\OneDrive - STMicroelectronics\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\clientGUI\ClientWPF\bin\Debug\Newtonsoft.Json.pdb
+C:\Users\olivier vannieuwenhu\OneDrive - STMicroelectronics\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\clientGUI\ClientWPF\bin\Debug\Newtonsoft.Json.xml
+C:\Users\olivier vannieuwenhu\OneDrive - STMicroelectronics\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\clientGUI\ClientWPF\obj\Debug\ClientWPF.csproj.AssemblyReference.cache
+C:\Users\olivier vannieuwenhu\OneDrive - STMicroelectronics\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\clientGUI\ClientWPF\obj\Debug\ClientWPF.csproj.SuggestedBindingRedirects.cache
+C:\Users\olivier vannieuwenhu\OneDrive - STMicroelectronics\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\clientGUI\ClientWPF\obj\Debug\Views\MainWindow.baml
+C:\Users\olivier vannieuwenhu\OneDrive - STMicroelectronics\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\clientGUI\ClientWPF\obj\Debug\Views\MainWindow.g.cs
+C:\Users\olivier vannieuwenhu\OneDrive - STMicroelectronics\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\clientGUI\ClientWPF\obj\Debug\App.g.cs
+C:\Users\olivier vannieuwenhu\OneDrive - STMicroelectronics\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\clientGUI\ClientWPF\obj\Debug\ClientWPF_Content.g.cs
+C:\Users\olivier vannieuwenhu\OneDrive - STMicroelectronics\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\clientGUI\ClientWPF\obj\Debug\ClientWPF_MarkupCompile.cache
+C:\Users\olivier vannieuwenhu\OneDrive - STMicroelectronics\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\clientGUI\ClientWPF\obj\Debug\ClientWPF.g.resources
+C:\Users\olivier vannieuwenhu\OneDrive - STMicroelectronics\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\clientGUI\ClientWPF\obj\Debug\ClientWPF.Properties.Resources.resources
+C:\Users\olivier vannieuwenhu\OneDrive - STMicroelectronics\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\clientGUI\ClientWPF\obj\Debug\ClientWPF.csproj.GenerateResource.cache
+C:\Users\olivier vannieuwenhu\OneDrive - STMicroelectronics\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\clientGUI\ClientWPF\obj\Debug\ClientWPF.csproj.CoreCompileInputs.cache
+C:\Users\olivier vannieuwenhu\OneDrive - STMicroelectronics\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\clientGUI\ClientWPF\obj\Debug\ClientWPF.csproj.CopyComplete
+C:\Users\olivier vannieuwenhu\OneDrive - STMicroelectronics\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\clientGUI\ClientWPF\obj\Debug\ClientWPF.exe
+C:\Users\olivier vannieuwenhu\OneDrive - STMicroelectronics\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\clientGUI\ClientWPF\obj\Debug\ClientWPF.pdb

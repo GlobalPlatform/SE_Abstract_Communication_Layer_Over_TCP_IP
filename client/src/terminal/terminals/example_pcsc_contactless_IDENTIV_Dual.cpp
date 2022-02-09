@@ -49,8 +49,8 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::init() {
 	}
 
 	LOG_INFO << "Terminal PCSC initialized";
-//	return response;
-	return automaticInterfaceSwitching();
+	return response;
+//	return automaticInterfaceSwitching();
 }
 
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::loadAndListReaders() {
@@ -124,7 +124,9 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::connect(const char* 
 	}
 
 	LOG_DEBUG << "Reader connected: " << reader;
-	return response;
+//	return response;
+
+	return automaticInterfaceSwitching();
 }
 
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::sendCommand(unsigned char command[], DWORD command_length) {
@@ -362,11 +364,11 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::reconnect_HW() {
 
 	int tries = 0;
 	LOG_INFO << "Reconnect_HW called";
-	if ((resp = SCardConnect(hContext_, current_reader_.c_str(), SCARD_SHARE_DIRECT, 0, &hCard_, &dwActiveProtocol_)) != SCARD_S_SUCCESS) {
+	if ((resp = SCardConnect(hContext_, current_reader_.c_str(), SCARD_SHARE_DIRECT, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, &hCard_, &dwActiveProtocol_)) != SCARD_S_SUCCESS) {
 		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
 			resp = handleRetry();
 			LOG_INFO << "[Retry] SCardConnect called";
-			resp = SCardConnect(hContext_, current_reader_.c_str(), SCARD_SHARE_DIRECT, 0, &hCard_, &dwActiveProtocol_);
+			resp = SCardConnect(hContext_, current_reader_.c_str(), SCARD_SHARE_DIRECT, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, &hCard_, &dwActiveProtocol_);
 			tries++;
 		}
 		if (resp != SCARD_S_SUCCESS) {
@@ -375,6 +377,9 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV_Dual::reconnect_HW() {
 			return handleErrorResponse("Failed to connect", resp);
 		}
 	}
+	LOG_DEBUG << "Success to call SCardConnect() " << "[hContext:" << hContext_ << "][szReader:" << current_reader_ << "][dwShareMode:"
+			  << SCARD_SHARE_DIRECT << "]" << "[dwPreferredProtocols:" << 0 << "][hCard:" << hCard_ << "][dwActiveProtocol:" << dwActiveProtocol_ << "]";
+
 	return response;
 }
 
