@@ -20,6 +20,7 @@
 #include "client/requests/command.hpp"
 #include "client/requests/diag.hpp"
 #include "client/requests/disconnect.hpp"
+#include "client/requests/disconnect_HW.hpp"
 #include "client/requests/echo.hpp"
 #include "client/requests/power_off_field.hpp"
 #include "client/requests/power_on_field.hpp"
@@ -30,9 +31,15 @@
 #include "client/requests/send_typeB.hpp"
 #include "client/requests/send_typeF.hpp"
 #include "client/requests/warm_reset.hpp"
+#include "client/requests/poll_type_A.hpp"
+#include "client/requests/poll_type_B.hpp"
+#include "client/requests/poll_type_F.hpp"
+#include "client/requests/automatic_interface_switching.hpp"
+#include "client/requests/reconnect_HW.hpp"
 #include "constants/request_code.hpp"
 #include "terminal/factories/example_factory_pcsc_contact.hpp"
 #include "terminal/factories/example_factory_pcsc_contactless.hpp"
+#include "terminal/factories/example_factory_pcsc_contactless_IDENTIV.hpp"
 #include "terminal/flyweight_terminal_factory.hpp"
 #include "terminal/terminals/example_pcsc_contact.hpp"
 #include "dll/dll_client_api_wrapper.h"
@@ -73,6 +80,7 @@ void initClient(client::ClientAPI* client, const char* jsonConfig, ResponseDLL& 
 	FlyweightTerminalFactory available_terminals;
 	available_terminals.addFactory("EXAMPLE_PCSC_CONTACT", new ExamplePCSCContactFactory());
 	available_terminals.addFactory("EXAMPLE_PCSC_CONTACTLESS", new ExamplePCSCContactlessFactory());
+	available_terminals.addFactory("EXAMPLE_PCSC_CONTACTLESS_IDENTIV", new ExamplePCSCContactlessIDENTIVFactory());
 
 	// config all requests the client can handle
 	FlyweightRequests available_requests;
@@ -88,6 +96,12 @@ void initClient(client::ClientAPI* client, const char* jsonConfig, ResponseDLL& 
 	available_requests.addRequest(REQ_WARM_RESET, new WarmReset());
 	available_requests.addRequest(REQ_POWER_OFF_FIELD, new PowerOffField());
 	available_requests.addRequest(REQ_POWER_ON_FIELD, new PowerOnField());
+	available_requests.addRequest(REQ_POLL_TYPE_A, new PollTypeA());
+	available_requests.addRequest(REQ_POLL_TYPE_B, new PollTypeB());
+	available_requests.addRequest(REQ_POLL_TYPE_F, new PollTypeF());
+	available_requests.addRequest(REQ_AUTOMATIC_INTERFACE_SWITCHING, new AutomaticInterfaceSwitching());
+	available_requests.addRequest(REQ_DISCONNECT_HW, new Disconnect_HW());
+	available_requests.addRequest(REQ_RECONNECT_HW, new Reconnect_HW());
 
 	ResponsePacket response_packet = client->initClient((jsonConfig != NULL) ? jsonConfig : "config/init.json", available_terminals, available_requests);
 	responsePacketForDll(response_packet, response_packet_dll);
@@ -118,3 +132,9 @@ void responsePacketForDll(ResponsePacket response_packet, ResponseDLL& response_
 	response_packet_dll.err_card_code = response_packet.err_card_code;
 	strcpy(response_packet_dll.err_card_description, response_packet.err_card_description.c_str());
 }
+
+void automaticInterfaceSwitching(client::ClientAPI* client, ResponseDLL& response_packet_dll){
+	ResponsePacket response_packet = client->automaticInterfaceSwitching();
+	responsePacketForDll(response_packet, response_packet_dll);
+}
+

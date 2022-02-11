@@ -44,8 +44,15 @@ namespace ServerWPF.ViewModels
             _warmReset = new DelegateCommand(OnWarmReset, IsClientSelected);
             _powerOFFField = new DelegateCommand(OnPowerOFFField, IsClientSelected);
             _powerONField = new DelegateCommand(OnPowerONField, IsClientSelected);
+            _pollTypeA = new DelegateCommand(OnPollTypeA, IsClientSelected);
+            _pollTypeB = new DelegateCommand(OnPollTypeB, IsClientSelected);
+            _pollTypeF = new DelegateCommand(OnPollTypeF, IsClientSelected);
             _clearLogs = new DelegateCommand(OnClearLogs, null);
             _browseFile = new DelegateCommand(OnBrowseFile, IsClientSelected);
+            _automaticInterfaceSwitching = new DelegateCommand(OnAutomaticInterfaceSwitching, IsClientSelected);
+            _disconnect_HW = new DelegateCommand(OnDisconnect_HW, IsClientSelected);
+            _reconnect_HW = new DelegateCommand(OnReconnect_HW, IsClientSelected);
+
             _sendCommandsBatch = new AsyncDelegateCommand(async () => await OnSendCommandBatch(), CanSendCommandBatch);
             _sendCommandsBatchRandom = new AsyncDelegateCommand(async () => await OnSendCommandBatchRandom(), CanSendCommandBatch);
             //_getVersion = new DelegateCommand();
@@ -62,6 +69,12 @@ namespace ServerWPF.ViewModels
             _actions.AddAction(ActionMethod.WARM_RESET.ToString(), OnWarmReset);
             _actions.AddAction(ActionMethod.POWER_OFF_FIELD.ToString(), OnPowerOFFField);
             _actions.AddAction(ActionMethod.POWER_ON_FIELD.ToString(), OnPowerONField);
+            _actions.AddAction(ActionMethod.POLL_TYPE_A.ToString(), OnPollTypeA);
+            _actions.AddAction(ActionMethod.POLL_TYPE_B.ToString(), OnPollTypeB);
+            _actions.AddAction(ActionMethod.POLL_TYPE_F.ToString(), OnPollTypeF);
+            _actions.AddAction(ActionMethod.AUTOMATIC_INTERFACE_SWITCHING.ToString(), OnAutomaticInterfaceSwitching);
+            _actions.AddAction(ActionMethod.DISCONNECT_HW.ToString(), OnDisconnect_HW);
+            _actions.AddAction(ActionMethod.RECONNECT_HW.ToString(), OnReconnect_HW);
 
             LoadServerData();
             APIServerWrapper.InitServer();
@@ -157,6 +170,12 @@ namespace ServerWPF.ViewModels
                 _warmReset.InvokeCanExecuteChanged();
                 _powerOFFField.InvokeCanExecuteChanged();
                 _powerONField.InvokeCanExecuteChanged();
+                _pollTypeA.InvokeCanExecuteChanged();
+                _pollTypeB.InvokeCanExecuteChanged();
+                _pollTypeF.InvokeCanExecuteChanged();
+                _automaticInterfaceSwitching.InvokeCanExecuteChanged();
+                _disconnect_HW.InvokeCanExecuteChanged();
+                _reconnect_HW.InvokeCanExecuteChanged();
                 _browseFile.InvokeCanExecuteChanged();
                 _sendCommandsBatch.InvokeCanExecuteChanged();
                 _sendCommandsBatchRandom.InvokeCanExecuteChanged();
@@ -215,6 +234,24 @@ namespace ServerWPF.ViewModels
 
         private readonly DelegateCommand _powerONField;
         public ICommand PowerONField => _powerONField;
+
+        private readonly DelegateCommand _pollTypeA;
+        public ICommand PollTypeAField => _pollTypeA;
+
+        private readonly DelegateCommand _pollTypeB;
+        public ICommand PollTypeBField => _pollTypeB;
+
+        private readonly DelegateCommand _pollTypeF;
+        public ICommand PollTypeFField => _pollTypeF;
+
+        private readonly DelegateCommand _automaticInterfaceSwitching;
+        public ICommand AutoIntSwitch => _automaticInterfaceSwitching;
+
+        private readonly DelegateCommand _disconnect_HW;
+        public ICommand Disconnect_HW => _disconnect_HW;
+
+        private readonly DelegateCommand _reconnect_HW;
+        public ICommand Reconnect_HW => _reconnect_HW;
 
         private readonly DelegateCommand _browseFile;
         public ICommand BrowseFile => _browseFile;
@@ -328,6 +365,48 @@ namespace ServerWPF.ViewModels
         {
             ResponseDLL response = APIServerWrapper.PowerONField(_selectedClient.ClientID);
             AppendLog(ActionMethod.POWER_ON_FIELD.ToString(), response);
+            return APIServerWrapper.RetrieveErrorDescription(response).Equals(APIServerWrapper.NO_ERROR);
+        }
+
+        private bool OnPollTypeA()
+        {
+            ResponseDLL response = APIServerWrapper.PollTypeA(_selectedClient.ClientID);
+            AppendLog(ActionMethod.POLL_TYPE_A.ToString(), response);
+            return APIServerWrapper.RetrieveErrorDescription(response).Equals(APIServerWrapper.NO_ERROR);
+        }
+
+        private bool OnPollTypeB()
+        {
+            ResponseDLL response = APIServerWrapper.PollTypeB(_selectedClient.ClientID);
+            AppendLog(ActionMethod.POLL_TYPE_B.ToString(), response);
+            return APIServerWrapper.RetrieveErrorDescription(response).Equals(APIServerWrapper.NO_ERROR);
+        }
+
+        private bool OnPollTypeF()
+        {
+            ResponseDLL response = APIServerWrapper.PollTypeF(_selectedClient.ClientID);
+            AppendLog(ActionMethod.POLL_TYPE_F.ToString(), response);
+            return APIServerWrapper.RetrieveErrorDescription(response).Equals(APIServerWrapper.NO_ERROR);
+        }
+
+        private bool OnAutomaticInterfaceSwitching()
+        {
+            ResponseDLL response = APIServerWrapper.AutomaticInterfaceSwitching(_selectedClient.ClientID);
+            AppendLog(ActionMethod.AUTOMATIC_INTERFACE_SWITCHING.ToString(), response);
+            return APIServerWrapper.RetrieveErrorDescription(response).Equals(APIServerWrapper.NO_ERROR);
+        }
+
+        private bool OnDisconnect_HW()
+        {
+            ResponseDLL response = APIServerWrapper.Disconnect_HW(_selectedClient.ClientID);
+            AppendLog(ActionMethod.DISCONNECT_HW.ToString(), response);
+            return APIServerWrapper.RetrieveErrorDescription(response).Equals(APIServerWrapper.NO_ERROR);
+        }
+
+        private bool OnReconnect_HW()
+        {
+            ResponseDLL response = APIServerWrapper.Reconnect_HW(_selectedClient.ClientID);
+            AppendLog(ActionMethod.RECONNECT_HW.ToString(), response);
             return APIServerWrapper.RetrieveErrorDescription(response).Equals(APIServerWrapper.NO_ERROR);
         }
 

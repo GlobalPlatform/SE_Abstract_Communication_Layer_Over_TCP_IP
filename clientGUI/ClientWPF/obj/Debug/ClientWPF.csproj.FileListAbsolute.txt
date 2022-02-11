@@ -43,7 +43,6 @@ C:\Users\st\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\clientG
 C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\clientGUI\ClientWPF\bin\Debug\Newtonsoft.Json.dll
 C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\clientGUI\ClientWPF\bin\Debug\Newtonsoft.Json.pdb
 C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\clientGUI\ClientWPF\bin\Debug\Newtonsoft.Json.xml
-C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\clientGUI\ClientWPF\obj\Debug\ClientWPF.csprojAssemblyReference.cache
 C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\clientGUI\ClientWPF\obj\Debug\Views\MainWindow.baml
 C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\clientGUI\ClientWPF\obj\Debug\Views\MainWindow.g.cs
 C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\clientGUI\ClientWPF\obj\Debug\App.g.cs
@@ -61,3 +60,4 @@ C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_O
 C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\clientGUI\ClientWPF\bin\Debug\ClientWPF.exe
 C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\clientGUI\ClientWPF\bin\Debug\ClientWPF.pdb
 C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\clientGUI\ClientWPF\obj\Debug\ClientWPF.csproj.CopyComplete
+C:\Users\olivier vannieuwenhu\Documents\GitHub\SE_Abstract_Communication_Layer_Over_TCP_IP\clientGUI\ClientWPF\obj\Debug\ClientWPF.csprojAssemblyReference.cache

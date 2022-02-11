@@ -97,6 +97,12 @@ public:
 	virtual ResponsePacket disconnect() = 0;
 
 	/**
+	 * disconnect_HW - disconnect the HW from the client.
+	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
+	 */
+	virtual ResponsePacket disconnect_HW() = 0;
+
+	/**
 	 * isAlive - send a valid packet to the terminal to check whether it is responding.
 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
 	 */
@@ -131,6 +137,37 @@ public:
  	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
 	 */
 	virtual ResponsePacket powerONField() = 0;
+
+	/**
+	 * pollTypeA - Start the polling sequence in Type A
+ 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
+	 */
+	virtual ResponsePacket pollTypeA() = 0;
+
+	/**
+	 * pollTypeB - Start the polling sequence in Type B
+ 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
+	 */
+	virtual ResponsePacket pollTypeB() = 0;
+
+	/**
+	 * pollTypeF - Start the polling sequence in Type F
+ 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
+	 */
+	virtual ResponsePacket pollTypeF() = 0;
+
+	/**
+	 * automaticInterfaceSwitching - Perform the Automatic Interface Switching for reader (like IDENTIV 470x)
+ 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
+	 */
+	virtual ResponsePacket automaticInterfaceSwitching() = 0;
+
+	/**
+	 * Reconnect_HW - Reconnect a disconnected HW to the client
+ 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
+	 */
+	virtual ResponsePacket reconnect_HW() = 0;
+
 };
 
 } /* namespace client */

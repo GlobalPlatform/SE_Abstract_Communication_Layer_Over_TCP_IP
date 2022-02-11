@@ -40,6 +40,10 @@ ResponsePacket ClientAPI::disconnectClient() {
 	return engine_->disconnectClient();
 }
 
+ResponsePacket ClientAPI::automaticInterfaceSwitching() {
+		return engine_->automaticInterfaceSwitching();
+}
+
 ResponsePacket ClientAPI::loadAndListReaders() {
 	return engine_->loadAndListReaders();
 }

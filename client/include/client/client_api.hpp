@@ -67,6 +67,14 @@ public:
 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
 	 */
 	ResponsePacket disconnectClient();
+
+	/**
+	 * automaticInterfaceSwitching - Perform configuration to allow automatic switching
+	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
+	 */
+	ResponsePacket automaticInterfaceSwitching();
+
+
 };
 
 } /* namespace client */

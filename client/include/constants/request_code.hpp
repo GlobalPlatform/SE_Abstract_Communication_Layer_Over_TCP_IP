@@ -36,7 +36,13 @@ enum RequestCode {
 	REQ_COLD_RESET,
 	REQ_WARM_RESET,
 	REQ_POWER_OFF_FIELD,
-	REQ_POWER_ON_FIELD
+	REQ_POWER_ON_FIELD,
+	REQ_POLL_TYPE_A,
+	REQ_POLL_TYPE_B,
+	REQ_POLL_TYPE_F,
+	REQ_AUTOMATIC_INTERFACE_SWITCHING,
+	REQ_DISCONNECT_HW,
+	REQ_RECONNECT_HW
 };
 
 /**
@@ -74,6 +80,18 @@ inline const std::string requestCodeToString(RequestCode request_code) {
 		return "REQ_POWER_OFF_FIELD";
 	case REQ_POWER_ON_FIELD:
 		return "REQ_POWER_ON_FIELD";
+	case REQ_POLL_TYPE_A:
+		return "REQ_POLL_TYPE_A";
+	case REQ_POLL_TYPE_B:
+		return "REQ_POLL_TYPE_B";
+	case REQ_POLL_TYPE_F:
+		return "REQ_POLL_TYPE_F";
+	case REQ_AUTOMATIC_INTERFACE_SWITCHING:
+		return "REQ_AUTOMATIC_INTERFACE_SWITCHING";
+	case REQ_DISCONNECT_HW:
+		return "REQ_DISCONNECT_HW";
+	case REQ_RECONNECT_HW:
+		return "REQ_RECONNECT_HW";
 	default:
 		return "[Unknown Request Code]";
 	}

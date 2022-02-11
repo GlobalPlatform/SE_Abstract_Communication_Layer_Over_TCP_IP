@@ -15,14 +15,20 @@
  limitations under the License.
  *********************************************************************************/
 
+#include <terminal/factories/example_factory_pcsc_contactless_IDENTIV.hpp>
 #include "client/client_api.hpp"
 #include "client/requests/cold_reset.hpp"
 #include "client/requests/command.hpp"
 #include "client/requests/diag.hpp"
 #include "client/requests/disconnect.hpp"
+#include "client/requests/disconnect_HW.hpp"
 #include "client/requests/echo.hpp"
 #include "client/requests/power_off_field.hpp"
 #include "client/requests/power_on_field.hpp"
+#include "client/requests/poll_type_A.hpp"
+#include "client/requests/poll_type_B.hpp"
+#include "client/requests/poll_type_F.hpp"
+#include "client/requests/reconnect_HW.hpp"
 #include "client/requests/request.hpp"
 #include "client/requests/request.hpp"
 #include "client/requests/restart_target.hpp"
@@ -30,6 +36,7 @@
 #include "client/requests/send_typeB.hpp"
 #include "client/requests/send_typeF.hpp"
 #include "client/requests/warm_reset.hpp"
+#include "client/requests/automatic_interface_switching.hpp"
 #include "constants/request_code.hpp"
 #include "terminal/factories/example_factory_pcsc_contact.hpp"
 #include "terminal/factories/example_factory_pcsc_contactless.hpp"
@@ -43,6 +50,7 @@ int __cdecl main(void) {
 	FlyweightTerminalFactory available_terminals;
 	available_terminals.addFactory("EXAMPLE_PCSC_CONTACT", new ExamplePCSCContactFactory());
 	available_terminals.addFactory("EXAMPLE_PCSC_CONTACTLESS", new ExamplePCSCContactlessFactory());
+	available_terminals.addFactory("EXAMPLE_PCSC_CONTACTLESS_IDENTIV", new ExamplePCSCContactlessIDENTIVFactory());
 
 	// config all requests the client can handle
 	FlyweightRequests available_requests;
@@ -58,6 +66,12 @@ int __cdecl main(void) {
 	available_requests.addRequest(REQ_WARM_RESET, new WarmReset());
 	available_requests.addRequest(REQ_POWER_OFF_FIELD, new PowerOffField());
 	available_requests.addRequest(REQ_POWER_ON_FIELD, new PowerOnField());
+	available_requests.addRequest(REQ_POLL_TYPE_A, new PollTypeA());
+	available_requests.addRequest(REQ_POLL_TYPE_B, new PollTypeB());
+	available_requests.addRequest(REQ_POLL_TYPE_F, new PollTypeF());
+	available_requests.addRequest(REQ_AUTOMATIC_INTERFACE_SWITCHING, new AutomaticInterfaceSwitching());
+	available_requests.addRequest(REQ_DISCONNECT_HW, new Disconnect_HW());
+	available_requests.addRequest(REQ_RECONNECT_HW, new Reconnect_HW());
 
 	ClientAPI* client = new ClientAPI(0, 0, 0);
 	client->initClient("./config/init.json", available_terminals, available_requests);
