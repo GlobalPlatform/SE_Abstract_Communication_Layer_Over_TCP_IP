@@ -6,12 +6,18 @@
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item key="isRegEx" value="true"/>
-		<item key="selection" value="current_reader_"/>
+		<item key="selection" value="Reconnect"/>
 		<item key="casesensitive" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="wrap" value="true"/>
 		<item key="wholeword" value="false"/>
 		<list key="findhistory">
+			<item value="reconnect"/>
+			<item value="cold"/>
+			<item value="dwActiveProtocol_"/>
+			<item value="init()"/>
+			<item value="init("/>
+			<item value="init"/>
 			<item value="current_reader_"/>
 			<item value="connect"/>
 			<item value="get"/>
@@ -21,12 +27,6 @@
 			<item value="SCardControl"/>
 			<item value="EXAMPLE_PCSC_CONTACTLESS_IDENTIV"/>
 			<item value="automaticInterfaceSwitching"/>
-			<item value="&quot;OK&quot;"/>
-			<item value="OK"/>
-			<item value="waitingRequests"/>
-			<item value="notifyConnectionAccepted"/>
-			<item value="notifyConnectionAccepted_"/>
-			<item value="current_Reader"/>
 		</list>
 		<list key="replacehistory">
 			<item value=""/>
@@ -48,9 +48,9 @@
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item key="DIALOG_WIDTH" value="414"/>
-		<item key="DIALOG_FONT_NAME" value="1|Segoe UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|5|0|Segoe UI"/>
+		<item key="DIALOG_FONT_NAME" value="1|Segoe UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI"/>
 		<item key="DIALOG_HEIGHT" value="454"/>
-		<item key="DIALOG_X_ORIGIN" value="1425"/>
-		<item key="DIALOG_Y_ORIGIN" value="309"/>
+		<item key="DIALOG_X_ORIGIN" value="1924"/>
+		<item key="DIALOG_Y_ORIGIN" value="611"/>
 	</section>
 </section>

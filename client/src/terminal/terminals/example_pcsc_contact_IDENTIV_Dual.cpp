@@ -566,6 +566,10 @@ ResponsePacket ExampleTerminalPCSCContact_IDENTIV_Dual::coldReset() {
 		break;
 	}
 
+	BYTE bAttr[32];
+	DWORD cByte = 32;
+	response = retrieveAtr(bAttr, &cByte);
+	response.response = utils::unsignedCharToString(bAttr, cByte);
 	return response;
 
 }
