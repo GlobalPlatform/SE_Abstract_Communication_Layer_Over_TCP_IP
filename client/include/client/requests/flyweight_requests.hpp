@@ -38,7 +38,7 @@ public:
 	 * @param request the request object to be stored.
 	 * @return true if the request is inserted, false if the key already exist.
 	 */
-	boolean addRequest(RequestCode key, IRequest* request);
+	bool addRequest(RequestCode key, IRequest* request);
 
 	/**
 	 * getRequest - retrieve a request.

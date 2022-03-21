@@ -23,7 +23,7 @@
 
 namespace client {
 
-boolean FlyweightRequests::addRequest(RequestCode key, IRequest* factory) {
+bool FlyweightRequests::addRequest(RequestCode key, IRequest* factory) {
 	return requests.insert(std::make_pair(key, factory)).second;
 }
 
