@@ -87,7 +87,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;ADD_EXPORTS;_CRT_SECURE_NO_WARNINGS;_DEBUG;LIBCLIENT_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;ADD_EXPORTS;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;_DEBUG;LIBCLIENT_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpplatest</LanguageStandard>
@@ -123,7 +123,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;ADD_EXPORTS;_CRT_SECURE_NO_WARNINGS;NDEBUG;LIBCLIENT_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;ADD_EXPORTS;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;NDEBUG;LIBCLIENT_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpplatest</LanguageStandard>
@@ -162,20 +162,23 @@
     <ClInclude Include="..\..\client\include\client\client_api.hpp" />
     <ClInclude Include="..\..\client\include\client\client_engine.hpp" />
     <ClInclude Include="..\..\client\include\client\client_tcp_socket.hpp" />
+    <ClInclude Include="..\..\client\include\client\requests\activate_interface.hpp" />
     <ClInclude Include="..\..\client\include\client\requests\automatic_interface_switching.hpp" />
+    <ClInclude Include="..\..\client\include\client\requests\clear_notifications.hpp" />
     <ClInclude Include="..\..\client\include\client\requests\cold_reset.hpp" />
     <ClInclude Include="..\..\client\include\client\requests\command.hpp" />
+    <ClInclude Include="..\..\client\include\client\requests\deactivate_interface.hpp" />
     <ClInclude Include="..\..\client\include\client\requests\diag.hpp" />
     <ClInclude Include="..\..\client\include\client\requests\disconnect.hpp" />
-    <ClInclude Include="..\..\client\include\client\requests\disconnect_HW.hpp" />
     <ClInclude Include="..\..\client\include\client\requests\echo.hpp" />
     <ClInclude Include="..\..\client\include\client\requests\flyweight_requests.hpp" />
+    <ClInclude Include="..\..\client\include\client\requests\get_notifications.hpp" />
     <ClInclude Include="..\..\client\include\client\requests\poll_type_A.hpp" />
+    <ClInclude Include="..\..\client\include\client\requests\poll_type_all_types.hpp" />
     <ClInclude Include="..\..\client\include\client\requests\poll_type_B.hpp" />
     <ClInclude Include="..\..\client\include\client\requests\poll_type_F.hpp" />
     <ClInclude Include="..\..\client\include\client\requests\power_off_field.hpp" />
     <ClInclude Include="..\..\client\include\client\requests\power_on_field.hpp" />
-    <ClInclude Include="..\..\client\include\client\requests\reconnect_HW.hpp" />
     <ClInclude Include="..\..\client\include\client\requests\request.hpp" />
     <ClInclude Include="..\..\client\include\client\requests\restart_target.hpp" />
     <ClInclude Include="..\..\client\include\client\requests\send_typeA.hpp" />
@@ -192,11 +195,17 @@
     <ClInclude Include="..\..\client\include\terminal\factories\example_factory_pcsc_contact.hpp" />
     <ClInclude Include="..\..\client\include\terminal\factories\example_factory_pcsc_contactless.hpp" />
     <ClInclude Include="..\..\client\include\terminal\factories\example_factory_pcsc_contactless_IDENTIV.hpp" />
+    <ClInclude Include="..\..\client\include\terminal\factories\example_factory_pcsc_contactless_IDENTIV_Dual.hpp" />
+    <ClInclude Include="..\..\client\include\terminal\factories\example_factory_pcsc_contact_IDENTIV_Dual.hpp" />
+    <ClInclude Include="..\..\client\include\terminal\factories\example_factory_pcsc_HCI_TH.hpp" />
     <ClInclude Include="..\..\client\include\terminal\factories\factory.hpp" />
     <ClInclude Include="..\..\client\include\terminal\flyweight_terminal_factory.hpp" />
     <ClInclude Include="..\..\client\include\terminal\terminals\example_pcsc_contact.hpp" />
     <ClInclude Include="..\..\client\include\terminal\terminals\example_pcsc_contactless.hpp" />
     <ClInclude Include="..\..\client\include\terminal\terminals\example_pcsc_contactless_IDENTIV.hpp" />
+    <ClInclude Include="..\..\client\include\terminal\terminals\example_pcsc_contactless_IDENTIV_Dual.hpp" />
+    <ClInclude Include="..\..\client\include\terminal\terminals\example_pcsc_contact_IDENTIV_Dual.hpp" />
+    <ClInclude Include="..\..\client\include\terminal\terminals\example_pcsc_HCI_TH.hpp" />
     <ClInclude Include="..\..\client\include\terminal\terminals\terminal.hpp" />
     <ClInclude Include="..\..\client\include\terminal\terminals\utils\type_converter.hpp" />
     <ClInclude Include="framework.h" />
@@ -206,20 +215,23 @@
     <ClCompile Include="..\..\client\src\client\client_api.cpp" />
     <ClCompile Include="..\..\client\src\client\client_engine.cpp" />
     <ClCompile Include="..\..\client\src\client\client_tcp_socket.cpp" />
+    <ClCompile Include="..\..\client\src\client\requests\activate_interface.cpp" />
     <ClCompile Include="..\..\client\src\client\requests\automatic_interface_switching.cpp" />
+    <ClCompile Include="..\..\client\src\client\requests\clear_notifications.cpp" />
     <ClCompile Include="..\..\client\src\client\requests\cold_reset.cpp" />
     <ClCompile Include="..\..\client\src\client\requests\command.cpp" />
+    <ClCompile Include="..\..\client\src\client\requests\deactivate_interface.cpp" />
     <ClCompile Include="..\..\client\src\client\requests\diag.cpp" />
     <ClCompile Include="..\..\client\src\client\requests\disconnect.cpp" />
-    <ClCompile Include="..\..\client\src\client\requests\disconnect_HW.cpp" />
     <ClCompile Include="..\..\client\src\client\requests\echo.cpp" />
     <ClCompile Include="..\..\client\src\client\requests\flyweight_requests.cpp" />
+    <ClCompile Include="..\..\client\src\client\requests\get_notifications.cpp" />
     <ClCompile Include="..\..\client\src\client\requests\poll_type_A.cpp" />
+    <ClCompile Include="..\..\client\src\client\requests\poll_type_all_types.cpp" />
     <ClCompile Include="..\..\client\src\client\requests\poll_type_B.cpp" />
     <ClCompile Include="..\..\client\src\client\requests\poll_type_F.cpp" />
     <ClCompile Include="..\..\client\src\client\requests\power_off_field.cpp" />
     <ClCompile Include="..\..\client\src\client\requests\power_on_field.cpp" />
-    <ClCompile Include="..\..\client\src\client\requests\reconnect_HW.cpp" />
     <ClCompile Include="..\..\client\src\client\requests\restart_target.cpp" />
     <ClCompile Include="..\..\client\src\client\requests\send_typeA.cpp" />
     <ClCompile Include="..\..\client\src\client\requests\send_typeB.cpp" />
@@ -228,13 +240,19 @@
     <ClCompile Include="..\..\client\src\config\config_wrapper.cpp" />
     <ClCompile Include="..\..\client\src\dll\dll_client_api_wrapper.cpp" />
     <ClCompile Include="..\..\client\src\logger\logger.cpp" />
+    <ClCompile Include="..\..\client\src\terminal\factories\example_factory_HCI_TH.cpp" />
     <ClCompile Include="..\..\client\src\terminal\factories\example_factory_pcsc_contact.cpp" />
     <ClCompile Include="..\..\client\src\terminal\factories\example_factory_pcsc_contactless.cpp" />
     <ClCompile Include="..\..\client\src\terminal\factories\example_factory_pcsc_contactless_IDENTIV.cpp" />
+    <ClCompile Include="..\..\client\src\terminal\factories\example_factory_pcsc_contactless_IDENTIV_Dual.cpp" />
+    <ClCompile Include="..\..\client\src\terminal\factories\example_factory_pcsc_contact_IDENTIV_Dual.cpp" />
     <ClCompile Include="..\..\client\src\terminal\flyweight_terminal_factory.cpp" />
     <ClCompile Include="..\..\client\src\terminal\terminals\example_pcsc_contact.cpp" />
     <ClCompile Include="..\..\client\src\terminal\terminals\example_pcsc_contactless.cpp" />
     <ClCompile Include="..\..\client\src\terminal\terminals\example_pcsc_contactless_IDENTIV.cpp" />
+    <ClCompile Include="..\..\client\src\terminal\terminals\example_pcsc_contactless_IDENTIV_Dual.cpp" />
+    <ClCompile Include="..\..\client\src\terminal\terminals\example_pcsc_contact_IDENTIV_Dual.cpp" />
+    <ClCompile Include="..\..\client\src\terminal\terminals\example_pcsc_HCI_TH.cpp" />
     <ClCompile Include="dllmain.cpp" />
   </ItemGroup>
   <ItemGroup>
