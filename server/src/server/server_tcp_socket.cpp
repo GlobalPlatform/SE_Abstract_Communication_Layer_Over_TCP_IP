@@ -133,18 +133,32 @@ int ServerTCPSocket::receivePacket(SOCKET client_socket, char* packet) {
 
 	// retrieve packet size
 	int retval = recv(client_socket, (char*) &net_received_size, sizeof(int), MSG_WAITALL);
-	if (retval == SOCKET_ERROR || retval == 0) {
-		LOG_DEBUG << "Failed to receive data size from client -  " << "[socket:" << client_socket << "][buffer:" << received_size << "][size:" << sizeof(int) << "][flags:" << NULL << "]";
+	if (retval == SOCKET_ERROR) {
+		int errorCode = WSAGetLastError();
+		LOG_DEBUG << "Failed to receive data size from client -  " << "[socket:" << client_socket << "][buffer:" << received_size << "][size:" << sizeof(int) << "][flags:" << NULL << "][errorCode:" << errorCode << "]";
 		return RES_SOCKET_WARNING;
 	}
+	if (retval == 0) {
+		// NOTE: According to the documentation, when recv returns 0 then the socket has been closed. We could add a client disconnected callback here.
+		LOG_DEBUG << "Failed to receive data size from client -  " << "[socket:" << client_socket << "][buffer:" << received_size << "][size:" << sizeof(int) << "][flags:" << NULL << "][retval:" << retval << "]";
+		return RES_SOCKET_WARNING;
+	}
+
 	received_size = ntohl(net_received_size); // deal with endianness
 
 	// retrieve packet
 	retval = recv(client_socket, packet, received_size, MSG_WAITALL); // keep receiving until received_size bytes are received
-	if (retval == SOCKET_ERROR || retval == 0) {
-		LOG_DEBUG << "Failed to receive data size from client -  " << "[socket:" << client_socket << "][buffer:" << received_size << "][size:" << sizeof(int) << "][flags:" << NULL << "]";
+	if (retval == SOCKET_ERROR) {
+		int errorCode = WSAGetLastError();
+		LOG_DEBUG << "Failed to receive data from client -  " << "[socket:" << client_socket << "][buffer:" << received_size << "][size:" << sizeof(int) << "][flags:" << NULL << "][errorCode:" << errorCode << "]";
 		return RES_SOCKET_ERROR;
 	}
+	if (retval == 0) {
+		// NOTE: According to the documentation, when recv returns 0 then the socket has been closed. We could add a client disconnected callback here.
+		LOG_DEBUG << "Failed to receive data from client -  " << "[socket:" << client_socket << "][buffer:" << received_size << "][size:" << sizeof(int) << "][flags:" << NULL << "][retval:" << retval << "]";
+		return RES_SOCKET_ERROR;
+	}
+
 	packet[retval] = '\0';
 
 	return RES_SOCKET_OK;
