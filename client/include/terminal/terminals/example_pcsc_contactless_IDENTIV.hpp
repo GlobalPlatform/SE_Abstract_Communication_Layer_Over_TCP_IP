@@ -83,6 +83,7 @@ private:
 	LONG handleRetry();
 	ResponsePacket disconnect_HW();
 	ResponsePacket reconnect_HW();
+	ResponsePacket reset_Field();
 
 };
 

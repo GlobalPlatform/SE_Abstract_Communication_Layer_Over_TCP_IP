@@ -6,12 +6,13 @@
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item key="isRegEx" value="true"/>
-		<item key="selection" value="Reconnect"/>
+		<item key="selection" value="reconnect_HW"/>
 		<item key="casesensitive" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="wrap" value="true"/>
 		<item key="wholeword" value="false"/>
 		<list key="findhistory">
+			<item value="reconnect_HW"/>
 			<item value="reconnect"/>
 			<item value="cold"/>
 			<item value="dwActiveProtocol_"/>
@@ -26,7 +27,6 @@
 			<item value="sendInternalCommand"/>
 			<item value="SCardControl"/>
 			<item value="EXAMPLE_PCSC_CONTACTLESS_IDENTIV"/>
-			<item value="automaticInterfaceSwitching"/>
 		</list>
 		<list key="replacehistory">
 			<item value=""/>
@@ -50,7 +50,7 @@
 		<item key="DIALOG_WIDTH" value="414"/>
 		<item key="DIALOG_FONT_NAME" value="1|Segoe UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI"/>
 		<item key="DIALOG_HEIGHT" value="454"/>
-		<item key="DIALOG_X_ORIGIN" value="1924"/>
-		<item key="DIALOG_Y_ORIGIN" value="611"/>
+		<item key="DIALOG_X_ORIGIN" value="462"/>
+		<item key="DIALOG_Y_ORIGIN" value="367"/>
 	</section>
 </section>

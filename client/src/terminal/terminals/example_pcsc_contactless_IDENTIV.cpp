@@ -353,6 +353,7 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::activate_Interface() {
 
 
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::reconnect_HW() {
+/*
 	LONG resp;
 	ResponsePacket response;
 
@@ -383,6 +384,41 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::reconnect_HW() {
 	}
 
 	return response;
+*/
+
+	ResponsePacket response;
+	LONG resp;
+
+	int tries = 0;
+	LOG_INFO << "Reconnect_HW called";
+	if ((resp = SCardReconnect(hCard_, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_LEAVE_CARD, &dwActiveProtocol_)) != SCARD_S_SUCCESS) {
+		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
+			resp = handleRetry();
+			LOG_INFO << "[Retry] SCardReconnect called";
+			resp = SCardReconnect(hCard_, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_UNPOWER_CARD, &dwActiveProtocol_);
+			Sleep(300);
+			tries++;
+		}
+		if (resp != SCARD_S_SUCCESS) {
+			LOG_DEBUG << "Failed to call Reconnect_HW() "
+					  << "[hCard_:" << hCard_ << "][[dwShareMode:" << SCARD_SHARE_SHARED << "]"
+					  << "[dwActiveProtocol:" << dwActiveProtocol_ << "]";
+			return handleErrorResponse("Failed to cold reset", resp);
+		}
+	}
+
+	switch (dwActiveProtocol_) {
+	case SCARD_PROTOCOL_T0:
+		pioSendPci_ = *SCARD_PCI_T0;
+		break;
+
+	case SCARD_PROTOCOL_T1:
+		pioSendPci_ = *SCARD_PCI_T1;
+		break;
+	}
+
+	return response;
+
 }
 
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::restart() {
@@ -479,7 +515,74 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::powerOFFField() {
 
 	}
 
+	ret = powerFieldState();
+	if (ret == -1) {
+		response.response = "Not supported";
+		return response;
+	}
+
 	LOG_DEBUG << "Set Power OFF Field: Success";
+
+	return response;
+}
+
+ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::reset_Field() {
+	ResponsePacket response;
+	int ret;
+
+	LOG_DEBUG << "Contactless_IDENTIV Start PowerOFFField";
+	//Get Power Field State
+
+	ret = powerFieldState();
+	if (ret == -1) {
+		response.response = "Problem to get Field State";
+		return response;
+	}
+
+	LOG_DEBUG << "Set power OFF Field: ";
+	// get initial polling
+	unsigned char command[] = { 0x96,  0x00};
+	DWORD commandLen = sizeof command;
+
+	if (sendEscapeCommand(command, &commandLen) != 0x00) {
+		LOG_DEBUG << "Set Power OFF Field: failed";
+		response.response = "Not supported";
+		return response;
+	}
+
+	if ((commandLen < 2) | (command[0x00]!=0x90) | (command[0x01]!=0x00) ){
+		LOG_DEBUG << "Set Power OFF Field failed: " << "Answer : " << command << " & length is : " << commandLen;
+		response.response = "Failed to Set Power OFF Field, wrong answer from the reader";
+		return response;
+
+	}
+
+	ret = powerFieldState();
+	if (ret == -1) {
+		response.response = "Not supported";
+		return response;
+	}
+
+	LOG_DEBUG << "Set Power OFF Field: Success";
+
+	command[0x00] = 0x96;
+	command[0x01] = 0x01;
+	commandLen = 2;
+
+	if (sendEscapeCommand(command, &commandLen) != 0x00) {
+		LOG_DEBUG << "Set Power ON Field: failed";
+		response.response = "Not supported";
+		return response;
+	}
+
+	if ((commandLen < 2) | (command[0x00]!=0x90) | (command[0x01]!=0x00) ){
+		LOG_DEBUG << "Set Power ON Field failed: " << "Answer : " << command << " & length is : " << commandLen;
+		response.response = "Failed to Set Power OFF Field, wrong answer from the reader";
+		return response;
+
+	}
+
+	LOG_DEBUG << "Set Power ON Field: Success";
 
 	ret = powerFieldState();
 	if (ret == -1) {
@@ -495,6 +598,7 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::powerONField() {
 //	LONG resp;
 	ResponsePacket response;
 
+	reconnect_HW();
 	int ret;
 	ret = powerFieldState();
 	if (ret == -1) {
@@ -611,7 +715,8 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::pollTypeA() {
 	currentPollingType_ = TYPE_A;
 	LOG_DEBUG << "Set Initial Polling (success): TYPE_A";
 
-	return response;
+//	return response;
+	return reset_Field();
 }
 
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::pollTypeB() {
@@ -637,7 +742,9 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::pollTypeB() {
 	currentPollingType_ = TYPE_B;
 	LOG_DEBUG << "Set Initial Polling (success): TYPE_B";
 
-	return response;
+//	return response;
+	return reset_Field();
+
 }
 
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::pollTypeF() {
@@ -663,7 +770,9 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::pollTypeF() {
 	currentPollingType_ = TYPE_F;
 	LOG_DEBUG << "Set Initial Polling (success): TYPE_F";
 
-	return response;
+//	return response;
+	return reset_Field();
+
 }
 
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::pollTypeAllTypes() {
