@@ -78,6 +78,7 @@ private:
 	ResponsePacket handleErrorResponse(std::string context_message, LONG error);
 	ResponsePacket retrieveAtr(BYTE* bAttr, DWORD* cByte);
 	int sendEscapeCommand(unsigned char* command, unsigned long int* command_length);
+	int sendInternalCommand(unsigned char* command, unsigned long int* command_length);
 	int powerFieldState();
 	std::string errorToString(LONG error);
 	LONG handleRetry();

@@ -192,6 +192,12 @@ ResponsePacket ExampleTerminalPCSCHCI_TH::sendCommand_T1(unsigned char* command,
 			return response;
 		}
 
+		if ((APDU[APDU_Len - 2] == 0x90) | (APDU[APDU_Len -1] == 0x00)) {
+			APDU_Len -= 2;
+			LOG_DEBUG << "sendCommand T1: 0x90 0x00 detected and removed, new len " << APDU_Len;
+
+		}
+
 		responseAPDU =  utils::unsignedCharToString(APDU, APDU_Len);
 		response = { .response = responseAPDU };
 		return response;
@@ -230,6 +236,12 @@ ResponsePacket ExampleTerminalPCSCHCI_TH::sendCommand_T1(unsigned char* command,
 			response.response = "Problem when received T1 command";
 			return response;
 		}
+
+	}
+
+	if ((APDU[APDU_Resp_Len - 2] == 0x90) | (APDU[APDU_Resp_Len -1] == 0x00)) {
+		APDU_Resp_Len -= 2;
+		LOG_DEBUG << "sendCommand T1: 0x90 0x00 detected and removed, new len " << APDU_Resp_Len;
 
 	}
 

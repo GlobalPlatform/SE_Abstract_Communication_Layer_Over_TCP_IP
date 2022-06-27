@@ -202,6 +202,40 @@ int ExampleTerminalPCSCContactless_IDENTIV::sendEscapeCommand(unsigned char* com
 
 }
 
+int ExampleTerminalPCSCContactless_IDENTIV::sendInternalCommand(unsigned char* command, unsigned long int* command_length) {
+	LONG resp = SCARD_SWALLOWED;
+
+	LOG_DEBUG << "Interna Command Input, APDU : " << utils::unsignedCharToString(command, *command_length) << ", APDU_Length : " << *command_length;
+
+
+	dwRecvLength_ = sizeof(pbRecvBuffer_);
+
+	LOG_DEBUG << "hCard_ After SendEscapeCommand Connect " << "[hCard:" << hCard_ << "]";
+
+	int tries = 0;
+	if ((resp = SCardTransmit(hCard_, &pioSendPci_, command, *command_length, NULL, pbRecvBuffer_, &dwRecvLength_)) != SCARD_S_SUCCESS) {
+		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
+			resp = handleRetry();
+			resp = SCardTransmit(hCard_, &pioSendPci_, command, *command_length, NULL, pbRecvBuffer_, &dwRecvLength_);
+			tries++;
+		}
+		if (resp != SCARD_S_SUCCESS) {
+			LOG_DEBUG << "Failed to call SCardTransmit() [error:" << errorToString(resp) << "]" << "[card:" << hCard_ << "][pbSendBuffer:" << command << "][cbSendLength:" << *command_length << "]"
+					  << "[recvbuffer:" << pbRecvBuffer_ << "][recvlength:" << dwRecvLength_ << "]";
+			return -1;
+		}
+	}
+	LOG_DEBUG << "CommandEscape Success, APDU : " << utils::unsignedCharToString(command, *command_length) << " Len : " << *command_length << " [recvbuffer:" << utils::unsignedCharToString(pbRecvBuffer_, dwRecvLength_) << "][recvlength:" << dwRecvLength_ << "]";
+
+	*command_length = dwRecvLength_;
+	for (unsigned int i=0; i<*command_length; i++){
+		command[i] = pbRecvBuffer_[i];
+	}
+
+	return 0;
+
+}
+
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::sendTypeA(unsigned char command[],  unsigned long int command_length) {
 
 	if (currentPollingType_ != TYPE_A) {
@@ -752,8 +786,15 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::pollTypeF() {
 
 	LOG_DEBUG << "Get Initial Polling: ";
 	// get initial polling
-	unsigned char command[] = { 0x95,  TYPE_F};
-	DWORD commandLen = sizeof command;
+	unsigned char command[270] = { 0x95,  0xFF, 0x00, 0xC0};
+	DWORD commandLen = 0x00;
+
+	command[commandLen++] = 0x95;
+	command[commandLen++] = 0xFF;
+	command[commandLen++] = 0x00;
+	command[commandLen++] = 0xC0;
+
+//	command[commandLen++] = TYPE_ABF;
 
 	if (sendEscapeCommand(command, &commandLen) != 0x00) {
 		LOG_DEBUG << "Set Initial Polling: failed";
@@ -771,8 +812,30 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::pollTypeF() {
 	LOG_DEBUG << "Set Initial Polling (success): TYPE_F";
 
 //	return response;
-	return reset_Field();
+	response = reset_Field();
 
+	LOG_DEBUG << "Send Polling Type F";
+
+	commandLen = 0x00;
+	command[commandLen++] = 0xFF;
+	command[commandLen++] = 0x40;
+	command[commandLen++] = 0x00;
+	command[commandLen++] = 0x00;
+	command[commandLen++] = 0x04;
+	command[commandLen++] = 0xFF;
+	command[commandLen++] = 0xFF;
+	command[commandLen++] = 0x00;
+	command[commandLen++] = 0x00;
+
+	if (sendInternalCommand(command, &commandLen) != 0x00) {
+		LOG_DEBUG << "Send Polling Type F: failed";
+		response.response = "Error when sending POLL TYPE F";
+		return response;
+	}
+
+	LOG_DEBUG << "Send Polling Type F: success";
+
+	return response;
 }
 
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::pollTypeAllTypes() {
@@ -780,7 +843,7 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::pollTypeAllTypes() {
 
 	LOG_DEBUG << "Get Initial Polling: ";
 	// get initial polling
-	unsigned char command[] = { 0x95,  TYPE_ABF};
+	unsigned char command[] = {0x95,  TYPE_ABF};
 	DWORD commandLen = sizeof command;
 
 	if (sendEscapeCommand(command, &commandLen) != 0x00) {
