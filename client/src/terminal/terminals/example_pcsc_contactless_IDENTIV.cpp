@@ -205,7 +205,7 @@ int ExampleTerminalPCSCContactless_IDENTIV::sendEscapeCommand(unsigned char* com
 int ExampleTerminalPCSCContactless_IDENTIV::sendInternalCommand(unsigned char* command, unsigned long int* command_length) {
 	LONG resp = SCARD_SWALLOWED;
 
-	LOG_DEBUG << "Interna Command Input, APDU : " << utils::unsignedCharToString(command, *command_length) << ", APDU_Length : " << *command_length;
+	LOG_DEBUG << "Internal Command Input, APDU : " << utils::unsignedCharToString(command, *command_length) << ", APDU_Length : " << *command_length;
 
 
 	dwRecvLength_ = sizeof(pbRecvBuffer_);
@@ -266,8 +266,44 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::sendTypeF(unsigned char c
 		return response;
 	}
 
+	ResponsePacket response;
+	unsigned long int APDU_Len = command_length;
+	unsigned char APDU[270];
+	int res;
+
+	APDU[0x00] = 0xF3;
+	for (unsigned int i = 1; i < command_length ; i++){
+		APDU[i] = command[i];
+	}
+
+	res = sendEscapeCommand(APDU, &APDU_Len);
+
+	if (res == -1) {
+		response.response = "Not supported";
+		return response;
+	}
+
+	if ((APDU_Len < 2) | (APDU[APDU_Len - 2]!=0x90) | (APDU[APDU_Len - 1]!=0x00) ){
+		LOG_DEBUG << "Send Type F Failed: " << "Answer : " << APDU << " & length is : " << APDU_Len;
+		response.response = "Send Type F Failed, wrong answer from the reader";
+		return response;
+
+	}
+
+/*
+	APDU[0x00] = 0xFF;
+	APDU[0x01] = 0xCC;
+	APDU[0x02] = 0x00;
+	APDU[0x03] = 0x00;
+	APDU[0x04] = command_length + 1;
+	APDU[0x05] = 0xF3;
+//The lenght shall be
 	// send requested command
-	return sendCommand(command, command_length);
+	return sendCommand(APDU, APDU_Len);
+*/
+	std::string responseAPDU =  utils::unsignedCharToString(APDU, APDU_Len - 2);
+	response.response = responseAPDU;
+	return response;
 }
 
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::isAlive() {
