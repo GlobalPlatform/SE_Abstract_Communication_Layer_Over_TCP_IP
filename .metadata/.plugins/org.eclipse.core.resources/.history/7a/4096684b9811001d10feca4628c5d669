@@ -205,7 +205,7 @@ int ExampleTerminalPCSCContactless_IDENTIV::sendEscapeCommand(unsigned char* com
 int ExampleTerminalPCSCContactless_IDENTIV::sendInternalCommand(unsigned char* command, unsigned long int* command_length) {
 	LONG resp = SCARD_SWALLOWED;
 
-	LOG_DEBUG << "Interna Command Input, APDU : " << utils::unsignedCharToString(command, *command_length) << ", APDU_Length : " << *command_length;
+	LOG_DEBUG << "Internal Command Input, APDU : " << utils::unsignedCharToString(command, *command_length) << ", APDU_Length : " << *command_length;
 
 
 	dwRecvLength_ = sizeof(pbRecvBuffer_);
@@ -266,22 +266,51 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::sendTypeF(unsigned char c
 		return response;
 	}
 
-	unsigned long int APDU_Len = 6 + command_length;
+	ResponsePacket response;
+	unsigned long int APDU_Len = command_length;
 	unsigned char APDU[270];
-	unsigned int i = 0;
+	int res;
+	std::string responseAPDU;
 
+	APDU[0x00] = 0xF3;
+	for (unsigned int i = 1; i < command_length ; i++){
+		APDU[i] = command[i];
+	}
+
+	res = sendEscapeCommand(APDU, &APDU_Len);
+
+	if (res == -1) {
+		response.response = "Not supported";
+		return response;
+	}
+
+	if ((APDU_Len < 2) | (APDU[APDU_Len - 2]!=0x90) | (APDU[APDU_Len - 1]!=0x00) ){
+		LOG_DEBUG << "Send Type F Failed: " << "Answer : " << APDU << " & length is : " << APDU_Len;
+		response.response = "Send Type F Failed, wrong answer from the reader";
+		return response;
+
+	}
+
+/*
 	APDU[0x00] = 0xFF;
 	APDU[0x01] = 0xCC;
 	APDU[0x02] = 0x00;
 	APDU[0x03] = 0x00;
 	APDU[0x04] = command_length + 1;
 	APDU[0x05] = 0xF3;
-
-	for (unsigned int i = 1; i < command_length ; i++){
-		APDU[i + 5] = command[i];
-	}
+//The length shall be
 	// send requested command
 	return sendCommand(APDU, APDU_Len);
+*/
+	if (APDU_Len >= 4) {
+		responseAPDU =  utils::unsignedCharToString(APDU, APDU_Len - 4);
+	}
+	else {
+		responseAPDU =  utils::unsignedCharToString(APDU, APDU_Len - 2);
+	}
+
+	response.response = responseAPDU;
+	return response;
 }
 
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::isAlive() {
@@ -589,8 +618,12 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::reset_Field() {
 
 	LOG_DEBUG << "Set power OFF Field: ";
 	// get initial polling
-	unsigned char command[] = { 0x96,  0x00};
-	DWORD commandLen = sizeof command;
+	unsigned char command[270];
+	DWORD commandLen;
+
+	command[0x00] = 0x96;
+	command[0x01] = 0x00;
+	commandLen = 0x02;
 
 	if (sendEscapeCommand(command, &commandLen) != 0x00) {
 		LOG_DEBUG << "Set Power OFF Field: failed";
@@ -740,6 +773,53 @@ int ExampleTerminalPCSCContactless_IDENTIV::powerFieldState(){
 	return command[0x00];
 }
 
+int ExampleTerminalPCSCContactless_IDENTIV::getType(){
+
+	ResponsePacket response;
+	LOG_DEBUG << "Get Type: ";
+	// get initial polling
+	unsigned char command[270];
+	DWORD commandLen;
+	command[0x00] = 0x94;
+	command[0x01] = 0xFF;
+	commandLen = 0x02;
+
+	if (sendEscapeCommand(command, &commandLen) != 0x00) {
+		LOG_DEBUG << "Get Type: failed";
+		response.response = "Not supported";
+		return -1;
+	}
+
+	if ((commandLen < 3) | (command[0x01]!=0x90) | (command[0x02]!=0x00) ){
+		LOG_DEBUG << "Get Type failed: " << "Answer : " << command << " & length is : " << commandLen;
+		response.response = "Failed to Get Type State, wrong answer from the reader";
+		return -1;
+
+	}
+
+	if (commandLen = 3) {
+		LOG_DEBUG << "Get Type: Field ON, " << command[0x00];
+	} else if commandLen = 4 {
+		LOG_DEBUG << "Get Type: Field ON, " << command[0x00] << command [0x01];
+
+	}
+
+	switch (command[0x00]) {
+	case 0x00:
+		LOG_DEBUG << "Get Power Field State: Field ON";
+		break;
+	case 0x01:
+		LOG_DEBUG << "Get Power Field State: Field OFF";
+		break;
+	default:
+		LOG_DEBUG << "Get Power Field State: Unknow Field State";
+		break;
+	}
+
+	return 0x00;
+}
+
+
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::pollTypeA() {
 	ResponsePacket response;
 
@@ -800,13 +880,13 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::pollTypeF() {
 
 	LOG_DEBUG << "Get Initial Polling: ";
 	// get initial polling
-	unsigned char command[270] = { 0x95,  0xFF, 0x00, 0xC0};
+	unsigned char command[270];
 	DWORD commandLen = 0x00;
 
 	command[commandLen++] = 0x95;
 	command[commandLen++] = 0xFF;
 	command[commandLen++] = 0x00;
-	command[commandLen++] = 0xC0;
+	command[commandLen++] = 0x60;
 
 //	command[commandLen++] = TYPE_ABF;
 

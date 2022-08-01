@@ -80,6 +80,7 @@ private:
 	int sendEscapeCommand(unsigned char* command, unsigned long int* command_length);
 	int sendInternalCommand(unsigned char* command, unsigned long int* command_length);
 	int powerFieldState();
+	int getType();
 	std::string errorToString(LONG error);
 	LONG handleRetry();
 	ResponsePacket disconnect_HW();
