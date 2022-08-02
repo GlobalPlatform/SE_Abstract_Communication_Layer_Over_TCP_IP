@@ -22,11 +22,24 @@
 
 #define TYPE_A 0x00
 #define TYPE_B 0x01
-#define TYPE_AB 0x02
-#define TYPE_F 0x18
+#define TYPE_AB (TYPE_A || TYPE_B)
+#define TYPE_F 0x60
 #define TYPE_AF 0x19
 #define TYPE_BF 0x1A
 #define TYPE_ABF 0x1B
+
+#define RET_OK 0;
+#define ERR_CMD_GET_TYPE -1;
+#define ERR_RET_GET_TYPE -2;
+#define ERR_CMD_SET_TYPE -3;
+#define ERR_RET_SET_TYPE -4;
+#define ERR_CMD_GET_FIELD_STATE -5;
+#define ERR_RET_GET_FIELD_STATE -6;
+#define ERR_CMD_SET_FIELD_STATE -7;
+#define ERR_RET_SET_FIELD_STATE -8;
+#define ERR_CARD_RECONNECT -9;
+
+
 
 #include "terminal/terminals/terminal.hpp"
 #include "constants/response_packet.hpp"
@@ -79,13 +92,14 @@ private:
 	ResponsePacket retrieveAtr(BYTE* bAttr, DWORD* cByte);
 	int sendEscapeCommand(unsigned char* command, unsigned long int* command_length);
 	int sendInternalCommand(unsigned char* command, unsigned long int* command_length);
+	int switchPollingType(byte pollingType);
 	int powerFieldState();
 	int getType();
 	std::string errorToString(LONG error);
 	LONG handleRetry();
 	ResponsePacket disconnect_HW();
 	ResponsePacket reconnect_HW();
-	ResponsePacket reset_Field();
+	int reset_Field();
 
 };
 

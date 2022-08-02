@@ -1,0 +1,8 @@
+#
+#Tue Aug 02 15:00:26 CEST 2022
+Debug/src/terminal/terminals/example_pcsc_contactless_IDENTIV.o=1
+Debug/src/terminal/factories/example_factory_pcsc_contactless_IDENTIV_Dual.o=1
+Debug/src/terminal/factories/example_factory_pcsc_contactless_IDENTIV.o=1
+Debug/src/terminal/terminals/example_pcsc_contactless_IDENTIV_Dual.o=1
+include/terminal/terminals/example_pcsc_contactless_IDENTIV.hpp=1
+Debug/libclient.dll=1

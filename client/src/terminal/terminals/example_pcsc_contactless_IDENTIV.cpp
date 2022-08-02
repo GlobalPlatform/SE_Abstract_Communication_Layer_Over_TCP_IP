@@ -606,17 +606,15 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::powerOFFField() {
 	return response;
 }
 
-ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::reset_Field() {
-	ResponsePacket response;
+int ExampleTerminalPCSCContactless_IDENTIV::reset_Field() {
 	int ret;
 
 	LOG_DEBUG << "Contactless_IDENTIV Start PowerOFFField";
 	//Get Power Field State
 
 	ret = powerFieldState();
-	if (ret == -1) {
-		response.response = "Problem to get Field State";
-		return response;
+	if (ret < 0) {
+		return ret;
 	}
 
 	LOG_DEBUG << "Set power OFF Field: ";
@@ -628,59 +626,58 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::reset_Field() {
 	command[0x01] = 0x00;
 	commandLen = 0x02;
 
-	if (sendEscapeCommand(command, &commandLen) != 0x00) {
+	ret = sendEscapeCommand(command, &commandLen);
+	if (ret != 0x00) {
 		LOG_DEBUG << "Set Power OFF Field: failed";
-		response.response = "Not supported";
-		return response;
+		return ERR_CMD_SET_FIELD_STATE;
 	}
 
 	if ((commandLen < 2) | (command[0x00]!=0x90) | (command[0x01]!=0x00) ){
 		LOG_DEBUG << "Set Power OFF Field failed: " << "Answer : " << command << " & length is : " << commandLen;
-		response.response = "Failed to Set Power OFF Field, wrong answer from the reader";
-		return response;
+		return ERR_RET_SET_FIELD_STATE;
 
 	}
 
 	ret = powerFieldState();
-	if (ret == -1) {
-		response.response = "Not supported";
-		return response;
+	if (ret < 0) {
+		return ret;
 	}
 
 	LOG_DEBUG << "Set Power OFF Field: Success";
+
+//	Sleep(100);
 
 	command[0x00] = 0x96;
 	command[0x01] = 0x01;
 	commandLen = 2;
 
-	if (sendEscapeCommand(command, &commandLen) != 0x00) {
+	ret = sendEscapeCommand(command, &commandLen);
+	if (ret < 0x00) {
 		LOG_DEBUG << "Set Power ON Field: failed";
-		response.response = "Set Power ON Field: failed";
-		return response;
+		return ERR_CMD_SET_FIELD_STATE;
 	}
 
 	if ((commandLen < 2) | (command[0x00]!=0x90) | (command[0x01]!=0x00) ){
 		LOG_DEBUG << "Set Power ON Field failed: " << "Answer : " << command << " & length is : " << commandLen;
-		response.response = "Failed to Set Power OFF Field, wrong answer from the reader";
-		return response;
+		return ERR_RET_SET_FIELD_STATE;
 
 	}
 
 	LOG_DEBUG << "Set Power ON Field: Success";
 
 	ret = powerFieldState();
-	if (ret == -1) {
-		response.response = "Power ON Field State: failed";
-		return response;
+	if (ret < 0) {
+		LOG_DEBUG << "Power ON Field State: failed";
+		return ret;
 	}
 	LONG resp;
 
 	if ((resp = SCardReconnect(hCard_, SCARD_SHARE_DIRECT, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_RESET_CARD, &dwActiveProtocol_)) != SCARD_S_SUCCESS) {
-		response.response = "Error in SCardReconnect";
-		return response;
+		LOG_DEBUG << "Error in SCardReconnect";
+		return ERR_CARD_RECONNECT;
 		}
 
-	return response;
+	return RET_OK;
 }
 
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::powerONField() {
@@ -746,7 +743,6 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::powerONField() {
 
 int ExampleTerminalPCSCContactless_IDENTIV::powerFieldState(){
 
-	ResponsePacket response;
 	LOG_DEBUG << "Get power Field State: ";
 	// get initial polling
 	unsigned char command[] = { 0x96,  0xFF, 0x00};
@@ -755,14 +751,12 @@ int ExampleTerminalPCSCContactless_IDENTIV::powerFieldState(){
 
 	if (sendEscapeCommand(command, &commandLen) != 0x00) {
 		LOG_DEBUG << "Get Power Field State: failed";
-		response.response = "Not supported";
-		return -1;
+		return ERR_CMD_GET_FIELD_STATE;
 	}
 
 	if ((commandLen < 3) | (command[0x01]!=0x90) | (command[0x02]!=0x00) ){
 		LOG_DEBUG << "Get Power Field State failed: " << "Answer : " << command << " & length is : " << commandLen;
-		response.response = "Failed to Get Power Field State, wrong answer from the reader";
-		return -1;
+		return ERR_CMD_GET_FIELD_STATE;
 
 	}
 
@@ -814,95 +808,54 @@ int ExampleTerminalPCSCContactless_IDENTIV::getType(){
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::pollTypeA() {
 	ResponsePacket response;
 
-	LOG_DEBUG << "Get Initial Polling: ";
-	// get initial polling
-	unsigned char command[] = { 0x95,  TYPE_A};
-	DWORD commandLen = sizeof command;
+	LOG_DEBUG << "Set Polling Type A";
 
-	if (sendEscapeCommand(command, &commandLen) != 0x00) {
-		LOG_DEBUG << "Set Initial Polling: failed";
-		response.response = "Not supported";
+	int ret;
+
+	ret = switchPollingType(TYPE_A);
+	if (ret < 0){
+		response.response = "Failed to set polling type A";
 		return response;
 	}
 
-	if ((commandLen < 2) | (command[0x00]!=0x90) | (command[0x01]!=0x00) ){
-		LOG_DEBUG << "Set Initial Polling failed: TYPE_A " << "Answer : " << command << " & length is : " << commandLen;
-		response.response = "Failed to set polling type A, wrong answer from the reader";
-		return response;
+	LOG_DEBUG << "Set Polling Type A, Success";
 
-	}
-	currentPollingType_ = TYPE_A;
-	LOG_DEBUG << "Set Initial Polling (success): TYPE_A";
-
-//	return response;
-	return reset_Field();
+	return response;
 }
 
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::pollTypeB() {
 	ResponsePacket response;
 
-	LOG_DEBUG << "Get Initial Polling: ";
-	// get initial polling
-	unsigned char command[] = { 0x95,  TYPE_B};
-	DWORD commandLen = sizeof command;
+	LOG_DEBUG << "Set Polling Type B";
 
-	if (sendEscapeCommand(command, &commandLen) != 0x00) {
-		LOG_DEBUG << "Set Initial Polling: failed";
-		response.response = "Not supported";
+	int ret;
+
+	ret = switchPollingType(TYPE_B);
+	if (ret < 0){
+		response.response = "Failed to set polling type B";
 		return response;
 	}
 
-	if ((commandLen < 2) | (command[0x00]!=0x90) | (command[0x01]!=0x00) ){
-		LOG_DEBUG << "Set Initial Polling failed: TYPE_B " << "Answer : " << command << " & length is : " << commandLen;
-		response.response = "Failed to set polling type B, wrong answer from the reader";
-		return response;
-
-	}
-	currentPollingType_ = TYPE_B;
-	LOG_DEBUG << "Set Initial Polling (success): TYPE_B";
-
-//	return response;
-	response = reset_Field();
-
-	getType();
+	LOG_DEBUG << "Set Polling Type B, Success";
 
 	return response;
-
 }
 
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::pollTypeF() {
 	ResponsePacket response;
-
-	LOG_DEBUG << "Get Initial Polling: ";
-	// get initial polling
 	unsigned char command[270];
 	DWORD commandLen = 0x00;
 
-	command[commandLen++] = 0x95;
-	command[commandLen++] = 0xFF;
-	command[commandLen++] = 0x60;
-	command[commandLen++] = 0x00;
-
-//	command[commandLen++] = TYPE_ABF;
-
-	if (sendEscapeCommand(command, &commandLen) != 0x00) {
-		LOG_DEBUG << "Set Initial Polling: failed";
-		response.response = "Not supported";
-		return response;
-	}
-
-	if ((commandLen < 2) | (command[0x00]!=0x90) | (command[0x01]!=0x00) ){
-		LOG_DEBUG << "Set Initial Polling failed: TYPE_F " << "Answer : " << command << " & length is : " << commandLen;
-		response.response = "Failed to set polling type F, wrong answer from the reader";
-		return response;
-
-	}
-	currentPollingType_ = TYPE_F;
-	LOG_DEBUG << "Set Initial Polling (success): TYPE_F";
+	int ret;
+	LOG_DEBUG << "Set Polling Type F";
 
 //	return response;
-	response = reset_Field();
+	ret = switchPollingType(TYPE_F);
 
+	if (ret < 0) {
+		response.response = "Error when switch Polling Type";
+		return response;
+	}
 	LOG_DEBUG << "Send Polling Type F";
 
 	commandLen = 0x00;
@@ -924,35 +877,62 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::pollTypeF() {
 
 	LOG_DEBUG << "Send Polling Type F: success";
 
-	getType();
-
 	return response;
 }
 
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::pollTypeAllTypes() {
 	ResponsePacket response;
 
-	LOG_DEBUG << "Get Initial Polling: ";
+	LOG_DEBUG << "Set Polling Type ABF";
+
+	int ret;
+
+	ret = switchPollingType(TYPE_ABF);
+	if (ret < 0){
+		response.response = "Failed to set polling type ABF";
+		return response;
+	}
+
+	LOG_DEBUG << "Set Polling Type ABF, Success";
+
+	return response;
+}
+
+int ExampleTerminalPCSCContactless_IDENTIV::switchPollingType(byte pollingType) {
+
+	int ret = 0;
+	unsigned char command[270];
+	DWORD commandLen = 0x00;
+
+	LOG_DEBUG << "Set Initial Polling: ";
 	// get initial polling
-	unsigned char command[] = {0x95,  TYPE_ABF};
-	DWORD commandLen = sizeof command;
+
+	command[commandLen++] = 0x95;
+	command[commandLen++] = 0xFF;
+	command[commandLen++] = pollingType;
+	command[commandLen++] = 0x00;
+
+//	command[commandLen++] = TYPE_ABF;
 
 	if (sendEscapeCommand(command, &commandLen) != 0x00) {
 		LOG_DEBUG << "Set Initial Polling: failed";
-		response.response = "Not supported";
-		return response;
+		return ERR_CMD_GET_TYPE;
 	}
 
 	if ((commandLen < 2) | (command[0x00]!=0x90) | (command[0x01]!=0x00) ){
-		LOG_DEBUG << "Set Initial Polling failed: TYPE_ABF " << "Answer : " << command << " & length is : " << commandLen;
-		response.response = "Failed to set polling type ABF, wrong answer from the reader";
-		return response;
+		LOG_DEBUG << "Set Initial Polling failed: TYPE_F " << "Answer : " << command << " & length is : " << commandLen;
+		return ERR_RET_GET_TYPE;
 
 	}
-	currentPollingType_ = TYPE_ABF;
-	LOG_DEBUG << "Set Initial Polling (success): TYPE_ABF";
+	currentPollingType_ = pollingType;
+	LOG_DEBUG << "Set Initial Polling (success)";
 
-	return response;
+//	return response;
+	ret = reset_Field();
+
+	getType();
+
+	return ret;
 }
 
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::getNotifications() {

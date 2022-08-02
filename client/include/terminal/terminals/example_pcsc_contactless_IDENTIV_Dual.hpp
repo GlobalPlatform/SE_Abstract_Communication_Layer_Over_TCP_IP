@@ -20,14 +20,6 @@
 
 #define DEFAULT_BUFLEN 1024 * 64
 
-#define TYPE_A 0x00
-#define TYPE_B 0x01
-#define TYPE_AB 0x02
-#define TYPE_F 0x18
-#define TYPE_AF 0x19
-#define TYPE_BF 0x1A
-#define TYPE_ABF 0x1B
-
 #include "terminal/terminals/example_pcsc_contactless_IDENTIV.hpp"
 #include "constants/response_packet.hpp"
 
