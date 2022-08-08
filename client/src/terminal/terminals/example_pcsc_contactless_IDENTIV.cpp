@@ -153,33 +153,26 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::sendCommand(unsigned char
 int ExampleTerminalPCSCContactless_IDENTIV::sendEscapeCommand(unsigned char* command, unsigned long int* command_length) {
 	LONG resp = SCARD_SWALLOWED;
 	//std::string strCommand = utils::unsignedCharToString(command, command_length);
-	unsigned long int APDU_Len = 5 + *command_length;
-	unsigned char APDU[270];
+	unsigned long int lenReceived;
+	unsigned long int IOCTL_CCID_ESCAPE3500 = SCARD_CTL_CODE(3500);
 
-	APDU[0x00] = 0xFF;
-	APDU[0x01] = 0xCC;
-	APDU[0x02] = 0x00;
-	APDU[0x03] = 0x00;
-	APDU[0x04] = (*command_length)/* && 0xFF*/;
 
-	//APDU[0x00] = 0xFF;
-	//APDU[0x01] = 0x70;
-	//APDU[0x02] = 0x04;
-	//APDU[0x03] = 0xE6;
-	//APDU[0x04] = (*command_length)/* && 0xFF*/;
+//	APDU[APDU_Len++] = 0x00;
 
-	for (unsigned int i = 0; i < *command_length ; i++){
-		APDU[i + 5] = command[i];
-	}
-
-	LOG_DEBUG << "CommandEscape Input, Command : " << utils::unsignedCharToString(command, *command_length) << ", Command_Length : " << *command_length << ", APDU : " <<
-			utils::unsignedCharToString(APDU, APDU_Len) << " Len : " << APDU_Len;
+	LOG_DEBUG << "CommandEscape Input, Command : " << utils::unsignedCharToString(command, *command_length) << ", Command_Length : " << *command_length;
 
 
 	dwRecvLength_ = sizeof(pbRecvBuffer_);
 
 	LOG_DEBUG << "hCard_ After SendEscapeCommand Connect " << "[hCard:" << hCard_ << "]";
 
+	if ((resp = SCardControl(hCard_, IOCTL_CCID_ESCAPE3500, command, *command_length, pbRecvBuffer_, dwRecvLength_, &lenReceived)) !=SCARD_S_SUCCESS) {
+
+		LOG_DEBUG << "Failed to call SCardControl() [error:" << errorToString(resp) << "]" << "[card:" << hCard_ << "][pbSendBuffer:" << command << "][cbSendLength:" << *command_length << "]"
+				  << "[recvbuffer:" << pbRecvBuffer_ << "][recvlength:" << dwRecvLength_ << "][lenreceived:" << lenReceived << "]";
+		return -1;
+	}
+	/*
 	int tries = 0;
 	if ((resp = SCardTransmit(hCard_, &pioSendPci_, APDU, APDU_Len, NULL, pbRecvBuffer_, &dwRecvLength_)) != SCARD_S_SUCCESS) {
 		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
@@ -194,9 +187,10 @@ int ExampleTerminalPCSCContactless_IDENTIV::sendEscapeCommand(unsigned char* com
 			return -1;
 		}
 	}
-	LOG_DEBUG << "CommandEscape Success, APDU : " << utils::unsignedCharToString(APDU, APDU_Len) << " Len : " << APDU_Len << " [recvbuffer:" << utils::unsignedCharToString(pbRecvBuffer_, dwRecvLength_) << "][recvlength:" << dwRecvLength_ << "]";
+	*/
+	LOG_DEBUG << "CommandEscape Success, APDU : " << utils::unsignedCharToString(command, *command_length) << " Len : " << *command_length << " [recvbuffer:" << utils::unsignedCharToString(pbRecvBuffer_, lenReceived) << "][recvlength:" << lenReceived << "]";
 
-	*command_length = dwRecvLength_;
+	*command_length = lenReceived;
 	for (unsigned int i=0; i<*command_length; i++){
 		command[i] = pbRecvBuffer_[i];
 	}
@@ -573,7 +567,7 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::powerOFFField() {
 
 	ret = powerFieldState();
 	if (ret == -1) {
-		response.response = "Not supported";
+		response.response = "Get Power OFF Field: failed";
 		return response;
 	}
 
@@ -584,11 +578,11 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::powerOFFField() {
 
 	if (sendEscapeCommand(command, &commandLen) != 0x00) {
 		LOG_DEBUG << "Set Power OFF Field: failed";
-		response.response = "Not supported";
+		response.response = "Set Power OFF Field: failed";
 		return response;
 	}
 
-	if ((commandLen < 2) | (command[0x00]!=0x90) | (command[0x01]!=0x00) ){
+	if (commandLen < 0){
 		LOG_DEBUG << "Set Power OFF Field failed: " << "Answer : " << command << " & length is : " << commandLen;
 		response.response = "Failed to Set Power OFF Field, wrong answer from the reader";
 		return response;
@@ -597,7 +591,7 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::powerOFFField() {
 
 	ret = powerFieldState();
 	if (ret == -1) {
-		response.response = "Not supported";
+		response.response = "Get Power OFF Field: failed";
 		return response;
 	}
 
@@ -632,7 +626,7 @@ int ExampleTerminalPCSCContactless_IDENTIV::reset_Field() {
 		return ERR_CMD_SET_FIELD_STATE;
 	}
 
-	if ((commandLen < 2) | (command[0x00]!=0x90) | (command[0x01]!=0x00) ){
+	if (commandLen != 0){
 		LOG_DEBUG << "Set Power OFF Field failed: " << "Answer : " << command << " & length is : " << commandLen;
 		return ERR_RET_SET_FIELD_STATE;
 
@@ -645,7 +639,7 @@ int ExampleTerminalPCSCContactless_IDENTIV::reset_Field() {
 
 	LOG_DEBUG << "Set Power OFF Field: Success";
 
-//	Sleep(100);
+	Sleep(250);
 
 	command[0x00] = 0x96;
 	command[0x01] = 0x01;
@@ -657,7 +651,7 @@ int ExampleTerminalPCSCContactless_IDENTIV::reset_Field() {
 		return ERR_CMD_SET_FIELD_STATE;
 	}
 
-	if ((commandLen < 2) | (command[0x00]!=0x90) | (command[0x01]!=0x00) ){
+	if (commandLen != 0){
 		LOG_DEBUG << "Set Power ON Field failed: " << "Answer : " << command << " & length is : " << commandLen;
 		return ERR_RET_SET_FIELD_STATE;
 
@@ -670,13 +664,15 @@ int ExampleTerminalPCSCContactless_IDENTIV::reset_Field() {
 		LOG_DEBUG << "Power ON Field State: failed";
 		return ret;
 	}
+/*
 	LONG resp;
+
 
 	if ((resp = SCardReconnect(hCard_, SCARD_SHARE_DIRECT, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_RESET_CARD, &dwActiveProtocol_)) != SCARD_S_SUCCESS) {
 		LOG_DEBUG << "Error in SCardReconnect";
 		return ERR_CARD_RECONNECT;
 		}
-
+*/
 	return RET_OK;
 }
 
@@ -684,11 +680,11 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::powerONField() {
 //	LONG resp;
 	ResponsePacket response;
 
-	reconnect_HW();
+//	reconnect_HW();
 	int ret;
 	ret = powerFieldState();
 	if (ret == -1) {
-		response.response = "Not supported";
+		response.response = "Get Power OFF Field: failed";
 		return response;
 	}
 
@@ -717,11 +713,11 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::powerONField() {
 
 	if (sendEscapeCommand(command, &commandLen) != 0x00) {
 		LOG_DEBUG << "Set Power ON Field: failed";
-		response.response = "Not supported";
+		response.response = "Set Power ON Field: failed";
 		return response;
 	}
 
-	if ((commandLen < 2) | (command[0x00]!=0x90) | (command[0x01]!=0x00) ){
+	if (commandLen != 0){
 		LOG_DEBUG << "Set Power ON Field failed: " << "Answer : " << command << " & length is : " << commandLen;
 		response.response = "Failed to Set Power ON Field, wrong answer from the reader";
 		return response;
@@ -733,7 +729,7 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::powerONField() {
 
 	ret = powerFieldState();
 	if (ret == -1) {
-		response.response = "Not supported";
+		response.response = "Get Power OFF Field: failed";
 		return response;
 	}
 
@@ -745,16 +741,18 @@ int ExampleTerminalPCSCContactless_IDENTIV::powerFieldState(){
 
 	LOG_DEBUG << "Get power Field State: ";
 	// get initial polling
-	unsigned char command[] = { 0x96,  0xFF, 0x00};
-	DWORD commandLen = sizeof command;
-	commandLen = 0x02;
+	unsigned char command[270];
+	DWORD commandLen = 0;
+
+	command[commandLen++] = 0x96;
+	command[commandLen++] = 0xFF;
 
 	if (sendEscapeCommand(command, &commandLen) != 0x00) {
 		LOG_DEBUG << "Get Power Field State: failed";
 		return ERR_CMD_GET_FIELD_STATE;
 	}
 
-	if ((commandLen < 3) | (command[0x01]!=0x90) | (command[0x02]!=0x00) ){
+	if (commandLen != 1){
 		LOG_DEBUG << "Get Power Field State failed: " << "Answer : " << command << " & length is : " << commandLen;
 		return ERR_CMD_GET_FIELD_STATE;
 
@@ -792,7 +790,7 @@ int ExampleTerminalPCSCContactless_IDENTIV::getType(){
 		return -1;
 	}
 
-	if ((commandLen < 3) | (command[commandLen - 2]!=0x90) | (command[commandLen - 1]!=0x00) ){
+	if (commandLen != 2){
 		LOG_DEBUG << "Get Type failed: " << "Answer : " << command << " & length is : " << commandLen;
 		response.response = "Failed to Get Type State, wrong answer from the reader";
 		return -1;
@@ -919,8 +917,8 @@ int ExampleTerminalPCSCContactless_IDENTIV::switchPollingType(byte pollingType) 
 		return ERR_CMD_GET_TYPE;
 	}
 
-	if ((commandLen < 2) | (command[0x00]!=0x90) | (command[0x01]!=0x00) ){
-		LOG_DEBUG << "Set Initial Polling failed: TYPE_F " << "Answer : " << command << " & length is : " << commandLen;
+	if (commandLen != 0){
+		LOG_DEBUG << "Set Initial Polling failed, " << "Answer : " << command << " & length is : " << commandLen;
 		return ERR_RET_GET_TYPE;
 
 	}

@@ -6,12 +6,15 @@
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item key="isRegEx" value="true"/>
-		<item key="selection" value="wait"/>
+		<item key="selection" value=""/>
 		<item key="casesensitive" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="wrap" value="true"/>
 		<item key="wholeword" value="false"/>
 		<list key="findhistory">
+			<item value="ESCAPE"/>
+			<item value="3500"/>
+			<item value="sendInternalCommand"/>
 			<item value="wait"/>
 			<item value="sleep"/>
 			<item value="reset_Field"/>
@@ -24,9 +27,6 @@
 			<item value="handleRetry"/>
 			<item value="handleetry"/>
 			<item value="handlertry"/>
-			<item value="handleretry"/>
-			<item value="reload"/>
-			<item value="SCARD_SHARE_SHARED"/>
 		</list>
 		<list key="replacehistory">
 			<item value=""/>

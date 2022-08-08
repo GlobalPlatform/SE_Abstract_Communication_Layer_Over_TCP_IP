@@ -20,8 +20,8 @@
 
 #define DEFAULT_BUFLEN 1024 * 64
 
-#define TYPE_A 0x00
-#define TYPE_B 0x01
+#define TYPE_A 0x01
+#define TYPE_B 0x02
 #define TYPE_AB (TYPE_A || TYPE_B)
 #define TYPE_F 0x60
 #define TYPE_AF 0x19
