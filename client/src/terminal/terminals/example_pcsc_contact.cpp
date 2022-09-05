@@ -281,34 +281,21 @@ ResponsePacket ExampleTerminalPCSCContact::disconnect() {
 ResponsePacket ExampleTerminalPCSCContact::deactivate_Interface() {
 	LOG_INFO << "Deactivate_Interface";
 
-	return coldReset();
+	ResponsePacket response;
+
+	return response;
+//	return coldReset();
 }
 
 ResponsePacket ExampleTerminalPCSCContact::activate_Interface() {
-/*
-	LONG resp;
+
+	LOG_INFO << "Activate_Interface called";
+
 	ResponsePacket response;
 
-	int tries = 0;
-	LOG_INFO << "Activate_Interface called";
-	if ((resp = SCardConnect(hContext_, current_reader_.c_str(), SCARD_SHARE_DIRECT, 0, &hCard_, &dwActiveProtocol_)) != SCARD_S_SUCCESS) {
-		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
-			resp = handleRetry();
-			LOG_INFO << "[Retry] SCardConnect called";
-			resp = SCardConnect(hContext_, current_reader_.c_str(), SCARD_SHARE_DIRECT, 0, &hCard_, &dwActiveProtocol_);
-			tries++;
-		}
-		if (resp != SCARD_S_SUCCESS) {
-			LOG_DEBUG << "Failed to call SCardConnect() " << "[error:" << errorToString(resp) << "]" << "[hContext:" << hContext_ << "][szReader:" << current_reader_ << "][dwShareMode:"
-					  << SCARD_SHARE_DIRECT << "]" << "[dwPreferredProtocols:" << 0 << "][hCard:" << hCard_ << "][dwActiveProtocol:" << dwActiveProtocol_ << "]";
-			return handleErrorResponse("Failed to connect", resp);
-		}
-	}
 	return response;
-	*/
-	LOG_INFO << "Activate_Interface called";
 
-	return coldReset();
+//	return coldReset();
 }
 
 ResponsePacket ExampleTerminalPCSCContact::restart() {
