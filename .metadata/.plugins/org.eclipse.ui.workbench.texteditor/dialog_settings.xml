@@ -12,6 +12,8 @@
 		<item key="wrap" value="true"/>
 		<item key="wholeword" value="false"/>
 		<list key="findhistory">
+			<item value="SCARD_SHARE_SHARED"/>
+			<item value="SCARD_SHARE_DIRECT"/>
 			<item value="ESCAPE"/>
 			<item value="3500"/>
 			<item value="sendInternalCommand"/>
@@ -25,8 +27,6 @@
 			<item value="disconnect"/>
 			<item value="Release"/>
 			<item value="handleRetry"/>
-			<item value="handleetry"/>
-			<item value="handlertry"/>
 		</list>
 		<list key="replacehistory">
 			<item value=""/>
@@ -47,10 +47,10 @@
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
-		<item key="DIALOG_WIDTH" value="414"/>
-		<item key="DIALOG_FONT_NAME" value="1|Segoe UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI"/>
-		<item key="DIALOG_HEIGHT" value="452"/>
-		<item key="DIALOG_X_ORIGIN" value="1935"/>
-		<item key="DIALOG_Y_ORIGIN" value="231"/>
+		<item key="DIALOG_WIDTH" value="322"/>
+		<item key="DIALOG_FONT_NAME" value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|5|0|Segoe UI"/>
+		<item key="DIALOG_HEIGHT" value="391"/>
+		<item key="DIALOG_X_ORIGIN" value="1393"/>
+		<item key="DIALOG_Y_ORIGIN" value="138"/>
 	</section>
 </section>

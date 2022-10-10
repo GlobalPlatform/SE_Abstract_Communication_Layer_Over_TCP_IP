@@ -95,8 +95,8 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::connect(const char* reade
 	LONG resp;
 
 	int tries = 0;
-//	if ((resp = SCardConnect(hContext_, reader, SCARD_SHARE_DIRECT, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, &hCard_, &dwActiveProtocol_)) != SCARD_S_SUCCESS) {
-	if ((resp = SCardConnect(hContext_, reader, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, &hCard_, &dwActiveProtocol_)) != SCARD_S_SUCCESS) {
+	if ((resp = SCardConnect(hContext_, reader, SCARD_SHARE_DIRECT, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, &hCard_, &dwActiveProtocol_)) != SCARD_S_SUCCESS) {
+//	if ((resp = SCardConnect(hContext_, reader, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, &hCard_, &dwActiveProtocol_)) != SCARD_S_SUCCESS) {
 		this->current_reader_ = std::string(reader);
 
 		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
@@ -106,7 +106,7 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::connect(const char* reade
 
 		if (resp != SCARD_S_SUCCESS) {
 			LOG_DEBUG << "Failed to call SCardConnect() " << "[error:" << errorToString(resp) << "]"
-					  << "[hContext:" << hContext_ << "][szReader:" << reader << "][dwShareMode:" << SCARD_SHARE_SHARED<< "]"
+					  << "[hContext:" << hContext_ << "][szReader:" << reader << "][dwShareMode:" << SCARD_SHARE_DIRECT<< "]"
 					  << "[dwPreferredProtocols:" << 0 << "][hCard:" << hCard_ << "][dwActiveProtocol:" << dwActiveProtocol_ << "]";
 			return handleErrorResponse("Failed to connect", resp);
 		}
@@ -466,17 +466,17 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::reconnect_HW() {
 
 	int tries = 0;
 	LOG_INFO << "Reconnect_HW called";
-	if ((resp = SCardReconnect(hCard_, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_LEAVE_CARD, &dwActiveProtocol_)) != SCARD_S_SUCCESS) {
+	if ((resp = SCardReconnect(hCard_, SCARD_SHARE_DIRECT, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_LEAVE_CARD, &dwActiveProtocol_)) != SCARD_S_SUCCESS) {
 		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
 			resp = handleRetry();
 			LOG_INFO << "[Retry] SCardReconnect called";
-			resp = SCardReconnect(hCard_, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_UNPOWER_CARD, &dwActiveProtocol_);
+			resp = SCardReconnect(hCard_, SCARD_SHARE_DIRECT, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_UNPOWER_CARD, &dwActiveProtocol_);
 			Sleep(300);
 			tries++;
 		}
 		if (resp != SCARD_S_SUCCESS) {
 			LOG_DEBUG << "Failed to call Reconnect_HW() "
-					  << "[hCard_:" << hCard_ << "][[dwShareMode:" << SCARD_SHARE_SHARED << "]"
+					  << "[hCard_:" << hCard_ << "][[dwShareMode:" << SCARD_SHARE_DIRECT << "]"
 					  << "[dwActiveProtocol:" << dwActiveProtocol_ << "]";
 			return handleErrorResponse("Failed to cold reset", resp);
 		}
@@ -503,16 +503,16 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::restart() {
 
 	int tries = 0;
 	LOG_INFO << "SCardReconnect called";
-	if ((resp = SCardReconnect(hCard_, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_LEAVE_CARD, &dwProtocol)) != SCARD_S_SUCCESS) {
+	if ((resp = SCardReconnect(hCard_, SCARD_SHARE_DIRECT, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_LEAVE_CARD, &dwProtocol)) != SCARD_S_SUCCESS) {
 		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
 			resp = handleRetry();
 			LOG_INFO << "[Retry] SCardReconnect called";
-			resp = SCardReconnect(hCard_, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_LEAVE_CARD, &dwProtocol);
+			resp = SCardReconnect(hCard_, SCARD_SHARE_DIRECT, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_LEAVE_CARD, &dwProtocol);
 			tries++;
 		}
 		if (resp != SCARD_S_SUCCESS) {
 			LOG_DEBUG << "Failed to call SCardReconnect() "
-					  << "[hContext:" << hContext_ << "][[dwShareMode:" << SCARD_SHARE_SHARED << "]"
+					  << "[hContext:" << hContext_ << "][[dwShareMode:" << SCARD_SHARE_DIRECT << "]"
 					  << "[dwActiveProtocol:" << dwActiveProtocol_ << "]";
 			return handleErrorResponse("Failed to reconnect", resp);
 		}
@@ -1060,16 +1060,16 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::coldReset() {
 
 	int tries = 0;
 	LOG_INFO << "SCardReconnect called";
-	if ((resp = SCardReconnect(hCard_, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_UNPOWER_CARD, &dwProtocol)) != SCARD_S_SUCCESS) {
+	if ((resp = SCardReconnect(hCard_, SCARD_SHARE_DIRECT, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_UNPOWER_CARD, &dwProtocol)) != SCARD_S_SUCCESS) {
 		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
 			resp = handleRetry();
 			LOG_INFO << "[Retry] SCardReconnect called";
-			resp = SCardReconnect(hCard_, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_UNPOWER_CARD, &dwProtocol);
+			resp = SCardReconnect(hCard_, SCARD_SHARE_DIRECT, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_UNPOWER_CARD, &dwProtocol);
 			tries++;
 		}
 		if (resp != SCARD_S_SUCCESS) {
 			LOG_DEBUG << "Failed to call SCardReconnect() "
-					  << "[hCard_:" << hCard_ << "][[dwShareMode:" << SCARD_SHARE_SHARED << "]"
+					  << "[hCard_:" << hCard_ << "][[dwShareMode:" << SCARD_SHARE_DIRECT << "]"
 					  << "[dwActiveProtocol:" << dwActiveProtocol_ << "]";
 			return handleErrorResponse("Failed to cold reset", resp);
 		}
@@ -1099,16 +1099,16 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::warmReset() {
 
 	int tries = 0;
 	LOG_INFO << "SCardReconnect called";
-	if ((resp = SCardReconnect(hCard_, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_RESET_CARD, &dwProtocol)) != SCARD_S_SUCCESS) {
+	if ((resp = SCardReconnect(hCard_, SCARD_SHARE_DIRECT, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_RESET_CARD, &dwProtocol)) != SCARD_S_SUCCESS) {
 		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
 			resp = handleRetry();
 			LOG_INFO << "[Retry] SCardReconnect called";
-			resp = SCardReconnect(hCard_, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_RESET_CARD, &dwProtocol);
+			resp = SCardReconnect(hCard_, SCARD_SHARE_DIRECT, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_RESET_CARD, &dwProtocol);
 			tries++;
 		}
 		if (resp != SCARD_S_SUCCESS) {
 			LOG_DEBUG << "Failed to call SCardReconnect() "
-					  << "[hCard_:" << hCard_ << "][[dwShareMode:" << SCARD_SHARE_SHARED << "]"
+					  << "[hCard_:" << hCard_ << "][[dwShareMode:" << SCARD_SHARE_DIRECT << "]"
 					  << "[dwActiveProtocol:" << dwActiveProtocol_ << "]";
 			return handleErrorResponse("Failed to warm reset", resp);
 		}
@@ -1341,7 +1341,7 @@ LONG ExampleTerminalPCSCContactless_IDENTIV::handleRetry() {
 	LONG response;
 
 	if (hCard_){
-		if ((response = SCardReconnect(hCard_, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_LEAVE_CARD, &dwActiveProtocol_)) == SCARD_S_SUCCESS) {
+		if ((response = SCardReconnect(hCard_, SCARD_SHARE_DIRECT, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_LEAVE_CARD, &dwActiveProtocol_)) == SCARD_S_SUCCESS) {
 			LOG_DEBUG << "SCardReconnect() Success";
 			return response;
 		}
@@ -1364,7 +1364,7 @@ LONG ExampleTerminalPCSCContactless_IDENTIV::handleRetry() {
 		LOG_DEBUG << "Failed to call SCardEstablishContect() " ;
 	}
 
-	response = SCardConnect(hContext_, current_reader_.c_str(), SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, &hCard_, &dwActiveProtocol_);
+	response = SCardConnect(hContext_, current_reader_.c_str(), SCARD_SHARE_DIRECT, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, &hCard_, &dwActiveProtocol_);
 
 	return response;
 }
