@@ -6,12 +6,14 @@
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item key="isRegEx" value="true"/>
-		<item key="selection" value=""/>
+		<item key="selection" value="SCardRelease"/>
 		<item key="casesensitive" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="wrap" value="true"/>
 		<item key="wholeword" value="false"/>
 		<list key="findhistory">
+			<item value="SCardRelease"/>
+			<item value="SCardEstablishContext"/>
 			<item value="SCARD_SHARE_SHARED"/>
 			<item value="SCARD_SHARE_DIRECT"/>
 			<item value="ESCAPE"/>
@@ -25,8 +27,6 @@
 			<item value="release"/>
 			<item value="mszReaders_"/>
 			<item value="disconnect"/>
-			<item value="Release"/>
-			<item value="handleRetry"/>
 		</list>
 		<list key="replacehistory">
 			<item value=""/>

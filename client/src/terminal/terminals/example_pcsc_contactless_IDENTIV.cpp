@@ -415,7 +415,8 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::disconnect_HW() {
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::deactivate_Interface() {
 	LOG_INFO << "Deactivate_Interface called";
 
-	return disconnect();
+//	return disconnect();
+	return reconnect_HW();
 }
 
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::activate_Interface() {
@@ -466,7 +467,7 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::reconnect_HW() {
 
 	int tries = 0;
 	LOG_INFO << "Reconnect_HW called";
-	if ((resp = SCardReconnect(hCard_, SCARD_SHARE_DIRECT, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_LEAVE_CARD, &dwActiveProtocol_)) != SCARD_S_SUCCESS) {
+	if ((resp = SCardReconnect(hCard_, SCARD_SHARE_DIRECT, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_UNPOWER_CARD, &dwActiveProtocol_)) != SCARD_S_SUCCESS) {
 		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
 			resp = handleRetry();
 			LOG_INFO << "[Retry] SCardReconnect called";
