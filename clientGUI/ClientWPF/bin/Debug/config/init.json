@@ -1,5 +1,5 @@
 {
-	"name": "client_contact",
+	"name": "client_contactless",
   	"port": "62111",
   	"ip": "127.0.0.1",
   	"log_directory": "./logs/",

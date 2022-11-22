@@ -1,0 +1,12 @@
+client/Debug
+server/Debug
+
+.vs
+
+clientGUI/ClientWPF/obj
+clientGUI/ClientWPF/bin/Release
+clientGUI/ClientWPF/bin/Debug/logs
+
+serverGUI/ServerWPF/obj
+serverGUI/ServerWPF/bin/Release
+serverGUI/ServerWPF/bin/Debug/logs
