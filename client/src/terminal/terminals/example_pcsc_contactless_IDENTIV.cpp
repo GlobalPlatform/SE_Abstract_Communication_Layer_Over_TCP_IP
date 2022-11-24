@@ -300,12 +300,7 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::sendTypeF(unsigned char c
 	// send requested command
 	return sendCommand(APDU, APDU_Len);
 */
-	if (APDU_Len >= 4) {
-		responseAPDU =  utils::unsignedCharToString(APDU, APDU_Len - 4);
-	}
-	else {
-		responseAPDU =  utils::unsignedCharToString(APDU, APDU_Len - 2);
-	}
+	responseAPDU =  utils::unsignedCharToString(APDU, APDU_Len - 2);
 
 	response.response = responseAPDU;
 	return response;
