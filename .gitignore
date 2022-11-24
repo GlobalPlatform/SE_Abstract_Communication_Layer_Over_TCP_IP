@@ -10,3 +10,9 @@ clientGUI/ClientWPF/bin/Debug/logs
 serverGUI/ServerWPF/obj
 serverGUI/ServerWPF/bin/Release
 serverGUI/ServerWPF/bin/Debug/logs
+
+clientGUI_CL
+clientGUI_HCI
+
+copy_lib_client.bat
+copy_lib_server.bat
