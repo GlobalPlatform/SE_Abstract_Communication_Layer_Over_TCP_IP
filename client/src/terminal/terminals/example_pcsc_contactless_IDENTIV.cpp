@@ -412,8 +412,8 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::disconnect_HW() {
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::deactivate_Interface() {
 	LOG_INFO << "Deactivate_Interface called";
 
-	powerOFFField();
-	return disconnect();
+	return powerOFFField();
+	//return disconnect();
 }
 
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::activate_Interface() {
@@ -909,8 +909,8 @@ int ExampleTerminalPCSCContactless_IDENTIV::switchPollingType(byte pollingType) 
 
 	command[commandLen++] = 0x95;
 	command[commandLen++] = 0xFF;
-	command[commandLen++] = pollingType;
 	command[commandLen++] = 0x00;
+	command[commandLen++] = pollingType;
 
 //	command[commandLen++] = TYPE_ABF;
 
