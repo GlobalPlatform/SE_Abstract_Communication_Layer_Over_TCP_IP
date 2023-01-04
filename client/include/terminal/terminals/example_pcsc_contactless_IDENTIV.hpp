@@ -22,11 +22,11 @@
 
 #define TYPE_A 0x01
 #define TYPE_B 0x02
-#define TYPE_AB (TYPE_A || TYPE_B)
+#define TYPE_AB (TYPE_A | TYPE_B)
 #define TYPE_F 0x60
-#define TYPE_AF 0x19
-#define TYPE_BF 0x1A
-#define TYPE_ABF 0x1B
+#define TYPE_AF (TYPE_A | TYPE_F)
+#define TYPE_BF (TYPE_B | TYPE_F)
+#define TYPE_ABF (TYPE_A | TYPE_B | TYPE_F)
 
 #define RET_OK 0;
 #define ERR_CMD_GET_TYPE -1;

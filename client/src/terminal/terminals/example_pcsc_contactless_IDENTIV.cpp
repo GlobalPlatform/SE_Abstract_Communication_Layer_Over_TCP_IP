@@ -398,6 +398,8 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::disconnect() {
 	}
 
 	LOG_INFO << "Terminal PCSC disconnected successfully";
+	powerONField();
+	pollTypeAllTypes();
 	return response;
 }
 
@@ -410,15 +412,18 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::disconnect_HW() {
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::deactivate_Interface() {
 	LOG_INFO << "Deactivate_Interface called";
 
-//	return disconnect();
-	return reconnect_HW();
+	powerOFFField();
+	return disconnect();
 }
 
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::activate_Interface() {
 	LOG_INFO << "Activate_Interface called";
 
-	ResponsePacket response;
+	powerONField();
+	//reconnect_HW();
+	pollTypeAllTypes();
 
+	ResponsePacket response;
 	return response;
 }
 
