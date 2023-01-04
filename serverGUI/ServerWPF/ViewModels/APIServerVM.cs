@@ -403,7 +403,7 @@ namespace ServerWPF.ViewModels
 
         private bool OnPollTypeAllTypes()
         {
-            ResponseDLL response = APIServerWrapper.PollTypeF(_selectedClient.ClientID);
+            ResponseDLL response = APIServerWrapper.PollTypeAllTypes(_selectedClient.ClientID);
             AppendLog(ActionMethod.POLL_TYPE_ALL_TYPES.ToString(), response);
             return APIServerWrapper.RetrieveErrorDescription(response).Equals(APIServerWrapper.NO_ERROR);
         }

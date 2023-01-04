@@ -909,8 +909,8 @@ int ExampleTerminalPCSCContactless_IDENTIV::switchPollingType(byte pollingType) 
 
 	command[commandLen++] = 0x95;
 	command[commandLen++] = 0xFF;
-	command[commandLen++] = 0x00;
 	command[commandLen++] = pollingType;
+	command[commandLen++] = 0x00;
 
 //	command[commandLen++] = TYPE_ABF;
 
