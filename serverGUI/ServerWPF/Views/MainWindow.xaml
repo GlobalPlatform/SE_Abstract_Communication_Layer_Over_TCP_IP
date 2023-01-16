@@ -124,7 +124,7 @@
                 <DataGridTextColumn Binding="{Binding ServerPort}" Header="Server port" Width="*" />
             </DataGrid.Columns>
         </DataGrid>
-        <Button Command="{Binding StartServer}" Content="Start server" Margin="0,0,125,0" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" Click="Button_Click"/>
+        <Button Command="{Binding StartServer}" Content="Start server" Margin="0,0,125,0" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right"/>
         <Button Command ="{Binding StopServer}" Content="Stop server" Margin="0,0,10,0" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right"/>
 
         <!-- Connected clients -->
@@ -138,7 +138,7 @@
 
         <!-- API Actions -->
         <Label Content="Actions on selected client" Grid.Column="1" HorizontalAlignment="Left" Margin="0" Grid.Row="4" VerticalAlignment="Top" Width="200" FontWeight="Bold"/>
-        <TextBox Text="{Binding CurrentFilePath}" Grid.Column="1" HorizontalAlignment="Left" Height="22" Margin="5,22,0,0" Grid.Row="4" TextWrapping="Wrap" VerticalContentAlignment="Center" VerticalAlignment="Top" Width="230" />
+        <TextBox x:Name="current_file_path" Text="{Binding CurrentFilePath}" Grid.Column="1" HorizontalAlignment="Left" Height="22" Margin="5,22,0,0" Grid.Row="4" TextWrapping="Wrap" VerticalContentAlignment="Center" VerticalAlignment="Top" Width="230" />
         <Button Command="{Binding BrowseFile}" Content="Browse" HorizontalAlignment="Left" Margin="245,22,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
         <Button Command="{Binding SendCommandsBatch}" Content="Send batch" HorizontalAlignment="Left" Margin="365,22,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>
         <Button Command="{Binding SendCommandsBatchRandom}" Content="Send batch random" HorizontalAlignment="Left" Margin="485,22,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.Column="1"/>

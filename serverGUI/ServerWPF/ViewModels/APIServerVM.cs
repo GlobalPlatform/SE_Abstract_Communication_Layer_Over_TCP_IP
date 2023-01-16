@@ -51,7 +51,7 @@ namespace ServerWPF.ViewModels
             _getNotifications = new DelegateCommand(OnGetNotifications, IsClientSelected);
             _clearNotifications = new DelegateCommand(OnClearNotifications, IsClientSelected);
             _clearLogs = new DelegateCommand(OnClearLogs, null);
-            _browseFile = new DelegateCommand(OnBrowseFile, IsClientSelected);
+            _browseFile = new DelegateCommand(OnBrowseFile, null);
             _deactivate_Interface = new DelegateCommand(OnDeactivate_Interface, IsClientSelected);
             _activate_Interface = new DelegateCommand(OnActivate_Interface, IsClientSelected);
 
@@ -145,6 +145,7 @@ namespace ServerWPF.ViewModels
                 ip = array["ip"];
                 port = array["port"];
             }
+
             _serverData.Add(new APIServerModel(ServerState.INITIALIZED, ip, port));
             return _serverData;
         }
@@ -182,7 +183,6 @@ namespace ServerWPF.ViewModels
                 _clearNotifications.InvokeCanExecuteChanged();
                 _deactivate_Interface.InvokeCanExecuteChanged();
                 _activate_Interface.InvokeCanExecuteChanged();
-                _browseFile.InvokeCanExecuteChanged();
                 _sendCommandsBatch.InvokeCanExecuteChanged();
                 _sendCommandsBatchRandom.InvokeCanExecuteChanged();
             }
@@ -477,8 +477,16 @@ namespace ServerWPF.ViewModels
             var lines = File.ReadLines(CurrentFilePath);
             foreach (string line in lines)
             {
-                if (SelectedClient == null)  return false;
                 string[] tokens = line.Split(' ');
+                if (tokens[0] == "SELECT")
+                {
+                    int index = 0;
+                    for (int i = 0; i < _clientsList.Count(); i++)
+                        if (_clientsList.ElementAt(i).ClientName.Split(' ')[0].Equals(tokens[1]))
+                            index = i;
+                    _selectedClient = _clientsList.ElementAt(index);
+                    continue;
+                }
                 if (tokens.Length == 2) CurrentCommand = tokens[1];
                 Func<bool> action = _actions.GetAction(tokens[0]);
                 if (action != null)
@@ -551,7 +559,7 @@ namespace ServerWPF.ViewModels
 
         private bool CanSendCommandBatch()
         {
-            return SelectedClient != null && File.Exists(CurrentFilePath);
+            return File.Exists(CurrentFilePath);
         }
         #endregion
 

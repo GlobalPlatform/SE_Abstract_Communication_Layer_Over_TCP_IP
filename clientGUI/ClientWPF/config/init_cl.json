@@ -1,0 +1,13 @@
+﻿{
+  "name": "client_contactless",
+  "port": "62111",
+  "ip": "127.0.0.1",
+  "log_directory": "./logs/",
+  "log_filename": "basics_cl.csv",
+  "log_level": "debug",
+  "log_max_size": "1000000",
+  "log_max_files": "10",
+  "default_timeout": 2000,
+  "terminal": "EXAMPLE_PCSC_CONTACTLESS_IDENTIV",
+  "default_pcsc": "Identive CLOUD 4700 F Contactless Reader"
+}
