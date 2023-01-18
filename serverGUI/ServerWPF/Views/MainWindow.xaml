@@ -82,7 +82,7 @@
     <Grid Margin="0,0,0,0">
         <!-- Grid rows/cols definition -->
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="600"/>
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -120,8 +120,8 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding ServerIP}" Header="Server IP" Width="*" />
-                <DataGridTextColumn Binding="{Binding ServerPort}" Header="Server port" Width="*" />
+                <DataGridTextColumn Binding="{Binding ServerIP}" Header="Server IP" Width="110" />
+                <DataGridTextColumn Binding="{Binding ServerPort}" Header="Server port" Width="110" />
             </DataGrid.Columns>
         </DataGrid>
         <Button Command="{Binding StartServer}" Content="Start server" Margin="0,0,125,0" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right"/>
@@ -131,7 +131,7 @@
         <Label Margin="6,0,6,0" Content="Connected clients" Grid.Row="3" FontWeight="Bold"/>
         <DataGrid Name="dgClients" Margin="10,0,10,10" SelectedItem="{Binding SelectedClient}" Grid.Row="4" AutoGenerateColumns="False" ItemsSource="{Binding ClientsList}" IsReadOnly="True" RowHeaderWidth="0">
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding ClientID}" Header="Client ID" Width="*" />
+                <DataGridTextColumn Binding="{Binding ClientID}" Header="Client ID" Width="110" />
                 <DataGridTextColumn Binding="{Binding ClientName}" Header="Client name" Width="*" />
             </DataGrid.Columns>
         </DataGrid>

@@ -121,8 +121,8 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding IpClientConnected}" Header="Server IP" Width="*" />
-                <DataGridTextColumn Binding="{Binding PortClientConnected}" Header="Server port" Width="*" />
+                <DataGridTextColumn Binding="{Binding IpClientConnected}" Header="Server IP" Width="110" />
+                <DataGridTextColumn Binding="{Binding PortClientConnected}" Header="Server port" Width="110" />
             </DataGrid.Columns>
         </DataGrid>
         <Button Command ="{Binding DisconnectClient}" Content="Disconnect" Margin="0,0,10,0" Grid.Row="2" HorizontalAlignment="Right"/>
@@ -134,7 +134,7 @@
         <DataGrid Name="dgReaders" SelectedItem="{Binding SelectedReader}" Margin="10,0,10,10" Grid.Row="4" 
                   AutoGenerateColumns="False" ItemsSource="{Binding ReadersList}" IsReadOnly="True" RowHeaderWidth="0">
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding ReaderID}" Header="Reader ID" Width="*" />
+                <DataGridTextColumn Binding="{Binding ReaderID}" Header="Reader ID" Width="110" />
                 <DataGridTextColumn Binding="{Binding ReaderName}" Header="Reader name" Width="*" />
             </DataGrid.Columns>
         </DataGrid>
