@@ -77,7 +77,7 @@ int __cdecl main(void) {
 	available_requests.addRequest(REQ_POLL_TYPE_A, new PollTypeA());
 	available_requests.addRequest(REQ_POLL_TYPE_B, new PollTypeB());
 	available_requests.addRequest(REQ_POLL_TYPE_F, new PollTypeF());
-	available_requests.addRequest(REQ_POLL_TYPE_ALL_TYPES, new PollTypeF());
+	available_requests.addRequest(REQ_POLL_TYPE_ALL_TYPES, new PollTypeAllTypes());
 	available_requests.addRequest(REQ_DEACTIVATE_INTERFACE, new Deactivate_Interface());
 	available_requests.addRequest(REQ_ACTIVATE_INTERFACE, new Activate_Interface());
 	available_requests.addRequest(REQ_GET_NOTIFICATIONS, new GetNotifications());

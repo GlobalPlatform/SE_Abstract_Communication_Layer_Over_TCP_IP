@@ -286,22 +286,9 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::sendTypeF(unsigned char c
 		LOG_DEBUG << "Send Type F Failed: " << "Answer : " << APDU << " & length is : " << APDU_Len;
 		response.response = "Send Type F Failed, wrong answer from the reader";
 		return response;
-
 	}
 
-/*
-	APDU[0x00] = 0xFF;
-	APDU[0x01] = 0xCC;
-	APDU[0x02] = 0x00;
-	APDU[0x03] = 0x00;
-	APDU[0x04] = command_length + 1;
-	APDU[0x05] = 0xF3;
-//The length shall be
-	// send requested command
-	return sendCommand(APDU, APDU_Len);
-*/
 	responseAPDU =  utils::unsignedCharToString(APDU, APDU_Len - 2);
-
 	response.response = responseAPDU;
 	return response;
 }
@@ -413,14 +400,12 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::deactivate_Interface() {
 	LOG_INFO << "Deactivate_Interface called";
 
 	return powerOFFField();
-	//return disconnect();
 }
 
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::activate_Interface() {
 	LOG_INFO << "Activate_Interface called";
 
 	powerONField();
-	//reconnect_HW();
 	pollTypeAllTypes();
 
 	ResponsePacket response;
@@ -556,11 +541,6 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::retrieveAtr(BYTE* bAttr, 
 }
 
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::powerOFFField() {
-	/*
-	ResponsePacket response;
-	unsigned char command[] = { 0xFF, 0xCC, 0x00, 0x00, 0x02, 0x96, 0x00 };
-	return sendCommand(command, sizeof command);
-	*/
 	ResponsePacket response;
 	int ret;
 
@@ -679,10 +659,8 @@ int ExampleTerminalPCSCContactless_IDENTIV::reset_Field() {
 }
 
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::powerONField() {
-//	LONG resp;
 	ResponsePacket response;
 
-//	reconnect_HW();
 	int ret;
 	ret = powerFieldState();
 	if (ret == -1) {
@@ -690,25 +668,6 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::powerONField() {
 		return response;
 	}
 
-/*
-	disconnect();
-	int tries = 0;
-	LOG_INFO << "SCardConnect called";
-
-	if ((resp = SCardConnect(hContext_, current_reader_.c_str(), SCARD_SHARE_DIRECT, 0, &hCard_, &dwActiveProtocol_)) != SCARD_S_SUCCESS) {
-		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
-			resp = handleRetry();
-			LOG_INFO << "[Retry] SCardConnect called";
-			resp = SCardConnect(hContext_, current_reader_.c_str(), SCARD_SHARE_DIRECT, 0, &hCard_, &dwActiveProtocol_);
-			tries++;
-		}
-		if (resp != SCARD_S_SUCCESS) {
-			LOG_DEBUG << "Failed to call SCardConnect() " << "[error:" << errorToString(resp) << "]" << "[hContext:" << hContext_ << "][szReader:" << current_reader_ << "][dwShareMode:"
-					  << SCARD_SHARE_DIRECT << "]" << "[dwPreferredProtocols:" << 0 << "][hCard:" << hCard_ << "][dwActiveProtocol:" << dwActiveProtocol_ << "]";
-			return handleErrorResponse("Failed to connect", resp);
-		}
-	}
-*/
 	LOG_DEBUG << "Set power ON Field: ";
 	unsigned char command[] = { 0x96,  0x01};
 	DWORD commandLen = sizeof command;
@@ -735,7 +694,6 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::powerONField() {
 		return response;
 	}
 
-//	return restart();
 	return response;
 }
 
@@ -843,13 +801,11 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::pollTypeB() {
 
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::pollTypeF() {
 	ResponsePacket response;
-	unsigned char command[270];
 	DWORD commandLen = 0x00;
 
 	int ret;
 	LOG_DEBUG << "Set Polling Type F";
 
-//	return response;
 	ret = switchPollingType(TYPE_F);
 
 	if (ret < 0) {
@@ -858,22 +814,30 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::pollTypeF() {
 	}
 	LOG_DEBUG << "Send Polling Type F";
 
-	commandLen = 0x00;
-	command[commandLen++] = 0xFF;
-	command[commandLen++] = 0x40;
-	command[commandLen++] = 0x00;
-	command[commandLen++] = 0x00;
-	command[commandLen++] = 0x04;
-	command[commandLen++] = 0xFF;
-	command[commandLen++] = 0xFF;
-	command[commandLen++] = 0x00;
-	command[commandLen++] = 0x00;
+	unsigned char APDU[270];
+	int res;
+	std::string responseAPDU;
 
-	if (sendInternalCommand(command, &commandLen) != 0x00) {
-		LOG_DEBUG << "Send Polling Type F: failed";
-		response.response = "Error when sending POLL TYPE F";
-		return response;
+	commandLen = 0x00;
+	APDU[commandLen++] = 0xF3;
+	APDU[commandLen++] = 0x00;
+	APDU[commandLen++] = 0xFF;
+	APDU[commandLen++] = 0xFF;
+	APDU[commandLen++] = 0x01;
+	APDU[commandLen++] = 0x00;
+	res = sendEscapeCommand(APDU, &commandLen);
+
+	if (res == -1) {
+		 response.response = " Send Polling Type F: failed, wrong answer from the reader";
+		 return response;
 	}
+	if ((commandLen < 2) | (APDU[commandLen - 2]!=0x90) | (APDU[commandLen - 1]!=0x00) ){
+		 LOG_DEBUG << " Send Polling Type F: " << "Answer : " << APDU << " & length is : " << commandLen;
+		 response.response = "Send Type F Failed, wrong answer from the reader";
+		 return response;
+	}
+
+
 
 	LOG_DEBUG << "Send Polling Type F: success";
 
@@ -912,8 +876,6 @@ int ExampleTerminalPCSCContactless_IDENTIV::switchPollingType(byte pollingType) 
 	command[commandLen++] = pollingType;
 	command[commandLen++] = 0x00;
 
-//	command[commandLen++] = TYPE_ABF;
-
 	if (sendEscapeCommand(command, &commandLen) != 0x00) {
 		LOG_DEBUG << "Set Initial Polling: failed";
 		return ERR_CMD_GET_TYPE;
@@ -927,7 +889,6 @@ int ExampleTerminalPCSCContactless_IDENTIV::switchPollingType(byte pollingType) 
 	currentPollingType_ = pollingType;
 	LOG_DEBUG << "Set Initial Polling (success)";
 
-//	return response;
 	ret = reset_Field();
 
 	getType();

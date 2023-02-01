@@ -28,6 +28,7 @@ namespace ServerWPF.ViewModels
         public static readonly ActionMethod ACTIVATE_INTERFACE = new ActionMethod(18, nameof(ACTIVATE_INTERFACE));
         public static readonly ActionMethod GET_NOTIFICATIONS = new ActionMethod(19, nameof(GET_NOTIFICATIONS));
         public static readonly ActionMethod CLEAR_NOTIFICATIONS = new ActionMethod(20, nameof(CLEAR_NOTIFICATIONS));
+        public static readonly ActionMethod CALL_EXTERNAL = new ActionMethod(21, nameof(CALL_EXTERNAL));
 
         private ActionMethod(int value, String name)
         {

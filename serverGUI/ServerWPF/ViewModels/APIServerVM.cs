@@ -4,6 +4,7 @@ using ServerWPF.Models;
 using ServerWPF.Services;
 using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -54,6 +55,7 @@ namespace ServerWPF.ViewModels
             _browseFile = new DelegateCommand(OnBrowseFile, null);
             _deactivate_Interface = new DelegateCommand(OnDeactivate_Interface, IsClientSelected);
             _activate_Interface = new DelegateCommand(OnActivate_Interface, IsClientSelected);
+            _call_external = new DelegateCommand(OnCallExternal, null);
 
             _sendCommandsBatch = new AsyncDelegateCommand(async () => await OnSendCommandBatch(), CanSendCommandBatch);
             _sendCommandsBatchRandom = new AsyncDelegateCommand(async () => await OnSendCommandBatchRandom(), CanSendCommandBatch);
@@ -79,6 +81,7 @@ namespace ServerWPF.ViewModels
             _actions.AddAction(ActionMethod.ACTIVATE_INTERFACE.ToString(), OnActivate_Interface);
             _actions.AddAction(ActionMethod.GET_NOTIFICATIONS.ToString(), OnGetNotifications);
             _actions.AddAction(ActionMethod.CLEAR_NOTIFICATIONS.ToString(), OnClearNotifications);
+            _actions.AddAction(ActionMethod.CALL_EXTERNAL.ToString(), OnCallExternal);
 
             LoadServerData();
             APIServerWrapper.InitServer();
@@ -89,6 +92,12 @@ namespace ServerWPF.ViewModels
         {
             get => _currentCommand;
             set => SetProperty(ref _currentCommand, value);
+        }
+        private string _currentParam = "";
+        public string CurrentParam
+        {
+            get => _currentParam;
+            set => SetProperty(ref _currentParam, value);
         }
 
         private string _currentFilePath = "";
@@ -185,6 +194,7 @@ namespace ServerWPF.ViewModels
                 _activate_Interface.InvokeCanExecuteChanged();
                 _sendCommandsBatch.InvokeCanExecuteChanged();
                 _sendCommandsBatchRandom.InvokeCanExecuteChanged();
+                _call_external.InvokeCanExecuteChanged();
             }
         }
 
@@ -264,6 +274,9 @@ namespace ServerWPF.ViewModels
 
         private readonly DelegateCommand _activate_Interface;
         public ICommand Activate_Interface => _activate_Interface;
+
+        private readonly DelegateCommand _call_external;
+        public ICommand CallExternal => _call_external;
 
         private readonly DelegateCommand _browseFile;
         public ICommand BrowseFile => _browseFile;
@@ -437,6 +450,19 @@ namespace ServerWPF.ViewModels
             return APIServerWrapper.RetrieveErrorDescription(response).Equals(APIServerWrapper.NO_ERROR);
         }
 
+        private bool OnCallExternal()
+        {
+            string filename = Path.GetFileName(_currentCommand);
+            string path = Path.GetDirectoryName(_currentCommand);
+            string parameters = _currentParam;
+            ProcessStartInfo startInfo = new ProcessStartInfo();
+            startInfo.WorkingDirectory = path;
+            startInfo.FileName = filename;
+            startInfo.Arguments = parameters;
+            Process.Start(startInfo);
+            return true;
+        }
+
         private bool OnRestartTarget()
         {
             ResponseDLL response = APIServerWrapper.RestartTarget(_selectedClient.ClientID);
@@ -487,7 +513,8 @@ namespace ServerWPF.ViewModels
                     _selectedClient = _clientsList.ElementAt(index);
                     continue;
                 }
-                if (tokens.Length == 2) CurrentCommand = tokens[1];
+                if (tokens.Length >= 2) CurrentCommand = tokens[1];
+                if (tokens.Length >= 3) CurrentParam = tokens[2];
                 Func<bool> action = _actions.GetAction(tokens[0]);
                 if (action != null)
                 {
@@ -510,7 +537,8 @@ namespace ServerWPF.ViewModels
             {
                 int index = rand.Next(lines.Count());
                 string[] tokens = lines.ElementAt(index).Split(' ');
-                if (tokens.Length == 2) CurrentCommand = tokens[1];
+                if (tokens.Length >= 2) CurrentCommand = tokens[1];
+                if (tokens.Length >= 3) CurrentParam = tokens[2];
                 Func<bool> action = _actions.GetAction(tokens[0]);
                 if (action != null)
                 {
