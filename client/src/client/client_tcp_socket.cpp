@@ -117,18 +117,32 @@ bool ClientTCPSocket::receivePacket(char* packet) {
 
 	// retrieve packet size
 	int retval = recv(client_socket_, (char*) &net_received_size, sizeof(int), MSG_WAITALL);
-	if (retval == SOCKET_ERROR || retval == 0) {
-		LOG_DEBUG << "Failed to receive data size from client -  " << "[socket:" << client_socket_ << "][buffer:" << received_size << "][size:" << sizeof(int) << "][flags:" << NULL << "]";
+	if (retval == SOCKET_ERROR) {
+		int errorCode = WSAGetLastError();
+		LOG_DEBUG << "Failed to receive data size from server -  " << "[socket:" << client_socket_ << "][buffer:" << received_size << "][size:" << sizeof(int) << "][flags:" << NULL << "][errorCode:" << errorCode << "]";
 		return false;
 	}
+	if (retval == 0) {
+		// NOTE: According to the documentation, when recv returns 0 then the socket has been closed. We could add a server disconnected callback here.
+		LOG_DEBUG << "Failed to receive data size from server -  " << "[socket:" << client_socket_ << "][buffer:" << received_size << "][size:" << sizeof(int) << "][flags:" << NULL << "][retval:" << retval << "]";
+		return false;
+	}
+
 	received_size = ntohl(net_received_size); // deal with endianness
 
 	// retrieve packet
 	retval = recv(client_socket_, packet, received_size, MSG_WAITALL); // wait all received_size bytes to be received
-	if (retval == SOCKET_ERROR || retval == 0) {
-		LOG_DEBUG << "Failed to receive data size from client -  " << "[socket:" << client_socket_ << "][buffer:" << received_size << "][size:" << sizeof(int) << "][flags:" << NULL << "]";
+	if (retval == SOCKET_ERROR) {
+		int errorCode = WSAGetLastError();
+		LOG_DEBUG << "Failed to receive data from server -  " << "[socket:" << client_socket_ << "][buffer:" << received_size << "][size:" << sizeof(int) << "][flags:" << NULL << "][errorCode:" << errorCode << "]";
 		return false;
 	}
+	if (retval == 0) {
+		// NOTE: According to the documentation, when recv returns 0 then the socket has been closed. We could add a client disconnected callback here.
+		LOG_DEBUG << "Failed to receive data from server -  " << "[socket:" << client_socket_ << "][buffer:" << received_size << "][size:" << sizeof(int) << "][flags:" << NULL << "][retval:" << retval << "]";
+		return false;
+	}
+
 	packet[retval] = '\0';
 	return true;
 }
