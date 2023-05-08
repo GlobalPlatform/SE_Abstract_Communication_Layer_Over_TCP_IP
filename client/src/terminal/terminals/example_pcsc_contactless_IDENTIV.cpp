@@ -257,6 +257,32 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::sendTypeB(unsigned char c
 	return sendCommand(command, command_length);
 }
 
+/**
+* Calculates a CRC16 (CCITT) from the provided payload bytes.
+* @param payloadBS the bytes for which the CRC is to be calculated.
+* @return the CRC for the payload.
+*/
+int TypeFCRC(unsigned char *payload, long int len)
+{
+    int crc = 0; // initial value
+    int polynomial = 0x1021; // 0001 0000 0010 0001  (0, 5, 12)
+
+    for(int x=0;x<len;x++)
+    {
+    	unsigned char b = payload[x];
+        for (int i = 0; i < 8; i++)
+        {
+            boolean bit = ((b >> (7 - i) & 1) == 1);
+            boolean c15 = ((crc >> 15 & 1) == 1);
+            crc <<= 1;
+            if(c15 ^ bit)
+                crc ^= polynomial;
+        }
+    }
+    crc &= 0xffff;
+    return crc;
+}
+
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::sendTypeF(unsigned char command[],  unsigned long int command_length) {
 	if (currentPollingType_ != TYPE_F) {
 		LOG_DEBUG << "Send Type F, the current state is not Type F, the current state is : " << currentPollingType_;
@@ -288,7 +314,11 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::sendTypeF(unsigned char c
 		return response;
 	}
 
-	responseAPDU =  utils::unsignedCharToString(APDU, APDU_Len - 2);
+	int crc = TypeFCRC(APDU,APDU_Len-2);
+	APDU[APDU_Len-2] = ((crc&0xFF00)>>8);
+	APDU[APDU_Len-1] = (crc&0xFF);
+	responseAPDU =  utils::unsignedCharToString(APDU, APDU_Len);
+
 	response.response = responseAPDU;
 	return response;
 }
