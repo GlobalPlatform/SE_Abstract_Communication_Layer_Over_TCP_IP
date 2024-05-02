@@ -25,6 +25,22 @@
 #include <map>
 
 #define TRIES_LIMIT 3
+#if 1
+#define TRANSP_CLASS 0xff
+#define TRANSP_INS 0xc2
+#define START_SESS_TAG 0x81
+#define END_SESS_TAG 0x82
+#define SWITCH_PROT_TAG 0x8f
+#define FIELD_OFF_TAG 0x83
+#define FIELD_ON_TAG 0x84
+
+#define GET_STATUS_TAG 0xc0
+#define ICC_RESP_TAG 0x97
+#define TRANSCEIVE_TAG 0x95
+#define TIMER_HI_TAG  0x5f
+#define TIMER_LO_TAG  0x46
+#endif
+
 
 namespace client {
 
@@ -257,6 +273,130 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::sendTypeB(unsigned char c
 	return sendCommand(command, command_length);
 }
 
+void ExampleTerminalPCSCContactless_IDENTIV::setTypeFTransparentSession()
+{
+	unsigned long int APDU_Len ;
+	long res ;
+	unsigned char APDU[270];
+	std::string APDU_cmd ;
+
+	// set transparent session on
+	// FF C2 00 00 02 81 00 00
+	APDU[0] = TRANSP_CLASS ;
+	APDU[1] = TRANSP_INS ;
+	APDU[2] = 0x00 ;
+	APDU[3] = 0x00 ;
+	APDU[4] = 0x02 ;
+
+	APDU[5] = START_SESS_TAG ;
+	APDU[6] = 0x00 ;
+	APDU[7] = 0x00 ;  // termination character
+	APDU_Len = 8 ;
+	APDU_cmd = utils::unsignedCharToString(APDU, APDU_Len);
+
+	res =	sendEscapeCommand(APDU, &APDU_Len);
+
+	if (res == -1) {
+	   ResponsePacket response = { .response = "KO", .err_client_code = ERR_OTHER, .err_client_description = "error reader" };
+
+	}
+
+// FF C2 00 02 04 8F 02 03 00
+	// switch to Felica
+	APDU[0] = TRANSP_CLASS ;
+	APDU[1] = TRANSP_INS ;
+	APDU[2] = 0x00 ;
+	APDU[3] = 0x02 ; // P2 = 2 for switch protocol
+	APDU[4] = 0x04 ;  //length
+	APDU[5] = SWITCH_PROT_TAG ;
+	APDU[6] = 0x02 ;
+	APDU[7] = 0x03 ; // FELICA framing
+	APDU[8] = 0x00 ;
+	APDU[9] = 0x00 ; // LE
+
+	APDU_Len = 10 ;
+	APDU_cmd = utils::unsignedCharToString(APDU, APDU_Len);
+	LOG_DEBUG << "SCardTransmit() [pbSendBuffer:" << APDU_cmd << "][cbSendLength:" << APDU_Len << "]";
+
+	res = sendEscapeCommand(APDU, &APDU_Len);
+
+	if (res == -1) {
+	   LOG_DEBUG << "error reader switch to Felica";
+
+	}
+
+
+	}	
+
+
+void ExampleTerminalPCSCContactless_IDENTIV::endTypeFTransparentSession()
+{
+	unsigned long int APDU_Len ;
+	long res ;
+	unsigned char APDU[270];
+	std::string APDU_cmd ;
+	// set transparent session off
+	// FF C2 00 00 02 82 00 00
+	APDU[0] = TRANSP_CLASS ;
+	APDU[1] = TRANSP_INS ;
+	APDU[2] = 0x00 ;
+	APDU[3] = 0x00 ;
+	APDU[4] = 0x02 ;
+
+	APDU[5] = END_SESS_TAG ;
+	APDU[6] = 0x00 ;
+	APDU[7] = 0x00 ;  // LE
+	APDU_Len = 8 ;
+	APDU_cmd = utils::unsignedCharToString(APDU, APDU_Len);
+
+	LOG_DEBUG << "ClearTransparent session :" << APDU_cmd << "][cbSendLength:" << APDU_Len << "]";
+	res =	sendEscapeCommand(APDU, &APDU_Len);
+
+		if (res == -1) {
+			ResponsePacket response = { .response = "KO", .err_client_code = ERR_OTHER, .err_client_description = "error 1." };
+			LOG_DEBUG << "error 1";
+
+		}
+
+
+	}
+
+
+/* take the APDU returned by the reader and retrieve the answer form the card
+ *  form is C0 03 00 90 00 97 xx aa bb cc dd......90 00
+ *  if error has been encountered or time first status word is different
+ *  xx length of useful data
+ */
+int TypeFCheckAnswer(unsigned char answer[], unsigned long int* answer_length )
+{
+	int val = 0 ;
+// check if answer[0] = 0xc0 and return code is 9000
+	if ((answer[0] == GET_STATUS_TAG) && (answer[3] == 0x90) && (answer[4] == 0x00 ) && (answer[5] == ICC_RESP_TAG))
+	{
+		// answer is valid
+		// copy from 5+2 to answer_length-1
+		// adjust APDU and APDU_Len APDU_len = APDU_Len -
+		for (long unsigned int xx= 7; xx < *answer_length; xx++){
+			answer[xx-7] = answer[xx] ;
+		}
+		*answer_length = *answer_length -7 ;
+	}
+	else
+	{//C0 03 01 64 01 90 00
+		if ((answer[0] == GET_STATUS_TAG) && (answer[3] == 0x64) && (answer[4] == 0x01)) {
+		// in this case answer length is 0 
+        *answer_length = 0 ; 
+        LOG_DEBUG << " TypeFCheckAnswer TIMEOUT : -2";
+		val = -2 ;
+		}
+		else // other type of answer
+			val = -1 ;
+	}
+	return val ;
+}
+	
+
+
 /**
 * Calculates a CRC16 (CCITT) from the provided payload bytes.
 * @param payloadBS the bytes for which the CRC is to be calculated.
@@ -290,42 +430,93 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::sendTypeF(unsigned char c
 		return response;
 	}
 
-	ResponsePacket response;
+    dwRecvLength_ = sizeof(pbRecvBuffer_);
+
+
 	unsigned long int APDU_Len = command_length;
-	unsigned char APDU[270];
-	int res;
+	unsigned char APDU[TRANSP_CMD_MAX_SIZE];
+
+	unsigned int ii ;
 	std::string responseAPDU;
+    long  res ;
+    setTypeFTransparentSession() ;
 
-	APDU[0x00] = 0xF3;
-	for (unsigned int i = 1; i < command_length ; i++){
-		APDU[i] = command[i];
-	}
+	// FF C2 00 01 08 95 06 06 00 8E FC 02 00 00
+	ii = 0 ;
+	APDU[ii++] = TRANSP_CLASS;
+    APDU[ii++] = TRANSP_INS;
+	APDU[ii++] = 0x00;
+    APDU[ii++] = 0x01;
+	APDU[ii++] = command_length + 7 + 2 ;  // length remaining part
+	APDU[ii++] = TRANSCEIVE_TAG ;
+	APDU[ii++] = command_length ; // length
 
+    for (unsigned int i = 0; i < command_length ; i++){
+       			APDU[ii++] = command[i];
+    }
+
+
+
+
+	// add timer object
+	APDU[ii++] = TIMER_HI_TAG ; // tag for timer
+	APDU[ii++] = TIMER_LO_TAG ;
+	APDU[ii++] = 0x04 ;  // length 
+	APDU[ii++] = 0x00 ;   // fixed  microseconds
+    APDU[ii++] = 0x02 ;
+	APDU[ii++] = 0x00 ;
+	APDU[ii++] = 0x00 ;  
+	APDU[ii++] = 0x00 ;  // LE
+	APDU_Len = command_length + 8 + 7;
+	LOG_DEBUG << "APDU to be sent: "  << APDU << " & length is : " << APDU_Len;
+ 
+// command 7 bytes header transparent + 1 byte (length) + max 255 bytes + 8 bytes (prologue) = 272 bytes
+	responseAPDU =  utils::unsignedCharToString(APDU, APDU_Len);
 	res = sendEscapeCommand(APDU, &APDU_Len);
 
-	if (res == -1) {
-		response.response = "Send Type F Failed, wrong answer from the reader";
-		return response;
-	}
+		if (res ==  -1) {
+			ResponsePacket response = { .response = "KO", .err_client_code = ERR_OTHER, .err_client_description = "Error F." };
+			response.response = "Send Type F Failed, wrong answer from the reader";
+			return response;
+		}
+		else {
+			// refine check on received packet
 
-	if ((APDU_Len < 2) | (APDU[APDU_Len - 2]!=0x90) | (APDU[APDU_Len - 1]!=0x00) ){
-		LOG_DEBUG << "Send Type F Failed: " << "Answer : " << APDU << " & length is : " << APDU_Len;
-		response.response = "Send Type F Failed, wrong answer from the reader";
-		return response;
-	}
-
+// answer 4 bytes (error status) + 1 byte(tag answer) + 1 byte (length) + 255 max + 2 bytes (9000)	=> max 263 bytes
+			res = TypeFCheckAnswer(APDU,&APDU_Len);
+			if (res ==  -1) {
+				ResponsePacket response = { .response = "KO", .err_client_code = ERR_OTHER, .err_client_description = "Error F." };
+				response.response = "Send Type F Failed, wrong answer from the reader";
+				return response;
+			}
+			if (res == -2) {
+			    ResponsePacket response ;
+				response.response = "" ; // empty answer
+				return response ; // NO CRC to be added
+		}
 	int crc = TypeFCRC(APDU,APDU_Len-2);
 	APDU[APDU_Len-2] = ((crc&0xFF00)>>8);
 	APDU[APDU_Len-1] = (crc&0xFF);
 	responseAPDU =  utils::unsignedCharToString(APDU, APDU_Len);
+	ResponsePacket response1 ;
 
-	response.response = responseAPDU;
-	return response;
+	response1.response = responseAPDU;
+
+	return response1;
+
+	}
 }
-
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::isAlive() {
-	unsigned char command[] = { 0x00, 0x00, 0x00, 0x00 };
-	return sendCommand(command, sizeof(command));
+
+	if (currentPollingType_ == TYPE_F) {
+	   unsigned char command[] = { 0x06, 0x00, 0xFF,0xFF, 0x00, 0x00 };
+	   return sendTypeF(command, sizeof(command));
+	}
+	else
+	{
+	  unsigned char command[] = { 0x00, 0x00, 0x00, 0x00 };
+	  return sendCommand(command, sizeof(command));
+	}
 }
 
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::diag() {
@@ -576,6 +767,10 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::powerOFFField() {
 
 	LOG_DEBUG << "Contactless_IDENTIV Start PowerOFFField";
 	//Get Power Field State
+	if (currentPollingType_ == TYPE_F) {
+			   endTypeFTransparentSession() ;
+	}
+
 
 	ret = powerFieldState();
 	if (ret == -1) {
@@ -617,7 +812,9 @@ int ExampleTerminalPCSCContactless_IDENTIV::reset_Field() {
 
 	LOG_DEBUG << "Contactless_IDENTIV Start PowerOFFField";
 	//Get Power Field State
-
+	if (currentPollingType_ == TYPE_F) {
+			   endTypeFTransparentSession() ;
+    }
 	ret = powerFieldState();
 	if (ret < 0) {
 		return ret;
@@ -687,11 +884,60 @@ int ExampleTerminalPCSCContactless_IDENTIV::reset_Field() {
 */
 	return RET_OK;
 }
+ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::powerOFF() {
+	ResponsePacket response;
+	std::string APDU_cmd ;
+	unsigned long int APDU_Len ;
+	long res ;
+
+		unsigned char APDU[270];
+	if (currentPollingType_ == TYPE_F) {
+		setTypeFTransparentSession() ;
+
+//RF OFF = FF C2 00 00 04 83 00 84 00 00
+	// toggle field
+	APDU[0] = TRANSP_CLASS ;
+	APDU[1] = TRANSP_INS ;
+	APDU[2] = 0x00 ;
+	APDU[3] = 0x00 ;
+
+	APDU[4] = 0x2  ;
+
+	APDU[5] = FIELD_OFF_TAG;
+	APDU[6] = 0x00 ;
+	APDU[7] = 0x00 ;
+
+
+    APDU_Len = 8 ;
+    LOG_DEBUG << "Power OFF F " ;
+    APDU_cmd = utils::unsignedCharToString(APDU, APDU_Len);
+    LOG_DEBUG << "SCardTransmit() [pbSendBuffer:" << APDU_cmd << "][cbSendLength:" << APDU_Len << "]";
+
+
+    res = sendEscapeCommand(APDU, &APDU_Len);
+
+    		if (res == -1) {
+    			LOG_DEBUG << "error 4";
+    		}
+
+	}
+    else
+    response =  powerOFFField() ;
+
+return response ;
+}
+
+
 
 ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::powerONField() {
 	ResponsePacket response;
 
 	int ret;
+
+	if (currentPollingType_ == TYPE_F) {
+	    endTypeFTransparentSession() ;
+	}
+
 	ret = powerFieldState();
 	if (ret == -1) {
 		response.response = "Get Power OFF Field: failed";
@@ -725,6 +971,47 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::powerONField() {
 	}
 
 	return response;
+}
+ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::powerON() {
+	ResponsePacket response;
+	unsigned long int APDU_Len ;
+	long res ;
+
+		unsigned char APDU[270];
+		std::string APDU_cmd ;
+
+	if (currentPollingType_ == TYPE_F) {
+		setTypeFTransparentSession() ;
+
+	APDU[0] = TRANSP_CLASS ;
+	APDU[1] = TRANSP_INS ;
+	APDU[2] = 0x00 ;
+	APDU[3] = 0x00 ;
+
+	APDU[4] = 0x2  ;
+
+	APDU[5] = FIELD_ON_TAG;
+	APDU[6] = 0x00 ;  // termination byte
+	APDU[7] = 0x00 ;
+
+    APDU_Len = 8 ;
+    LOG_DEBUG << "Power ON F " ;
+    APDU_cmd = utils::unsignedCharToString(APDU, APDU_Len);
+    	LOG_DEBUG << "SCardTransmit() [pbSendBuffer:" << APDU_cmd << "][cbSendLength:" << APDU_Len << "]";
+
+
+    	res = sendEscapeCommand(APDU, &APDU_Len);
+
+    		if (res == -1) {
+    			LOG_DEBUG << "error 5";
+    		}
+    		Sleep(500); // hardware needs delay
+
+
+	}
+	else
+		response = powerONField() ;
+	return response ;
 }
 
 int ExampleTerminalPCSCContactless_IDENTIV::powerFieldState(){
@@ -848,24 +1135,47 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::pollTypeF() {
 	int res;
 	std::string responseAPDU;
 
-	commandLen = 0x00;
-	APDU[commandLen++] = 0xF3;
-	APDU[commandLen++] = 0x00;
-	APDU[commandLen++] = 0xFF;
-	APDU[commandLen++] = 0xFF;
-	APDU[commandLen++] = 0x01;
-	APDU[commandLen++] = 0x00;
-	res = sendEscapeCommand(APDU, &commandLen);
+	   commandLen = 0x00;
+	   // FF C2 00 01 08 95 06 06 00 8E FC 02 00 00
+	   // FF C2 00 01 08 95 06 06 00 FF FF 02 00 00
+		APDU[commandLen++] = TRANSP_CLASS;
+		APDU[commandLen++] = TRANSP_INS;
+		APDU[commandLen++] = 0x00;
+		APDU[commandLen++] = 0x01;
+		APDU[commandLen++] = 0x0F;
 
-	if (res == -1) {
-		 response.response = " Send Polling Type F: failed, wrong answer from the reader";
-		 return response;
-	}
-	if ((commandLen < 2) | (APDU[commandLen - 2]!=0x90) | (APDU[commandLen - 1]!=0x00) ){
-		 LOG_DEBUG << " Send Polling Type F: " << "Answer : " << APDU << " & length is : " << commandLen;
-		 response.response = "Send Type F Failed, wrong answer from the reader";
-		 return response;
-	}
+		APDU[commandLen++] = TRANSCEIVE_TAG;
+		APDU[commandLen++] = 0x06;
+		APDU[commandLen++] = 0x06;
+		APDU[commandLen++] = 0x00;
+		APDU[commandLen++] = 0xFF;
+		APDU[commandLen++] = 0xFF;
+		APDU[commandLen++] = 0x00;
+		APDU[commandLen++] = 0x00;
+		APDU[commandLen++] = TIMER_HI_TAG ;
+		APDU[commandLen++] = TIMER_LO_TAG ;
+		APDU[commandLen++] = 0x04 ;  // length
+
+		APDU[commandLen++]  = 0x00;   // fixed   microseconds
+		APDU[commandLen++] = 0x02 ;
+		APDU[commandLen++]  = 0x00 ;
+		APDU[commandLen++]  = 0x00 ;
+		APDU[commandLen++] = 0x00 ;   // LE
+
+		LOG_DEBUG << " apdu: " <<   APDU << " & length is : " << commandLen;
+
+		res = sendEscapeCommand(APDU, &commandLen);
+
+		if (res == -1) {
+			 response.response = " Send Polling Type F: failed, wrong answer from the reader";
+			 return response;
+		}
+		// C0 03 01 64 01 90 00
+		if ((commandLen < 7 )| (APDU[3] == 0x64) |(APDU[commandLen - 2]!=0x90) | (APDU[commandLen - 1]!=0x00) ){
+				 LOG_DEBUG << " Send Polling Type F: " << "Answer : " << APDU << " & length is : " << commandLen;
+				 response.response = "";
+				 return response;
+			}
 
 
 
@@ -899,6 +1209,11 @@ int ExampleTerminalPCSCContactless_IDENTIV::switchPollingType(byte pollingType) 
 	DWORD commandLen = 0x00;
 
 	LOG_DEBUG << "Set Initial Polling: ";
+
+    if (currentPollingType_ == TYPE_F) {
+	    endTypeFTransparentSession() ;
+	}
+
 	// get initial polling
 
 	command[commandLen++] = 0x95;
@@ -922,6 +1237,14 @@ int ExampleTerminalPCSCContactless_IDENTIV::switchPollingType(byte pollingType) 
 	ret = reset_Field();
 
 	getType();
+
+
+    if (pollingType == TYPE_F){
+	// forcetypeF with transparent session
+	    setTypeFTransparentSession() ;
+  }
+
+
 
 	return ret;
 }
@@ -1049,11 +1372,27 @@ ResponsePacket ExampleTerminalPCSCContactless_IDENTIV::coldReset() {
 	ResponsePacket response;
 	LONG resp;
 	DWORD dwProtocol;
+	std::string s1 ;
 
 	int tries = 0;
+	if (currentPollingType_ == TYPE_F) {
+
+		// keep transparent session
+		// do field off/on
+		   powerOFF() ;
+		   powerON();
+
+		   	response.response = "3B 8F 80 01 80 4F 0C A0 00 00 03 06 11 00 3B 00 00 00 00 42" ;
+		   	return response;
+
+
+
+		}
 	LOG_INFO << "SCardReconnect called";
 	if ((resp = SCardReconnect(hCard_, SCARD_SHARE_DIRECT, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_UNPOWER_CARD, &dwProtocol)) != SCARD_S_SUCCESS) {
 		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
+			s1 = errorToString(resp) ;
+			LOG_DEBUG <<"fail reconnect :" << s1 ;
 			resp = handleRetry();
 			LOG_INFO << "[Retry] SCardReconnect called";
 			resp = SCardReconnect(hCard_, SCARD_SHARE_DIRECT, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_UNPOWER_CARD, &dwProtocol);

@@ -40,6 +40,21 @@
 #define ERR_CARD_RECONNECT -9;
 
 
+#define TRANSP_CLASS 0xff
+#define TRANSP_INS 0xc2
+
+#define START_SESS_TAG 0x81
+#define END_SESS_TAG 0x82
+#define SWITCH_PROT_TAG 0x8f
+#define FIELD_OFF_TAG 0x83
+#define FIELD_ON_TAG 0x84
+
+#define GET_STATUS_TAG 0xc0
+#define ICC_RESP_TAG 0x97
+#define TRANSCEIVE_TAG 0x95
+#define TIMER_HI_TAG  0x5f
+#define TIMER_LO_TAG  0x46
+#define TRANSP_CMD_MAX_SIZE 274
 
 #include "terminal/terminals/terminal.hpp"
 #include "constants/response_packet.hpp"
@@ -101,6 +116,11 @@ private:
 	ResponsePacket reconnect_HW();
 	int reset_Field();
 
+	void endTypeFTransparentSession() ;
+//	int TypeFCheckAnswer(unsigned char answer[], unsigned long int* answer_length);
+    void setTypeFTransparentSession();
+	ResponsePacket  powerOFF();
+	ResponsePacket  powerON();
 };
 
 } /* namespace client */
