@@ -26,7 +26,7 @@ class ExamplePCSCContactlessFactory : public ITerminalFactory {
 public:
 	ExamplePCSCContactlessFactory() = default;
 	~ExamplePCSCContactlessFactory() = default;
-	ITerminalLayer* create() override;
+	virtual ITerminalLayer* create() override;
 };
 
 } /* namespace client */

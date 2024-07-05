@@ -196,6 +196,8 @@ ResponsePacket ServerEngine::asyncRequest(SOCKET client_socket, std::string to_s
 
 	} while ((ret != RES_SOCKET_OK) && isExpectedRes);
 
+	LOG_DEBUG << "Data received from client: " << recvbuf;
+
 	try {
 		jresponse = nlohmann::json::parse(recvbuf); // parses response to json object
 	} catch (json::parse_error &err) {

@@ -1,9 +1,0 @@
-{
-	"name": "client_1",
-  	"port": "62111",
-  	"ip": "127.0.0.1",
-  	"log_path": "./logs/basics",
-  	"log_level": "debug",
-  	"default_timeout": 2000,
-  	"terminal": "EXAMPLE_PCSC_CONTACT"
-}

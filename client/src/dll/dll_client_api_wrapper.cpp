@@ -15,6 +15,8 @@
  limitations under the License.
  *********************************************************************************/
 
+#include <client/requests/activate_interface.hpp>
+#include <client/requests/deactivate_interface.hpp>
 #include "client/client_api.hpp"
 #include "client/requests/cold_reset.hpp"
 #include "client/requests/command.hpp"
@@ -30,9 +32,19 @@
 #include "client/requests/send_typeB.hpp"
 #include "client/requests/send_typeF.hpp"
 #include "client/requests/warm_reset.hpp"
+#include "client/requests/poll_type_A.hpp"
+#include "client/requests/poll_type_B.hpp"
+#include "client/requests/poll_type_F.hpp"
+#include "client/requests/poll_type_all_types.hpp"
+#include "client/requests/get_notifications.hpp"
+#include "client/requests/clear_notifications.hpp"
 #include "constants/request_code.hpp"
 #include "terminal/factories/example_factory_pcsc_contact.hpp"
+#include "terminal/factories/example_factory_pcsc_contact_IDENTIV_Dual.hpp"
+#include "terminal/factories/example_factory_pcsc_HCI_TH.hpp"
 #include "terminal/factories/example_factory_pcsc_contactless.hpp"
+#include "terminal/factories/example_factory_pcsc_contactless_IDENTIV.hpp"
+#include "terminal/factories/example_factory_pcsc_contactless_IDENTIV_Dual.hpp"
 #include "terminal/flyweight_terminal_factory.hpp"
 #include "terminal/terminals/example_pcsc_contact.hpp"
 #include "dll/dll_client_api_wrapper.h"
@@ -72,7 +84,11 @@ void initClient(client::ClientAPI* client, const char* jsonConfig, ResponseDLL& 
 	// config available terminal factories
 	FlyweightTerminalFactory available_terminals;
 	available_terminals.addFactory("EXAMPLE_PCSC_CONTACT", new ExamplePCSCContactFactory());
+	available_terminals.addFactory("EXAMPLE_PCSC_CONTACT_IDENTIV_DUAL", new ExamplePCSCContactIDENTIVDualFactory());
+	available_terminals.addFactory("EXAMPLE_PCSC_HCI_TH", new ExamplePCSCHCITHFactory());
 	available_terminals.addFactory("EXAMPLE_PCSC_CONTACTLESS", new ExamplePCSCContactlessFactory());
+	available_terminals.addFactory("EXAMPLE_PCSC_CONTACTLESS_IDENTIV", new ExamplePCSCContactlessIDENTIVFactory());
+	available_terminals.addFactory("EXAMPLE_PCSC_CONTACTLESS_IDENTIV_DUAL", new ExamplePCSCContactlessIDENTIVDualFactory());
 
 	// config all requests the client can handle
 	FlyweightRequests available_requests;
@@ -88,6 +104,14 @@ void initClient(client::ClientAPI* client, const char* jsonConfig, ResponseDLL& 
 	available_requests.addRequest(REQ_WARM_RESET, new WarmReset());
 	available_requests.addRequest(REQ_POWER_OFF_FIELD, new PowerOffField());
 	available_requests.addRequest(REQ_POWER_ON_FIELD, new PowerOnField());
+	available_requests.addRequest(REQ_POLL_TYPE_A, new PollTypeA());
+	available_requests.addRequest(REQ_POLL_TYPE_B, new PollTypeB());
+	available_requests.addRequest(REQ_POLL_TYPE_F, new PollTypeF());
+	available_requests.addRequest(REQ_POLL_TYPE_ALL_TYPES, new PollTypeAllTypes());
+	available_requests.addRequest(REQ_DEACTIVATE_INTERFACE, new Deactivate_Interface());
+	available_requests.addRequest(REQ_ACTIVATE_INTERFACE, new Activate_Interface());
+	available_requests.addRequest(REQ_GET_NOTIFICATIONS, new GetNotifications());
+	available_requests.addRequest(REQ_CLEAR_NOTIFICATIONS,new ClearNotifications());
 
 	ResponsePacket response_packet = client->initClient((jsonConfig != NULL) ? jsonConfig : "config/init.json", available_terminals, available_requests);
 	responsePacketForDll(response_packet, response_packet_dll);
@@ -118,3 +142,9 @@ void responsePacketForDll(ResponsePacket response_packet, ResponseDLL& response_
 	response_packet_dll.err_card_code = response_packet.err_card_code;
 	strcpy(response_packet_dll.err_card_description, response_packet.err_card_description.c_str());
 }
+
+void automaticInterfaceSwitching(client::ClientAPI* client, ResponseDLL& response_packet_dll){
+	ResponsePacket response_packet = client->automaticInterfaceSwitching();
+	responsePacketForDll(response_packet, response_packet_dll);
+}
+

@@ -97,6 +97,12 @@ public:
 	virtual ResponsePacket disconnect() = 0;
 
 	/**
+	 * Deactivate an Interface - Deactivate an interface (procedure use when switch between 2 interfaces of the client).
+	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
+	 */
+	virtual ResponsePacket deactivate_Interface() = 0;
+
+	/**
 	 * isAlive - send a valid packet to the terminal to check whether it is responding.
 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
 	 */
@@ -131,6 +137,55 @@ public:
  	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
 	 */
 	virtual ResponsePacket powerONField() = 0;
+
+	/**
+	 * pollTypeA - Start the polling sequence in Type A
+ 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
+	 */
+	virtual ResponsePacket pollTypeA() = 0;
+
+	/**
+	 * pollTypeB - Start the polling sequence in Type B
+ 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
+	 */
+	virtual ResponsePacket pollTypeB() = 0;
+
+	/**
+	 * pollTypeF - Start the polling sequence in Type F
+ 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
+	 */
+	virtual ResponsePacket pollTypeF() = 0;
+
+	/**
+	 * pollingTypeABF - Start the polling sequence with all types available for the reader (in principle A, B and F)
+ 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
+	 */
+	virtual ResponsePacket pollTypeAllTypes() = 0;
+
+	/**
+	 * getNotifications - Get Notifications
+ 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
+	 */
+	virtual ResponsePacket getNotifications() = 0;
+
+	/**
+	 * clearNotifications - Clear Notifications
+ 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
+	 */
+	virtual ResponsePacket clearNotifications() = 0;
+
+	/**
+	 * automaticInterfaceSwitching - Perform the Automatic Interface Switching for reader (like IDENTIV 470x)
+ 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
+	 */
+	virtual ResponsePacket automaticInterfaceSwitching() = 0;
+
+	/**
+	 * activate_Interface - Activate a deactivated interface (procedure use when switch between 2 interfaces of the client)
+ 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
+	 */
+	virtual ResponsePacket activate_Interface() = 0;
+
 };
 
 } /* namespace client */

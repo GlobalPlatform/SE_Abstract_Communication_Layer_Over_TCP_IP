@@ -112,6 +112,46 @@ using namespace server;
 	responsePacketForDll(response, response_packet);
 }
 
+void pollTypeA(server::ServerAPI* server, int id_client, DWORD timeout, ResponseDLL& response_packet) {
+	ResponsePacket response = server->pollTypeA(id_client, timeout);
+	responsePacketForDll(response, response_packet);
+}
+
+void pollTypeB(server::ServerAPI* server, int id_client, DWORD timeout, ResponseDLL& response_packet) {
+	ResponsePacket response = server->pollTypeB(id_client, timeout);
+	responsePacketForDll(response, response_packet);
+}
+
+void pollTypeF(server::ServerAPI* server, int id_client, DWORD timeout, ResponseDLL& response_packet) {
+	ResponsePacket response = server->pollTypeF(id_client, timeout);
+	responsePacketForDll(response, response_packet);
+}
+
+void pollTypeAllTypes(server::ServerAPI* server, int id_client, DWORD timeout, ResponseDLL& response_packet) {
+	ResponsePacket response = server->pollTypeAllTypes(id_client, timeout);
+	responsePacketForDll(response, response_packet);
+}
+
+void getNotifications(server::ServerAPI* server, int id_client, DWORD timeout, ResponseDLL& response_packet) {
+	ResponsePacket response = server->getNotifications(id_client, timeout);
+	responsePacketForDll(response, response_packet);
+}
+
+void clearNotifications(server::ServerAPI* server, int id_client, DWORD timeout, ResponseDLL& response_packet) {
+	ResponsePacket response = server->clearNotifications(id_client, timeout);
+	responsePacketForDll(response, response_packet);
+}
+
+void deactivate_Interface(server::ServerAPI* server, int id_client, DWORD timeout, ResponseDLL& response_packet) {
+	ResponsePacket response = server->deactivate_Interface(id_client, timeout);
+	responsePacketForDll(response, response_packet);
+}
+
+void activate_Interface(server::ServerAPI* server, int id_client, DWORD timeout, ResponseDLL& response_packet) {
+	ResponsePacket response = server->activate_Interface(id_client, timeout);
+	responsePacketForDll(response, response_packet);
+}
+
  void stopServer(server::ServerAPI* server, ResponseDLL& response_packet) {
 	ResponsePacket response = server->stopServer();
 	responsePacketForDll(response, response_packet);

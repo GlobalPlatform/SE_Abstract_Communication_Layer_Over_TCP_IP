@@ -64,6 +64,7 @@ void responsePacketForDll(client::ResponsePacket response_packet, ResponseDLL& r
 ADDAPI void disposeClientAPI(client::ClientAPI* client);
 ADDAPI void initClient(client::ClientAPI* client, const char* jsonConfig, ResponseDLL& response_packet);
 ADDAPI void loadAndListReaders(client::ClientAPI*, ResponseDLL& response_packet);
+ADDAPI void automaticInterfaceSwitching(client::ClientAPI* client, ResponseDLL& response_packet_dll);
 
 #ifdef __cplusplus
 }

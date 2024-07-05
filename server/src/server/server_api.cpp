@@ -101,6 +101,38 @@ ResponsePacket ServerAPI::powerONField(int id_client, DWORD timeout) {
 	return engine_->handleRequest(id_client, REQ_POWER_ON_FIELD, true, timeout);
 }
 
+ResponsePacket ServerAPI::pollTypeA(int id_client, DWORD timeout) {
+	return engine_->handleRequest(id_client, REQ_POLL_TYPE_A, true, timeout);
+}
+
+ResponsePacket ServerAPI::pollTypeB(int id_client, DWORD timeout) {
+	return engine_->handleRequest(id_client, REQ_POLL_TYPE_B, true, timeout);
+}
+
+ResponsePacket ServerAPI::pollTypeF(int id_client, DWORD timeout) {
+	return engine_->handleRequest(id_client, REQ_POLL_TYPE_F, true, timeout);
+}
+
+ResponsePacket ServerAPI::pollTypeAllTypes(int id_client, DWORD timeout) {
+	return engine_->handleRequest(id_client, REQ_POLL_TYPE_ALL_TYPES, true, timeout);
+}
+
+ResponsePacket ServerAPI::getNotifications(int id_client, DWORD timeout) {
+	return engine_->handleRequest(id_client, REQ_GET_NOTIFICATIONS, true, timeout);
+}
+
+ResponsePacket ServerAPI::clearNotifications(int id_client, DWORD timeout) {
+	return engine_->handleRequest(id_client, REQ_CLEAR_NOTIFICATIONS, true, timeout);
+}
+
+ResponsePacket ServerAPI::deactivate_Interface(int id_client, DWORD timeout) {
+	return engine_->handleRequest(id_client, REQ_DEACTIVATE_INTERFACE, true, timeout);
+}
+
+ResponsePacket ServerAPI::activate_Interface(int id_client, DWORD timeout) {
+	return engine_->handleRequest(id_client, REQ_ACTIVATE_INTERFACE, true, timeout);
+}
+
 ResponsePacket ServerAPI::stopServer() {
 	return engine_->stopAllClients();
 }

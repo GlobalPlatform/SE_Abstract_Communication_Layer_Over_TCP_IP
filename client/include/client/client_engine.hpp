@@ -88,6 +88,12 @@ public:
 	ResponsePacket disconnectClient();
 
 	/**
+	 * automaticInterfaceSwitching - Initialize the AutomaticInterfaceSwitching.
+	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
+	 */
+	ResponsePacket automaticInterfaceSwitching();
+
+	/**
 	 * waitingRequests - wait for requests on the given socket by using the helper function handleRequest.
 	 * @return a ResponsePacket struct containing either the request's response or error codes (under 0) and error descriptions.
 	 */

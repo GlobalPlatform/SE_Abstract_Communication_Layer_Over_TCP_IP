@@ -91,6 +91,8 @@ ResponsePacket ExampleTerminalPCSCContactless::loadAndListReaders() {
 
 ResponsePacket ExampleTerminalPCSCContactless::connect(const char* reader) {
 	ResponsePacket response;
+	ResponsePacket response2;
+
 	LONG resp;
 
 	int tries = 0;
@@ -294,6 +296,34 @@ ResponsePacket ExampleTerminalPCSCContactless::disconnect() {
 	return response;
 }
 
+ResponsePacket ExampleTerminalPCSCContactless::deactivate_Interface() {
+	LOG_INFO << "Deactivate Interface";
+
+	return disconnect();
+}
+
+ResponsePacket ExampleTerminalPCSCContactless::activate_Interface() {
+	LONG resp;
+	ResponsePacket response;
+
+	int tries = 0;
+	LOG_INFO << "activate_Interface";
+	if ((resp = SCardConnect(hContext_, current_reader_.c_str(), SCARD_SHARE_DIRECT, 0, &hCard_, &dwActiveProtocol_)) != SCARD_S_SUCCESS) {
+		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
+			resp = handleRetry();
+			LOG_INFO << "[Retry] SCardConnect called";
+			resp = SCardConnect(hContext_, current_reader_.c_str(), SCARD_SHARE_DIRECT, 0, &hCard_, &dwActiveProtocol_);
+			tries++;
+		}
+		if (resp != SCARD_S_SUCCESS) {
+			LOG_DEBUG << "Failed to call SCardConnect() " << "[error:" << errorToString(resp) << "]" << "[hContext:" << hContext_ << "][szReader:" << current_reader_ << "][dwShareMode:"
+					  << SCARD_SHARE_DIRECT << "]" << "[dwPreferredProtocols:" << 0 << "][hCard:" << hCard_ << "][dwActiveProtocol:" << dwActiveProtocol_ << "]";
+			return handleErrorResponse("Failed to connect", resp);
+		}
+	}
+	return response;
+}
+
 ResponsePacket ExampleTerminalPCSCContactless::restart() {
 	ResponsePacket response;
 	LONG resp;
@@ -365,6 +395,7 @@ ResponsePacket ExampleTerminalPCSCContactless::powerONField() {
 	disconnect();
 	int tries = 0;
 	LOG_INFO << "SCardConnect called";
+
 	if ((resp = SCardConnect(hContext_, current_reader_.c_str(), SCARD_SHARE_DIRECT, 0, &hCard_, &dwActiveProtocol_)) != SCARD_S_SUCCESS) {
 		while (resp != SCARD_S_SUCCESS && tries < TRIES_LIMIT) {
 			resp = handleRetry();
@@ -389,6 +420,56 @@ ResponsePacket ExampleTerminalPCSCContactless::powerONField() {
 	Sleep(500); // hardware needs delay
 	// reconnect shared & T0|T1 protocol
 	return restart();
+}
+
+ResponsePacket ExampleTerminalPCSCContactless::pollTypeA() {
+	ResponsePacket response;
+
+	// poll for type A only
+	unsigned long int length;
+	unsigned char* command_rawA = utils::stringToUnsignedChar("FF CC 00 00 02 95 00", &length);
+	response = sendCommand(command_rawA, length);
+//	if response.response.compare("KO") == 0) {
+//		return response;
+//	}
+	return response;
+
+}
+
+ResponsePacket ExampleTerminalPCSCContactless::pollTypeB() {
+	ResponsePacket response;
+	response.response = "Not supported";
+	return response;
+}
+
+ResponsePacket ExampleTerminalPCSCContactless::pollTypeF() {
+	ResponsePacket response;
+	response.response = "Not supported";
+	return response;
+}
+
+ResponsePacket ExampleTerminalPCSCContactless::pollTypeAllTypes() {
+	ResponsePacket response;
+	response.response = "Not supported";
+	return response;
+}
+
+ResponsePacket ExampleTerminalPCSCContactless::getNotifications() {
+	ResponsePacket response;
+	response.response = "Not supported";
+	return response;
+}
+
+ResponsePacket ExampleTerminalPCSCContactless::clearNotifications() {
+	ResponsePacket response;
+	response.response = "Not supported";
+	return response;
+}
+
+ResponsePacket ExampleTerminalPCSCContactless::automaticInterfaceSwitching(){
+	ResponsePacket response;
+	response.response = "Not supported";
+	return response;
 }
 
 ResponsePacket ExampleTerminalPCSCContactless::coldReset() {

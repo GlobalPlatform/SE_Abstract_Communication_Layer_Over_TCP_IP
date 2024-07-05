@@ -151,6 +151,39 @@ ResponsePacket ClientEngine::disconnectClient() {
 	return response;
 }
 
+ResponsePacket ClientEngine::automaticInterfaceSwitching(){
+	LOG_DEBUG << "Process Automatic Interface Switching called";
+
+	nlohmann::json j;
+	nlohmann::json jresponse;
+
+	j["request"] = 17;
+	j["data"] = "";
+	j["timeout"] = 4900;
+	std::string request = j.dump();
+	std::string resp;
+
+	if (notifyRequestReceived_ != 0) {
+		notifyRequestReceived_(request.c_str());
+	}
+
+/*
+	return handleRequest(j.dump());
+*/
+	ResponsePacket response_packet = terminal_->automaticInterfaceSwitching();
+
+	jresponse = response_packet;
+	resp = jresponse.dump();
+	LOG_INFO << "Response : " << resp;
+
+	if (notifyResponseSent_ != 0) {
+		notifyResponseSent_(resp.c_str());
+	}
+
+	return response_packet;
+
+}
+
 ResponsePacket ClientEngine::waitingRequests() {
 	char request[DEFAULT_BUFLEN];
 	bool response;

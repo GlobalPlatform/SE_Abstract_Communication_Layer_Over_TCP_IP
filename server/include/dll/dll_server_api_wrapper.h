@@ -66,11 +66,20 @@ ADDAPI void sendCommand(server::ServerAPI* server, int id_client, char* command,
 ADDAPI void sendTypeA(server::ServerAPI* server, int id_client, char* command, DWORD timeout, ResponseDLL& response_packet);
 ADDAPI void sendTypeB(server::ServerAPI* server, int id_client, char* command, DWORD timeout, ResponseDLL& response_packet);
 ADDAPI void sendTypeF(server::ServerAPI* server, int id_client, char* command, DWORD timeout, ResponseDLL& response_packet);
+ADDAPI void sendTypeAllTypes(server::ServerAPI* server, int id_client, char* command, DWORD timeout, ResponseDLL& response_packet);
 ADDAPI void stopClient(server::ServerAPI* server, int id_client, DWORD timeout, ResponseDLL& response_packet);
 ADDAPI void coldReset(server::ServerAPI* server, int id_client, DWORD timeout, ResponseDLL& response_packet);
 ADDAPI void warmReset(server::ServerAPI* server, int id_client, DWORD timeout, ResponseDLL& response_packet);
 ADDAPI void powerOFFField(server::ServerAPI* server, int id_client, DWORD timeout, ResponseDLL& response_packet);
-ADDAPI void powerONField(server::ServerAPI* server, int id_client, ResponseDLL& response_packet);
+ADDAPI void powerONField(server::ServerAPI* server, int id_client, DWORD timeout, ResponseDLL& response_packet);
+ADDAPI void pollTypeA(server::ServerAPI* server, int id_client, DWORD timeout, ResponseDLL& response_packet);
+ADDAPI void pollTypeB(server::ServerAPI* server, int id_client, DWORD timeout, ResponseDLL& response_packet);
+ADDAPI void pollTypeF(server::ServerAPI* server, int id_client, DWORD timeout, ResponseDLL& response_packet);
+ADDAPI void pollTypeAllTypes(server::ServerAPI* server, int id_client, DWORD timeout, ResponseDLL& response_packet);
+ADDAPI void getNotifications(server::ServerAPI* server, int id_client, DWORD timeout, ResponseDLL& response_packet);
+ADDAPI void clearNotifications(server::ServerAPI* server, int id_client, DWORD timeout, ResponseDLL& response_packet);
+ADDAPI void deactivate_Interface(server::ServerAPI* server, int id_client, DWORD timeout, ResponseDLL& response_packet);
+ADDAPI void activate_Interface(server::ServerAPI* server, int id_client, DWORD timeout, ResponseDLL& response_packet);
 
 #ifdef __cplusplus
 }

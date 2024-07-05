@@ -5,5 +5,6 @@
   "log_level": "debug",
   "log_max_size": "1000000",
   "log_max_files": "10",
-  "timeout": "5500"
+  "timeout": "5500",
+  "batch": "C:\\Users\\hoferflo\\Desktop\\test.txt"
 }

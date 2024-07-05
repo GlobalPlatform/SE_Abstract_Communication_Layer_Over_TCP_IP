@@ -28,6 +28,7 @@ namespace ClientWPF.ViewModels
             _reloadReaders = new DelegateCommand(OnReloadReaders, null);
             _connectClient = new DelegateCommand(OnConnectClient, CanConnectClient);
             _disconnectClient = new DelegateCommand(OnDisconnectClient, CanDisconnectClient);
+            _automaticInterfaceSwitching = new DelegateCommand(OnAutomaticInterfaceSwitching, CanAutomaticInterfaceSwitching);
             _clearLogs = new DelegateCommand(OnClearLogs, null);
 
             CheckError(APIClientWrapper.InitClient());
@@ -102,6 +103,7 @@ namespace ClientWPF.ViewModels
             string ip;
             string port;
             string name;
+            string pcsc;
             using (StreamReader r = new StreamReader("config/init.json"))
             {
                 string json = r.ReadToEnd();
@@ -109,7 +111,21 @@ namespace ClientWPF.ViewModels
                 ip = array["ip"];
                 port = array["port"];
                 name = array["name"];
+                pcsc = array["default_pcsc"];
             }
+
+            if (pcsc != "")
+            {
+                int index = 0;
+                for (int i = 0; i < ReadersList.Count(); i++)
+                    if (ReadersList.ElementAt(i).ReaderName.StartsWith(pcsc))
+                    { 
+                        index = i;
+                        break;
+                    }
+                _selectedReader = ReadersList.ElementAt(index);
+            }
+
             _clientData.Add(new APIClientModel(ClientState.INITIALIZED, ip, port, name));
             return _clientData;
         }
@@ -159,6 +175,9 @@ namespace ClientWPF.ViewModels
         private readonly DelegateCommand _disconnectClient;
         public ICommand DisconnectClient => _disconnectClient;
 
+        private readonly DelegateCommand _automaticInterfaceSwitching;
+        public ICommand AutomaticInterfaceSwitching => _automaticInterfaceSwitching;
+
         private readonly DelegateCommand _clearLogs;
         public ICommand ClearLogs => _clearLogs;
 
@@ -177,6 +196,7 @@ namespace ClientWPF.ViewModels
             _clientData.Add(new APIClientModel(ClientState.CONNECTED, old.IpClientConnected, old.PortClientConnected, old.Name));
             _connectClient.InvokeCanExecuteChanged();
             _disconnectClient.InvokeCanExecuteChanged();
+            _automaticInterfaceSwitching.InvokeCanExecuteChanged();
         }
 
         private void OnDisconnectClient()
@@ -189,6 +209,14 @@ namespace ClientWPF.ViewModels
             SelectedReader = null;
             _connectClient.InvokeCanExecuteChanged();
             _disconnectClient.InvokeCanExecuteChanged();
+            _automaticInterfaceSwitching.InvokeCanExecuteChanged();
+        }
+
+        private void OnAutomaticInterfaceSwitching()
+        {
+            ResponseDLL response = APIClientWrapper.AutomaticInterfaceSwitching();
+            if (CheckError(response)) return;
+            return;
         }
 
         private void OnClearLogs()
@@ -203,6 +231,12 @@ namespace ClientWPF.ViewModels
         }
 
         private bool CanDisconnectClient()
+        {
+            APIClientModel client = _clientData.FirstOrDefault();
+            return client.ClientState.Equals(ClientState.CONNECTED.ToString());
+        }
+
+        private bool CanAutomaticInterfaceSwitching()
         {
             APIClientModel client = _clientData.FirstOrDefault();
             return client.ClientState.Equals(ClientState.CONNECTED.ToString());
